@@ -38,7 +38,7 @@ async function buildCode() {
  */
 function buildStyles() {
   return gulp
-    .src(`${stylesDirectory}/${name}.${stylesExtension}`)
+    .src(`${stylesDirectory}/${name}.${stylesExtension}`, { allowEmpty: true })
     .pipe(sass().on('error', sass.logError))
     .pipe(gulp.dest(`${distDirectory}/styles`));
 }
