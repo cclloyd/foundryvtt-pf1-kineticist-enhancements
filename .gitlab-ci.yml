@@ -8,15 +8,28 @@ before_script:
   - yarn install
 
 stages:
-  - build_deploy
+  - build
+  - release
 
-build_&_deploy_app:
-  stage: build_deploy
+build:
+  stage: build
   only:
     - master
   script:
     - yarn build
-    - mv dist pf1-kineticist-enhancements
+    - mv dist/* ./
   artifacts:
     paths:
-      - pf1-kineticist-enhancements/*
+      - module.json
+      - lang/
+      - module/
+      - templates/
+
+release:
+  stage: release
+  only:
+    - master
+  image: registry.gitlab.com/gitlab-org/release-cli:latest
+  release:
+    tag_name: v${MAJOR}_${MINOR}_${REVISION}-alpha
+
