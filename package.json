@@ -20,6 +20,7 @@
   ],
   "scripts": {
     "build": "gulp build",
+    "watch": "gulp watch",
     "build:watch": "gulp watch",
     "link-project": "gulp link",
     "clean": "gulp clean",

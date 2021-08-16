@@ -1,0 +1,42 @@
+<style>
+    #ke-setup-tabs {
+        width: 100%;
+    }
+    #ke-setup-body {
+        width: 100%;
+        min-height: 100px;
+        display: block;
+    }
+    .setup-body div {
+
+    }
+</style>
+<div class="setup-container">
+    <h1>It looks like this Kineticist character is not being managed by Kineticist Enhanced.</h1>
+    <p>Configuring the module will improve the experience of using Kineticist in Pathfinder 1.  This is optional.  If you do not want to see this anymore, click here.</p>
+    <hr>
+    <nav class="tabs {{style}}" id="ke-setup-tabs" data-group="ke-setup">
+        <a class="item" data-tab="blastconfig">Blasts</a>
+        <a class="item" data-tab="infusionconfig">Infusions</a>
+        <a class="item" data-tab="utilityconfig">Utilities</a>
+        <a class="item" data-tab="metakinesisconfig">Metakinesis</a>
+    </nav>
+    <hr>
+
+    <section class="{{style}}" id="ke-setup-body">
+        <div class="tab blastconfig" data-group="ke-setup" data-tab="blastconfig">
+            {{> "modules/pf1-kineticist-enhanced/templates/partials/tab-name.hbs"tabname="blasts"}}
+        </div>
+        <div class="tab infusionconfig" data-group="ke-setup" data-tab="infusionconfig">
+            {{> "modules/pf1-kineticist-enhanced/templates/partials/tab-name.hbs" tabname="infusions"}}
+        </div>
+        <div class="tab utilityconfig" data-group="ke-setup" data-tab="utilityconfig">
+            {{> "modules/pf1-kineticist-enhanced/templates/partials/tab-name.hbs" tabname="utilities"}}
+        </div>
+        <div class="tab metakinesisconfig" data-group="ke-setup" data-tab="metakinesisconfig">
+            {{> "modules/pf1-kineticist-enhanced/templates/partials/tab-name.hbs" tabname="metakinesis"}}
+        </div>
+    </section>
+</div>
+
+

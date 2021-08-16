@@ -1,20 +1,13 @@
 {
   "name": "pf1-kineticist-enhancements",
-  "title": "pf1-kineticist-enhancements",
-  "description": "",
-  "version": "0.1.0",
-  "author": "",
-  "authors": [
-    {
-      "name": "",
-      "email": ""
-    }
-  ],
+  "title": "Kineticist Enhancements for pf1e",
+  "description": "Enhances the Kineticist experience on Pathfinder 1st Edition.",
+  "version": "0.1.1",
+  "author": "cclloyd",
   "minimumCoreVersion": "0.8.8",
   "compatibleCoreVersion": "0.8.8",
   "scripts": [],
   "esmodules": ["module/pf1-kineticist-enhancements.js"],
-  "styles": ["styles/pf1-kineticist-enhancements.css"],
   "packs": [],
   "dependencies": [],
   "languages": [
@@ -25,13 +18,10 @@
     }
   ],
   "socket": false,
-  "url": "",
-  "manifest": "",
-  "download": "https://host/path/to/0.0.0.zip",
-  "license": "",
-  "readme": "",
-  "bugs": "",
-  "changelog": "",
+  "url": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements",
+  "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements/-/raw/master/src/module.json",
+  "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements/-/jobs/1505120712/artifacts/download",
+  "license": "MIT",
   "system": [],
   "library": false
 }

@@ -19,4 +19,4 @@ build_&_deploy_app:
     - mv dist pf1-kineticist-enhancements
   artifacts:
     paths:
-      - pf1-kineticist-enhancements/
+      - pf1-kineticist-enhancements/*
