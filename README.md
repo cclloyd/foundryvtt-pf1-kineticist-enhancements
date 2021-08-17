@@ -8,41 +8,23 @@ Add your installation instructions here.
 
 ## Development
 
+- Clone the repository
+- Switch to `alpha` branch
+- Run `yarn install` (if you don't have yarn, run `npm install -g yarn` (may require admin/root))
+- To build:
+  - Run `yarn build`
+- To develop:
+  - Create a folder named `dist` in the project root.
+  - Create a symlink/shortcut from the `dist` folder to your foundry's module directory and name the linked folder `pf1-kineticist-enhnacements`
+    - Windows default: `%LocalAppData%\FoundryVTT\Data\modules`
+    - Linux default: `~/.local/share/FoundryVTT/Data/modules`
+  - Run `yarn watch` (this will watch the src directory for changes and automatically rebuild changes live)
+  - Launch Foundry
+
 ### Prerequisites
 
-In order to build this module, recent versions of `node` and `npm` are
-required. Most likely using `yarn` also works but only `npm` is officially
-supported. We recommend using the latest lts version of `node`, which is
-`v14.15.5` at the time of writing. If you use `nvm` to manage your `node`
-versions, you can simply run
-
-```
-nvm install
-```
-
-in the project's root directory.
-
-You also need to install the the project's dependencies. To do so, run
-
-```
-npm install
-```
-
-### Building
-
-You can build the project by running
-
-```
-npm run build
-```
-
-Alternatively, you can run
-
-```
-npm run build:watch
-```
-
-to watch for changes and automatically build as necessary.
+In order to build this module, recent versions of `node` and `yarn/npm` are
+required. If you don't have `yarn`, but have `npm`, just run `npm install -g yarn` to install `yarn`.
 
 ### Linking the built project to Foundry VTT
 
