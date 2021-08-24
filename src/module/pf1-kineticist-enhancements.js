@@ -13,48 +13,46 @@
 // Import JavaScript modules
 import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
-import {ns} from './lib/config.js';
-import {debug, getAllPlayersActors, sleep} from "./lib/common";
-import {SetupApplication} from "./models/SetupApplication";
-
+import { ns } from './lib/config.js';
+import { debug, getAllPlayersActors, sleep } from './lib/common';
+import { SetupApplication } from './models/SetupApplication';
 
 // Initialize module
 Hooks.once('init', async () => {
-  console.log('pf1-kineticist-enhancements | Initializing pf1-kineticist-enhancements');
+    console.log('pf1-kineticist-enhancements | Initializing pf1-kineticist-enhancements');
 
-  // Assign custom classes and constants here
+    // Assign custom classes and constants here
 
-  // Register custom module settings
-  registerSettings();
+    // Register custom module settings
+    registerSettings();
 
-  // Preload Handlebars templates
-  await preloadTemplates();
+    // Preload Handlebars templates
+    await preloadTemplates();
 
-  // Register custom sheets (if any)
+    // Register custom sheets (if any)
 });
 
 // Setup module
 Hooks.once('setup', async () => {
-  // Do anything after initialization but before
-  // ready
+    // Do anything after initialization but before
+    // ready
 });
 
-
 Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {
-  if (data.actor.getFlag(ns, 'firstSetupCompleted') !== true) {
-    console.debug('Doing first setup', data.actor);
-    new SetupApplication().render(true);
+    if (data.actor.getFlag(ns, 'firstSetupCompleted') !== true) {
+        console.debug('Doing first setup', data.actor);
+        new SetupApplication().render(true);
 
-    //const items = data.actor.getEmbeddedDocument('Energy Kinetic Blast');
-    //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
-    /*
+        //const items = data.actor.getEmbeddedDocument('Energy Kinetic Blast');
+        //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
+        /*
     const items = data.actor.getEmbeddedCollection('Item');
     for (const [key, value] of Object.entries(items)) {
         if (value.data.name === 'Energy Kinetic Blast')
         console.log(key, value);
     }*/
-    //console.log('items', items);
-    /*new Dialog({
+        //console.log('items', items);
+        /*new Dialog({
         title: "Kineticist Enhancements Setup",
         content: content,
         //"<p>Enter the amount you want to heal</p><center><input type='number' id='amountInput'></center><br>",
@@ -68,21 +66,20 @@ Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {
             },
         },
     }).render(true);*/
-  }
-})
-
+    }
+});
 
 // When ready
 Hooks.once('ready', async () => {
-  await sleep(500);
-  let actors = await getAllPlayersActors();
+    await sleep(500);
+    let actors = await getAllPlayersActors();
 
-  debug()
-  let app = new SetupApplication();
-  app.render(true);
-  console.warn('tabs', app._tabs);
+    debug();
+    let app = new SetupApplication();
+    app.render(true);
+    console.warn('tabs', app._tabs);
 
-  /*
+    /*
   for (let actor of actors) {
     if (Object.keys(actor.data.data.classes).includes('kineticist')) {
       console.debug(actor.items.filter(o => {return o.type === 'attack'}));
