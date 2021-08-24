@@ -1,15 +1,12 @@
-<div style="display: block">
+<div id="ke-blasts-config">
     <h3>Select your blasts that you have.</h3>
-    {{#each blasts}}
-    <div>
-        <label>
-            <input type="checkbox"/>
-            {{name}}
-        </label>
-    </div>
-    {{/each}}
-    <hr>
-    {{#if (or isGM isTrustedPlayerEdit)}}
-    <div>isGM</div>
-    {{/if}}
+        {{#each blasts}}
+            <div>
+                <label>
+                    <input type="checkbox" name="{{checkbox}}" id="simple_{{name}}"/>
+                    {{name}}
+                </label>
+            </div>
+        {{/each}}
+    <button class="ke-button"><i class="fas fa-solid fa-undo"></i> Get Composite Blasts</button>
 </div>

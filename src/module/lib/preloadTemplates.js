@@ -10,6 +10,5 @@ export async function preloadTemplates() {
     "partials/tab-metakinesis.hbs",
     "partials/tab-name.hbs",
   ];
-  console.error(templatePaths.map((t) => `modules/${ns}/templates/${t}`));
   return loadTemplates(templatePaths.map((t) => `modules/${ns}/templates/${t}`));
 }

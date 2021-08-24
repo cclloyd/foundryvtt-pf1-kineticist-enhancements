@@ -10,32 +10,18 @@
     </nav>
     <section class="ke-setup-body {{style}}" id="ke-setup-body">
         <div class="tab" data-tab="blastconfig" data-group="primary-tabs" >
-            blastconfig
+          {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-blasts.hbs" blasts=blasts}}
         </div>
         <div class="tab" data-tab="infusionconfig" data-group="primary-tabs" >
-          infusionconfig
+          {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-name.hbs" tabname="infusionconfig"}}
         </div>
         <div class="tab" data-tab="utilityconfig" data-group="primary-tabs" >
-          utilityconfig
+          {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-name.hbs" tabname="utilityconfig"}}
         </div>
         <div class="tab" data-tab="metakinesisconfig" data-group="primary-tabs" >
-          metakinesisconfig
+          {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-name.hbs" tabname="metakinesisconfig"}}
         </div>
     </section>
-
-
-
-  <h3>Select your blasts that you have.</h3>
-  {{#each blasts}}
-    <div>
-      <label>
-        <input type="checkbox" name="{{checkbox}}" id="simple_{{name}}"/>
-        {{name}}
-      </label>
-    </div>
-  {{/each}}
-  <button class="ke-button"><i class="fas fa-solid fa-undo"></i> Get Composite Blasts</button>
-  <input type="button" value="Get Composite Blasts"/>
 </div>
 
 

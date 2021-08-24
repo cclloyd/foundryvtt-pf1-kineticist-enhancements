@@ -1,14 +1,17 @@
-/* ---------------------------- */
-/*             Sass             */
-/* This is your Sass entry file */
-/* ---------------------------- */
 
 .ke-setup-container {
   color: red;
   h1 {
-    color: green;
+    color: cyan !important;
   }
-  .ke-button {
-    background-color: rgba(0,0,0,.1);
-  }
+
+}
+
+.ke-button {
+  background-color: rgba(0,0,0,.1);
+  width: 50%;
+}
+
+#ke-blasts-config {
+
 }
