@@ -1,0 +1,15 @@
+<div style="display: block">
+    <h3>Select your blasts that you have.</h3>
+    {{#each blasts}}
+    <div>
+        <label>
+            <input type="checkbox"/>
+            {{name}}
+        </label>
+    </div>
+    {{/each}}
+    <hr>
+    {{#if (or isGM isTrustedPlayerEdit)}}
+    <div>isGM</div>
+    {{/if}}
+</div>

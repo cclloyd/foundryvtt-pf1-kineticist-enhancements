@@ -20,10 +20,8 @@ export class SetupApplication extends Application {
       template: `modules/${ns}/templates/setup.hbs`,
       width: 700,
       height: 600,
-      minimizable: true,
-      resizable: true,
       title: 'Kineticist Enhanced Setup',
-      tabs: [{ navSelector: '#ke-setup-tabs', contentSelector: '#ke-setup-body', initial: 'blastconfig' }],
+      tabs: [{ navSelector: '.ke-setup-tabs', contentSelector: '.ke-setup-body', initial: 'blastconfig' }],
     });
   }
 
@@ -43,12 +41,9 @@ export class SetupApplication extends Application {
    * @see https://foundryvtt.com/api/FormApplication.html#getData
    */
   getData() {
-    let data = super.getData()
-    data = {
+    return foundry.utils.mergeObject(super.getData(), {
       blasts: getSimpleBlasts(),
-      ...data,
-    }
-    return data
+    });
   }
 
   /**

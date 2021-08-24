@@ -78,7 +78,9 @@ Hooks.once('ready', async () => {
   let actors = await getAllPlayersActors();
 
   debug()
-  let app = new SetupApplication().render(true);
+  let app = new SetupApplication();
+  app.render(true);
+  console.warn('tabs', app._tabs);
 
   /*
   for (let actor of actors) {

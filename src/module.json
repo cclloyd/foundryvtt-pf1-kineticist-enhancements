@@ -8,6 +8,7 @@
   "compatibleCoreVersion": "0.8.8",
   "scripts": [],
   "esmodules": ["module/pf1-kineticist-enhancements.js"],
+  "styles": ["styles/pf1-kineticist-enhancements.css"],
   "packs": [],
   "dependencies": [],
   "languages": [

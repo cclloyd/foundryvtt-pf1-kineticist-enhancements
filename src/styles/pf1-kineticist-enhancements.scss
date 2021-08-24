@@ -3,9 +3,12 @@
 /* This is your Sass entry file */
 /* ---------------------------- */
 
-.ke-setup-body {
+.ke-setup-container {
   color: red;
   h1 {
     color: green;
+  }
+  .ke-button {
+    background-color: rgba(0,0,0,.1);
   }
 }
