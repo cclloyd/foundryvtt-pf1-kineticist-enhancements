@@ -19,9 +19,9 @@
     }
   ],
   "socket": false,
-  "url": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements",
-  "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements/-/raw/alpha/src/module.json",
-  "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhnacements/-/jobs/1505433506/artifacts/download",
+  "url": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements",
+  "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/raw/alpha/src/module.json",
+  "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/jobs/1505433506/artifacts/download",
   "license": "MIT",
   "system": [],
   "library": false

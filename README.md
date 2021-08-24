@@ -15,7 +15,7 @@ Add your installation instructions here.
   - Run `yarn build`
 - To develop:
   - Create a folder named `dist` in the project root.
-  - Create a symlink/shortcut from the `dist` folder to your foundry's module directory and name the linked folder `pf1-kineticist-enhnacements`
+  - Create a symlink/shortcut from the `dist` folder to your foundry's module directory and name the linked folder `pf1-kineticist-enhancements`
     - Windows default: `%LocalAppData%\FoundryVTT\Data\modules`
     - Linux default: `~/.local/share/FoundryVTT/Data/modules`
   - Run `yarn watch` (this will watch the src directory for changes and automatically rebuild changes live)

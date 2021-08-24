@@ -1,11 +1,10 @@
 
 .ke-setup-container {
-  color: red;
-  h1 {
-    color: cyan !important;
-  }
+  color: red !important;
+
 
 }
+
 
 .ke-button {
   background-color: rgba(0,0,0,.1);
@@ -14,4 +13,10 @@
 
 #ke-blasts-config {
 
+}
+
+#pf1-kineticist-enhancements_setup {
+    h1, h3 {
+        color: cyan !important;
+    }
 }
