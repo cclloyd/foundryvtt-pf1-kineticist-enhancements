@@ -21,7 +21,7 @@
     "socket": false,
     "url": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements",
     "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/raw/alpha/src/module.json",
-    "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/jobs/1505433506/artifacts/download",
+    "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/archive/alpha/pf1-kineticist-enhancements-master.zip?path=src",
     "license": "MIT",
     "system": [],
     "library": false
