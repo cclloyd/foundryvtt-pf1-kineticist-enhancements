@@ -1,4 +1,4 @@
-image: node:14.16.1
+image: node:16.10.0
 
 cache:
   paths:
@@ -14,7 +14,7 @@ stages:
 
 fetch-semantic-version:
   # Requires Node >= 10.13 version
-  image: node:13
+  image: node:16.10.0
   stage: fetch-version
   only:
     refs:
