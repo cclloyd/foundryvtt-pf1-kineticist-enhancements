@@ -1,10 +1,10 @@
 import { ns } from '../lib/config';
 import { getSimpleBlasts, jquery } from '../lib/common';
-import { BlastConfigApplication } from './BlastConfigApplication';
 
-export class SetupApplication extends Application {
+export class BlastConfigApplication extends FormApplication {
     constructor(options = {}) {
         super(options);
+        //if (options.actor) {}
     }
 
     /**
@@ -15,13 +15,12 @@ export class SetupApplication extends Application {
      */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
-            id: `${ns}_setup`,
+            id: `blast-config-form`,
             classes: [ns],
-            template: `modules/${ns}/templates/setup.hbs`,
+            template: `modules/${ns}/templates/blastconfig.hbs`,
             width: 700,
             height: 600,
-            title: 'Kineticist Enhanced Setup',
-            tabs: [{ navSelector: '.ke-setup-tabs', contentSelector: '.ke-setup-body', initial: 'blastconfig' }],
+            title: 'Kineticist Enhanced Blast Configuration',
         });
     }
 
@@ -43,16 +42,16 @@ export class SetupApplication extends Application {
     getData() {
         return foundry.utils.mergeObject(super.getData(), {
             blasts: getSimpleBlasts(),
+            compositeblasts: this.getCompositeBlasts(),
         });
     }
 
-    getCompositeBlasts(html, arg1, arg2) {
-        console.log(this, html, arg1, arg2);
-        return this;
+    saveSimpleBlasts() {
+        return [];
     }
 
-    static openBlastConfiguration() {
-        new BlastConfigApplication().render(true);
+    getCompositeBlasts() {
+        return [];
     }
 
     /**
@@ -64,6 +63,17 @@ export class SetupApplication extends Application {
      */
     activateListeners(html) {
         super.activateListeners(html);
-        html.on(jquery.click, '.blasts-config-open', SetupApplication.openBlastConfiguration);
+
+        html.on(jquery.click, '.save-simple-button', this.saveSimpleBlasts);
+    }
+
+    async _updateObject(event, formData) {
+        console.log('event', event);
+        console.log('formData', formData);
+
+        for (let key of Object.keys(formData)) {
+            console.log('actor', formData[key]);
+            console.log(game);
+        }
     }
 }

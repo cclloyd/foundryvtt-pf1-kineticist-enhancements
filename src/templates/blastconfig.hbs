@@ -1,0 +1,41 @@
+<form id="blast-config-form">
+    <div id="ke-blasts-config">
+        <h3>Select your blasts that you have.</h3>
+        <table>
+            <tr>
+                <th>Simple Blasts</th>
+                <th>Composite Blasts</th>
+                <th>Infusions</th>
+            </tr>
+            <tr>
+                <td>
+                    {{#each blasts}}
+                        <div>
+                            <label>
+                                <input type="checkbox" name="{{id}}" id="simple_{{id}}" value="{{id}}"/>
+                                {{name}}
+                            </label>
+                        </div>
+                    {{/each}}
+                    <button class="ke-button save-simple-button"><i class="fas fa-solid fa-undo"></i>Save Simple Blasts</button>
+                </td>
+                <td>
+                    {{#each compositeblasts}}
+                        <div>
+                            <label>
+                                <input type="checkbox" name="{{id}}" id="simple_{{id}}" value="{{id}}"/>
+                                {{name}}
+                            </label>
+                        </div>
+                    {{/each}}
+                </td>
+                <td> </td>
+            </tr>
+        </table>
+        <button type="submit">Submit</button>
+
+
+</div>
+</form>
+
+
