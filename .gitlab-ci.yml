@@ -56,7 +56,7 @@ build:
       - templates/
 
 release:
-  image: node:13
+  image: node:16.10.0
   stage: release
   only:
     refs:
