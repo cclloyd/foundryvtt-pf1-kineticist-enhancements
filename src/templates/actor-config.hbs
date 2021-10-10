@@ -1,0 +1,36 @@
+<form id="ke-actor-config">
+
+<div>
+    <h1>{{actor.data.name}}</h1>
+    <table>
+        <tr>
+            <th>Simple Blasts</th>
+            <th>Composite Blasts</th>
+        </tr>
+        <tr>
+            <td>
+                <form id="simple-blasts">
+                {{#each blasts.simple}}
+                    <div>
+                        <label>
+                            <input type="checkbox" name="simple-{{blast.id}}" id="simple-{{blast.id}}" value="{{blast.id}}" {{isOwned}}/>
+                            {{blast.name}}
+                        </label>
+                    </div>
+                {{/each}}
+                    <button class="ke-button save-simple-button" type="submit"><i class="fas fa-solid fa-undo"></i>Save Simple Blasts</button>
+                </form>
+            </td>
+            <td>
+                <ul>
+                    {{#each blasts.composite}}
+                        <li>{{blast.name}}</li>
+                    {{/each}}
+                </ul>
+            </td>
+        </tr>
+    </table>
+</div>
+</form>
+
+

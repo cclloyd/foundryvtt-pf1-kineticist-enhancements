@@ -43,6 +43,7 @@ export class BlastConfigApplication extends FormApplication {
         return foundry.utils.mergeObject(super.getData(), {
             blasts: getSimpleBlasts(),
             compositeblasts: this.getCompositeBlasts(),
+            kineticists: this.getKineticistActors(),
         });
     }
 

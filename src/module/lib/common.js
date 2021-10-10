@@ -1,4 +1,4 @@
-import { config } from './config';
+import { config, ns } from './config';
 
 export const sleep = (time) => {
     return new Promise((resolve) => setTimeout(resolve, time));
@@ -20,6 +20,48 @@ export const getSimpleBlasts = () => {
         blasts.push(config.blasts.simple[key]);
     }
     return blasts;
+};
+
+export const getCompositeBlasts = (simpleBlasts) => {
+    const all = config.blasts.composite;
+    const possible = [];
+    for (let b in all) {
+        let match1 = false;
+        let match2 = false;
+        let match3 = false;
+        for (let s of simpleBlasts) {
+            if (s === all[b].blast1) match1 = true;
+            if (s === all[b].blast2) match2 = true;
+            if (all[b].blast3 === null || s === all[b].blast3) match3 = true;
+        }
+        if (match1 && match2 && match3) possible.push(all[b]);
+    }
+    return possible;
+};
+
+export const getAllBlastsFromActor = (actor) => {
+    const allSimple = getSimpleBlasts();
+    const ownedSimple = [];
+
+    let owned = actor.getFlag(ns, 'simpleBlasts');
+    if (owned === undefined) owned = [];
+    for (let blast of allSimple) {
+        let isOwned = false;
+        for (let b of owned) {
+            if (b === blast.id) {
+                isOwned = true;
+                break;
+            }
+        }
+        if (isOwned) ownedSimple.push(blast);
+    }
+
+    const allComposite = getCompositeBlasts(owned);
+
+    return {
+        simple: ownedSimple,
+        composite: allComposite,
+    };
 };
 
 /**

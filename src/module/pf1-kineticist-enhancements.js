@@ -16,6 +16,9 @@ import { preloadTemplates } from './lib/preloadTemplates.js';
 import { ns } from './lib/config.js';
 import { debug, getAllPlayersActors, sleep } from './lib/common';
 import { SetupApplication } from './models/SetupApplication';
+import { BlastConfigApplication } from './models/BlastConfigApplication';
+import { ApplicationActorConfig } from './models/ApplicationActorConfig';
+import { ApplicationActorSelection } from './models/ApplicationActorSelection';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -41,7 +44,7 @@ Hooks.once('setup', async () => {
 Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {
     if (data.actor.getFlag(ns, 'firstSetupCompleted') !== true) {
         console.debug('Doing first setup', data.actor);
-        new SetupApplication().render(true);
+        //new SetupApplication().render(true);
 
         //const items = data.actor.getEmbeddedDocument('Energy Kinetic Blast');
         //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
@@ -71,13 +74,15 @@ Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {
 
 // When ready
 Hooks.once('ready', async () => {
-    await sleep(500);
-    let actors = await getAllPlayersActors();
+    //await sleep(500);
+    //let actors = await getAllPlayersActors();
 
-    debug();
-    let app = new SetupApplication();
+    //debug();
+    //let app = new SetupApplication();
+    //let app = new BlastConfigApplication();
+    let app = new ApplicationActorSelection();
     app.render(true);
-    console.warn('tabs', app._tabs);
+    //console.warn('tabs', app._tabs);
 
     /*
   for (let actor of actors) {

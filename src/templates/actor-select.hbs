@@ -1,0 +1,22 @@
+<div id="ke-actor-select">
+    {{#each kineticists}}
+        <div class="ke-actor" id="ke-actor-select-{{data._id}}">
+            <table>
+                <tr>
+                    <td>
+                        <img src="{{data.img}}" alt="{{data.name}}" class="ke-avatar"/>
+                    </td>
+                    <td>
+                        <h1>{{data.name}}</h1>
+                        <p>
+                            <b>Level: </b>{{data.data.classes.kineticist.level}}; <b>Type:</b> {{data.type}}
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <button class="ke-button do-attack" id="ke-actor-select-{{data._id}}-attack"><i class="fas fa-solid fa-undo"></i>Do Attack {{data.name}}</button>
+    {{/each}}
+</div>
+
+
