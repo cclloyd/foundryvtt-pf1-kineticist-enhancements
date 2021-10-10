@@ -50,22 +50,25 @@ export class ApplicationBlastAttack extends FormApplication {
     }
 
     _updateObject(event, formData) {
-        console.debug('formData', formData);
         const lvl = this.actor.data.data.classes.kineticist.level;
 
         //const items = this.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
+
+        const features = this.actor.items.filter((o) => {
+            return o.data._id === 'Nn63UQXMCSpziqer';
+        });
+
         const items = this.actor.items.filter((o) => {
             return o.type === 'feat';
         });
         console.log(items);
-        console.log('actor', this.actor);
+        //game.pf1.createEmbeddedDocuments()
         let item = this.actor.createEmbeddedDocuments('Item', [
             {
-                type: 'pf1.Item',
+                type: 'feat',
                 name: 'KE Managed Blast',
             },
         ]);
-        console.log('new item', item);
 
         renderTemplate(`modules/${ns}/templates/partials/blast-attack-card.hbs`, {
             actor: this.actor,
