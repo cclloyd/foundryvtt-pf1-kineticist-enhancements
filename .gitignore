@@ -14,6 +14,7 @@ npm-debug.log
 !.yarn/sdks
 !.yarn/versions
 .pnp.*
+*.log
 
 # Local configuration
 foundryconfig.json

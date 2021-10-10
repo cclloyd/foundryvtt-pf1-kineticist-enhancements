@@ -18,7 +18,7 @@ export class BlastConfigApplication extends FormApplication {
             id: `blast-config-form`,
             classes: [ns],
             template: `modules/${ns}/templates/blastconfig.hbs`,
-            width: 700,
+            width: 800,
             height: 600,
             title: 'Kineticist Enhanced Blast Configuration',
         });
