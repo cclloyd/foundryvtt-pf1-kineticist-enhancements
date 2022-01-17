@@ -12,6 +12,7 @@ export async function preloadTemplates() {
         'actor-select.hbs',
         'blast-attack.hbs',
         'blast-attack-card.hbs',
+        'hud.hbs',
     ];
     return loadTemplates(templatePaths.map((t) => `modules/${ns}/templates/${t}`));
 }

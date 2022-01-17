@@ -27,3 +27,5 @@ dist
 
 # Junit results
 junit.xml
+*.env
+env

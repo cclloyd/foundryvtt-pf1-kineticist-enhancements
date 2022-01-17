@@ -1,13 +1,10 @@
 import { ns } from '../lib/config';
-import { getSimpleBlasts, getCompositeBlasts, jquery } from '../lib/common';
+import { getCompositeBlasts, getSimpleBlasts } from '../lib/common';
 
 export class ApplicationActorConfig extends FormApplication {
-    constructor(options = {}) {
-        const { actor, ...other } = options;
-        super(other);
-        if (actor) this.actor = actor;
-        CONFIG.debug.hooks = false;
-        console.log('this', this);
+    constructor(options = {}, actor = null) {
+        super(options);
+        this.actor = actor;
     }
 
     /**

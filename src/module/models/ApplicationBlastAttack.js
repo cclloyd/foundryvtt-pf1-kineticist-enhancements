@@ -1,6 +1,9 @@
-import { ns } from '../lib/config';
-import { getAllBlastsFromActor, getSimpleBlasts, jquery } from '../lib/common';
-import { ApplicationActorConfig } from './ApplicationActorConfig';
+import { defaultBlasts, ns } from '../lib/config';
+import { defaultCompositeTransform, getCompositeBlasts, getSimpleBlasts } from '../lib/common';
+import { compositeEnergy, compositePhysical, simpleEnergy, simplePhysical } from '../lib/blastData/simple';
+import { metaActions } from '../lib/blastData/metaActions';
+import { formInfusions } from '../lib/blastData/formInfusionConfig';
+import { wildTalents } from '../lib/blastData/wildTalents';
 
 export class ApplicationBlastAttack extends FormApplication {
     constructor(options = {}) {
@@ -42,47 +45,181 @@ export class ApplicationBlastAttack extends FormApplication {
      * @see https://foundryvtt.com/api/FormApplication.html#getData
      */
     getData() {
-        const blasts = getAllBlastsFromActor(this.actor);
+        const simple = getSimpleBlasts();
         return foundry.utils.mergeObject(super.getData(), {
-            blasts: blasts,
+            simple: simple,
+            composite: getCompositeBlasts(simple),
             actor: this.actor,
         });
     }
 
+    async getOrCreateManagedBlast() {
+        const managedID = this.actor.getFlag(ns, 'managedBlast');
+        if (managedID === undefined) {
+            const oldItems = this.actor.items.filter((o) => o.data.name === 'KE Managed Blast');
+            const oldIDs = [];
+            for (let i of oldItems) oldIDs.push(i.data._id);
+            await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
+            const newItem = (await this.actor.createEmbeddedDocuments('Item', [simplePhysical]))[0];
+            this.actor.setFlag(ns, 'managedBlast', newItem.data._id);
+            return newItem;
+        } else {
+            let blastItem = this.actor.items.filter((o) => o.data._id === managedID)[0];
+            if (blastItem) {
+                return blastItem;
+            } else {
+                const oldItems = this.actor.items.filter((o) => o.data.name === 'KE Managed Blast');
+                const oldIDs = [];
+                for (let i of oldItems) oldIDs.push(i.data._id);
+                await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
+                const newItem = (await this.actor.createEmbeddedDocuments('Item', [simplePhysical]))[0];
+                this.actor.setFlag(ns, 'managedBlast', newItem.data._id);
+                return newItem;
+            }
+        }
+    }
+
+    async _asyncUpdateObject(event, formData) {
+        /*
+        for (let item of this.actor.items) {
+            item.unsetFlag(ns, 'managedBlast');
+        }
+        this.actor.unsetFlag(ns, 'managedBlast');
+
+         */
+        let blastItem = await this.getOrCreateManagedBlast(formData['blast']);
+        // Get blast config from module config
+        let blastConfig = defaultBlasts.filter((o) => o.id === formData['blast'])[0];
+        console.log('blastConfig', blastConfig);
+
+        let blastData = blastItem.toObject();
+        console.log('Start of blastData mutation', blastData);
+        let baseBlast;
+        if (blastConfig.class === 'simple') {
+            if (blastConfig.type === 'energy') baseBlast = simpleEnergy;
+            else baseBlast = simplePhysical;
+        } else {
+            if (blastConfig.type === 'energy') baseBlast = compositeEnergy;
+            else baseBlast = compositePhysical;
+        }
+        console.log('baseBlast', baseBlast);
+
+        // Merge template item with blast config data
+        blastData = foundry.utils.mergeObject(blastData, baseBlast);
+        // Merge template item with data based on form input
+        blastData = foundry.utils.mergeObject(blastData, {
+            name: `${blastConfig.name}`,
+            img: blastConfig.icon,
+        });
+
+        blastData.data.attackNotes = [];
+
+        // TODO: Create pipeline of functions that accept blastData, formData as input and output modified blastData
+        // Base simple blast
+        let BASE = ['ceil(@classes.kineticist.level /2)d6', 'Simple'];
+        // Elemental Overflow
+        let EO = ['(min(@resources.burn.value, floor(@classes.kineticist.level /3))*2)', 'Elemental Overflow'];
+        // Physical blast bonus
+        let PB = ['@classes.kineticist.level', 'Physical blast'];
+        // Array of damage parts in the form of [str:damage string, str:description]
+        let dmgParts = [BASE];
+
+        // Add physical bonus
+        if (blastConfig.type === 'physical') {
+            dmgParts.push(PB);
+            blastData.data.attackNotes.push(`Not Touch Attack`);
+        } else {
+            blastData.data.attackNotes.push(`Touch Attack`);
+        }
+
+        // Add elemental overflows
+        dmgParts.push(EO);
+
+        // Apply custom transform function if found (mainly used for special composite blasts)
+        if (blastConfig.transform) {
+            [dmgParts, blastData] = blastConfig.transform(dmgParts, blastData, blastConfig, formData);
+        } else if (blastConfig.class === 'composite') {
+            [dmgParts, blastData] = defaultCompositeTransform(dmgParts, blastData, blastConfig, formData);
+        }
+
+        // Get form infusion from form
+        let formInfusionId = null;
+        for (let key of Object.keys(formData)) {
+            if (key.startsWith('form-') && formData[key] === true) {
+                formInfusionId = key.slice(5);
+                break;
+            }
+        }
+
+        // Run form infusion transformation
+        let formInfusion;
+        if (formInfusionId) {
+            formInfusion = formInfusions[formInfusionId];
+            [dmgParts, blastData] = formInfusion.transform(this, dmgParts, blastData, blastConfig, formData);
+        }
+
+        // Apply changes to name
+        // TODO: Add substance infusion name mutations
+        if (formInfusion) {
+            if (formInfusion.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
+            if (formInfusion.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
+            if (!formInfusion.noBlastText) blastData.name += ' Blast';
+        }
+        if (!formInfusion) {
+            blastData.name += ' Blast';
+        }
+
+        // Apply metakinesis
+        for (let key of Object.keys(formData)) {
+            // If the key starts with meta and the key is checked
+            if (key.startsWith('meta-') && formData[key] === true) {
+                // Run blastData through the meta action
+                [dmgParts, blastData] = metaActions[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
+            }
+        }
+
+        // Apply wild talents
+        let talentIDs = this.actor.getFlag(ns, 'wildTalents');
+        for (let talentId of talentIDs) {
+            let t = wildTalents[talentId];
+            if (t.transformBlast) t.transformBlast(dmgParts, blastData, blastConfig, formData);
+        }
+
+        // Build damage string
+        let damage = `${dmgParts[0][0]}`;
+        if (dmgParts.length > 1) {
+            for (let p of dmgParts.slice(1)) {
+                damage += ` + ${p[0]}[${p[1]}]`;
+            }
+        }
+
+        // Set damage string
+        blastData.data.damage.parts[0] = [damage, blastConfig.damageName];
+
+        console.log('End of blastData mutation', blastData);
+
+        // Create new item from data
+        const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData]))[0];
+        console.log('newBlast', newBlast);
+
+        // Pull up the dialog to use the blast
+        try {
+            await newBlast.use({ skipDialog: false });
+        } catch (err) {
+            //console.log('error rolling', err);
+        }
+        // Delete item after used
+        console.log('Deleting item...', newBlast.data._id);
+        try {
+            await this.actor.deleteEmbeddedDocuments('Item', [newBlast.data._id]);
+            console.log('Deleted item');
+        } catch (err) {
+            console.log('Error deleting item', err);
+        }
+    }
+
     _updateObject(event, formData) {
-        const lvl = this.actor.data.data.classes.kineticist.level;
-
-        //const items = this.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
-
-        const features = this.actor.items.filter((o) => {
-            return o.data._id === 'Nn63UQXMCSpziqer';
-        });
-
-        const items = this.actor.items.filter((o) => {
-            return o.type === 'feat';
-        });
-        console.log(items);
-        //game.pf1.createEmbeddedDocuments()
-        let item = this.actor.createEmbeddedDocuments('Item', [
-            {
-                type: 'feat',
-                name: 'KE Managed Blast',
-            },
-        ]);
-
-        renderTemplate(`modules/${ns}/templates/partials/blast-attack-card.hbs`, {
-            actor: this.actor,
-        }).then((content) => {
-            const messageData = {
-                // CONST.CHAT_MESSAGE_TYPES OTHER: 0, OOC: 1, IC: 2, EMOTE: 3, WHISPER: 4, ROLL: 5
-                type: CONST.CHAT_MESSAGE_TYPES.IC,
-                //content: `${lvl}`,
-                content: content,
-            };
-            //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
-
-            //ChatMessage.create(messageData);
-        });
+        this._asyncUpdateObject(event, formData);
     }
 
     /**

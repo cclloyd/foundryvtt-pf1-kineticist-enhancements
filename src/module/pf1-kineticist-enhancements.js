@@ -4,24 +4,20 @@
  * Change this heading to be more descriptive to your module, or remove it.
  * Author: [your name]
  * Content License: [copyright and-or license] If using an existing system
- * 					you may want to put a (link to a) license or copyright
- * 					notice here (e.g. the OGL).
+ *                    you may want to put a (link to a) license or copyright
+ *                    notice here (e.g. the OGL).
  * Software License: [your license] Put your desired license here, which
- * 					 determines how others may use and modify your module.
+ *                     determines how others may use and modify your module.
  */
 
 // Import JavaScript modules
 import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
-import { ns } from './lib/config.js';
-import { debug, getAllPlayersActors, sleep } from './lib/common';
-import { SetupApplication } from './models/SetupApplication';
-import { BlastConfigApplication } from './models/BlastConfigApplication';
-import { ApplicationActorConfig } from './models/ApplicationActorConfig';
-import { ApplicationActorSelection } from './models/ApplicationActorSelection';
+import { ApplicationActorHUD } from './models/ApplicationActorHUD';
 
 // Initialize module
 Hooks.once('init', async () => {
+    //CONFIG.debug.hooks = true;
     console.log('pf1-kineticist-enhancements | Initializing pf1-kineticist-enhancements');
 
     // Assign custom classes and constants here
@@ -37,53 +33,109 @@ Hooks.once('init', async () => {
 
 // Setup module
 Hooks.once('setup', async () => {
-    // Do anything after initialization but before
-    // ready
+    // Do anything after initialization but before ready
+});
+
+/*
+Hooks.on('getSceneControlButtons', (buttons) => {
+    let tokenButton = buttons.find((button) => button.name === 'token');
+    if (tokenButton) {
+        let tool = {
+            name: 'ke-attack',
+            title: 'Kinetic Blast Attack',
+            layer: 'TokenLayer',
+            icon: 'fas fa-axe',
+            visible: true,
+        };
+        tokenButton.tools.push(tool);
+    }
+});
+
+ */
+
+//Hooks.on('canvasReady', () => {
+//    canvas.stage.on('mousemove', (event) => this.mousemoveListener(event));
+//    this.ruler = canvas.controls._rulers[game.user._id];
+//});
+
+Hooks.on('controlToken', (token, selected) => {
+    console.warn('Controlling token');
+    if (selected) {
+        // Set the correct actor to the buttons
+        if (game.keTokenHUD.actor === null) {
+            game.keTokenHUD.actor = game.actors.get(token.data.actorId);
+        } else if (game.keTokenHUD.actor.data._id !== token.data.actorId) {
+            game.keTokenHUD.actor = game.actors.get(token.data.actorId);
+        }
+        // Set position of the HUD relative to Token Action HUD
+        const elem = $('#token-action-hud');
+        game.keTokenHUD.setPosition({ top: parseInt(elem.css('top')) + 40, left: parseInt(elem.css('left')) });
+
+        // Render the application
+        game.keTokenHUD.render(true);
+    } else {
+        game.keTokenHUD.close().then();
+    }
+});
+
+Hooks.on('canvasReady', async () => {
+    if (!game.keTokenHUD) {
+        game.keTokenHUD = new ApplicationActorHUD({}, game.user);
+    }
+    //CONFIG.debug.hooks = true;
+});
+
+Hooks.on('renderTokenActionHUD', (app, html, data) => {
+    ////CONFIG.debug.hooks = true;
+    //console.warn('Rendering token action hud');
+    //const elem = $('#token-action-hud');
+    //const xPos = parseInt(elem.css('left'));
+    //const yPos = parseInt(elem.css('top'));
+    //console.log('renderTokenActionHUD data', data);
+    ////let hud = {};
+    ////if actor.getFlag();
+    //const hud = new ApplicationActorHUD({
+    //    left: xPos,
+    //    top: yPos + 50,
+    //});
+    //game.keHUD = hud;
 });
 
 Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {
-    if (data.actor.getFlag(ns, 'firstSetupCompleted') !== true) {
-        console.debug('Doing first setup', data.actor);
-        //new SetupApplication().render(true);
+    //if (data.actor.getFlag(ns, 'firstSetupCompleted') !== true) {
+    //console.debug('Doing first setup', data.actor);
+    //new SetupApplication().render(true);
+    //const items = data.actor.getEmbeddedDocument('Energy Kinetic Blast');
+    //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
+    /*
+const items = data.actor.getEmbeddedCollection('Item');
+for (const [key, value] of Object.entries(items)) {
+    if (value.data.name === 'Energy Kinetic Blast')
+    console.log(key, value);
+}*/
+    //console.log('items', items);
+    /*new Dialog({
+    title: "Kineticist Enhancements Setup",
+    content: content,
+    //"<p>Enter the amount you want to heal</p><center><input type='number' id='amountInput'></center><br>",
+    buttons: {
+        submit: {
+            label: "Heal",
+            icon: '<i class="fas fa-medkit"></i>',
+            callback: () => {
 
-        //const items = data.actor.getEmbeddedDocument('Energy Kinetic Blast');
-        //const items = data.actor.getEmbeddedDocument('pf1.Item', 'Energy Kinetic Blast');
-        /*
-    const items = data.actor.getEmbeddedCollection('Item');
-    for (const [key, value] of Object.entries(items)) {
-        if (value.data.name === 'Energy Kinetic Blast')
-        console.log(key, value);
-    }*/
-        //console.log('items', items);
-        /*new Dialog({
-        title: "Kineticist Enhancements Setup",
-        content: content,
-        //"<p>Enter the amount you want to heal</p><center><input type='number' id='amountInput'></center><br>",
-        buttons: {
-            submit: {
-                label: "Heal",
-                icon: '<i class="fas fa-medkit"></i>',
-                callback: () => {
-
-                },
             },
         },
-    }).render(true);*/
-    }
+    },
+}).render(true);*/
+    //}
 });
 
 // When ready
 Hooks.once('ready', async () => {
-    //await sleep(500);
-    //let actors = await getAllPlayersActors();
-
-    //debug();
-    //let app = new SetupApplication();
-    //let app = new BlastConfigApplication();
-    let app = new ApplicationActorSelection();
-    app.render(true);
-    //console.warn('tabs', app._tabs);
-
+    // TODO: Current app hook
+    //let app = new ApplicationActorSelection();
+    //app.render(true);
     /*
   for (let actor of actors) {
     if (Object.keys(actor.data.data.classes).includes('kineticist')) {
