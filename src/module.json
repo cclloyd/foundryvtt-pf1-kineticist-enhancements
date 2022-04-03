@@ -20,7 +20,7 @@
     ],
     "socket": false,
     "url": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements",
-    "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/raw/alpha/src/module.json",
+    "manifest": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/raw/main/src/module.json",
     "download": "https://gitlab.com/cclloyd1/pf1-kineticist-enhancements/-/jobs/CI_COMMIT_TAG/artifacts/download",
     "license": "MIT",
     "system": [],
