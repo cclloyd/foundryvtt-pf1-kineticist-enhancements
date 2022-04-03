@@ -4,9 +4,6 @@ cache:
   paths:
     - node_modules/
 
-before_script:
-  - yarn install
-
 stages:
   - build
   - release
@@ -16,6 +13,7 @@ build:
     - if: $CI_COMMIT_TAG
   stage: build
   script:
+    - yarn install
     - yarn build
     - mv dist/* ./
     - sed -i 's/CI_COMMIT_TAG/$CI_COMMIT_TAG/g' module.json
