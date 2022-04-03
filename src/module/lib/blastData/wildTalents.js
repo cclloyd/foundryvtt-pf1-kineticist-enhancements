@@ -2,6 +2,8 @@
 
 export const wildTalents = {
     'airs-reach': {
+        id: 'airs-reach',
+        name: "Air's Reach",
         transformBlast: (dmgParts, blastData, blastConfig, formData) => {
             if (blastConfig.class === 'simple') {
                 if (blastConfig.name === 'air' || blastConfig.name === 'electric') blastData.data.range.value *= 2;

@@ -40,8 +40,22 @@ export class BlastConfigApplication extends FormApplication {
      * @see https://foundryvtt.com/api/FormApplication.html#getData
      */
     getData() {
+        // Get list of all wild talents and owned wild talents and compare
+        let ownedSimpleIDs = this.actor.getFlag(ns, 'simpleBlasts');
+        // Populate and set flag if not yet defined.
+        if (ownedSimpleIDs === undefined) {
+            this.actor.setFlag(ns, 'simpleBlasts', []);
+            ownedSimpleIDs = [];
+        }
+        // Set owned talents
+        let allSimpleBlasts = getSimpleBlasts();
+        let ownedSimpleBlasts = [];
+        for (let key of Object.keys(allSimpleBlasts)) {
+            if (ownedSimpleIDs.indexOf(allSimpleBlasts[key].id) > -1) ownedSimpleBlasts.push(allSimpleBlasts[key]);
+        }
+
         return foundry.utils.mergeObject(super.getData(), {
-            blasts: getSimpleBlasts(),
+            blasts: ownedSimpleBlasts,
             compositeblasts: this.getCompositeBlasts(),
             kineticists: this.getKineticistActors(),
         });

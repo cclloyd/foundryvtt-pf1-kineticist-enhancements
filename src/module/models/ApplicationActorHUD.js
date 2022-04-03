@@ -1,6 +1,7 @@
 import { ns } from '../lib/config';
 import { ApplicationBlastAttack } from './ApplicationBlastAttack';
 import { ApplicationActorConfig } from './ApplicationActorConfig';
+import { jquery } from '../lib/common';
 
 export class ApplicationActorHUD extends Application {
     constructor(options = {}, user = null, actor = null) {
@@ -23,8 +24,6 @@ export class ApplicationActorHUD extends Application {
             template: `modules/${ns}/templates/hud.hbs`,
             width: 200,
             height: 40,
-            //left: 150,
-            //top: 80,
             background: 'none',
             popOut: false,
             minimizable: false,
@@ -52,20 +51,27 @@ export class ApplicationActorHUD extends Application {
      * @see https://foundryvtt.com/api/FormApplication.html#getData
      */
     getData() {
+        const buttons = [
+            {
+                id: 'ke-button-actorconfig',
+                classes: [],
+                text: 'Configs',
+            },
+        ];
+        if (this.actor.getFlag(ns, 'firstSetupCompleted')) {
+            buttons.push(
+                ...[
+                    {
+                        id: 'ke-button-attack',
+                        classes: [],
+                        text: 'Blast Attack',
+                    },
+                ],
+            );
+        }
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
-            buttons: [
-                {
-                    id: 'ke-button-actorconfig',
-                    classes: [],
-                    text: 'Config',
-                },
-                {
-                    id: 'ke-button-attack',
-                    classes: [],
-                    text: 'Blast Attack',
-                },
-            ],
+            buttons: buttons,
         });
     }
 
@@ -91,8 +97,7 @@ export class ApplicationActorHUD extends Application {
      */
     activateListeners(html) {
         super.activateListeners(html);
-
-        html.click('#ke-button-actorconfig', () => this.doActorConfig(this.actor));
-        html.click('#ke-button-attack', () => this.doAttack(this.actor));
+        html.on(jquery.click, '#ke-button-actorconfig', void 0, () => this.doActorConfig(this.actor));
+        html.on(jquery.click, '#ke-button-attack', void 0, () => this.doAttack(this.actor));
     }
 }

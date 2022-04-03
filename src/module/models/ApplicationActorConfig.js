@@ -1,5 +1,6 @@
 import { ns } from '../lib/config';
-import { getCompositeBlasts, getSimpleBlasts } from '../lib/common';
+import { getSimpleBlasts } from '../lib/common';
+import { wildTalents } from '../lib/blastData/wildTalents';
 
 export class ApplicationActorConfig extends FormApplication {
     constructor(options = {}, actor = null) {
@@ -63,53 +64,41 @@ export class ApplicationActorConfig extends FormApplication {
             ownedSimple[blast] = true;
         }
 
-        const composite = getCompositeBlasts(owned);
-        owned = this.actor.getFlag(ns, 'compositeBlasts');
-        if (owned === undefined) owned = [];
-        const allComposite = [];
-        for (let blast of composite) {
-            let isOwned = false;
-            for (let b of owned) {
-                if (b === blast.id) {
-                    isOwned = true;
-                    break;
-                }
-            }
-            allComposite.push({
-                blast: blast,
-                isOwned: isOwned ? 'checked' : '',
-            });
+        // Get list of all wild talents and owned wild talents and compare
+        let ownedTalents = this.actor.getFlag(ns, 'wildTalents');
+        // Populate and set flag if not yet defined.
+        if (ownedTalents === undefined) {
+            this.actor.setFlag(ns, 'wildTalents', []);
+            ownedTalents = [];
         }
-        console.log('allComposite', allComposite);
-
-        const blasts = {
-            simple: allSimple,
-            composite: allComposite,
-        };
-
-        console.log('composite', composite);
+        // Set owned talents
+        let allTalents = wildTalents;
+        for (let key of Object.keys(allTalents)) {
+            allTalents[key].isOwned = ownedTalents.indexOf(allTalents[key].id) > -1 ? 'checked' : '';
+        }
 
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
-            blasts: blasts,
+            simpleBlasts: allSimple,
+            wildTalents: allTalents,
         });
     }
 
-    saveSimpleBlasts() {}
-
     _updateObject(event, formData) {
         console.debug('formData', formData);
-        let blasts = [];
-        for (let key in formData) {
-            if (key.startsWith('simple-')) {
-                blasts.push(key);
-            }
-        }
+        // Save simple blasts
         const simpleBlasts = [];
-        for (let key of blasts) {
-            if (formData[key]) simpleBlasts.push(key.substring(7));
-        }
+        for (let key in formData) if (key.startsWith('simple-') && formData[key]) simpleBlasts.push(key.substring(7));
         this.actor.setFlag(ns, 'simpleBlasts', simpleBlasts);
+
+        // Save wild talents
+        const talents = [];
+        for (let key in formData) if (key.startsWith('talent-') && formData[key]) talents.push(key.substring(7));
+        this.actor.setFlag(ns, 'wildTalents', talents);
+
+        // Mark actor setup completed if not setup before
+        if (!this.actor.getFlag(ns, 'firstSetupCompleted')) this.actor.setFlag(ns, 'firstSetupCompleted', true);
+        // TODO: Application requires you to unselect token once to refresh after configuring for first time.
     }
 
     /**

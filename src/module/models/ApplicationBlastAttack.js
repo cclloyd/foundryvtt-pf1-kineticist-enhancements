@@ -23,8 +23,8 @@ export class ApplicationBlastAttack extends FormApplication {
             id: `ke-blast-attack`,
             classes: [ns],
             template: `modules/${ns}/templates/blast-attack.hbs`,
-            width: 400,
-            height: 500,
+            width: 600,
+            height: 400,
             title: 'Kinetic Blast Attack',
         });
     }
@@ -45,12 +45,42 @@ export class ApplicationBlastAttack extends FormApplication {
      * @see https://foundryvtt.com/api/FormApplication.html#getData
      */
     getData() {
-        const simple = getSimpleBlasts();
+        // Get list of all wild talents and owned wild talents and compare
+        let ownedSimpleIDs = this.actor.getFlag(ns, 'simpleBlasts');
+        // Populate and set flag if not yet defined.
+        if (ownedSimpleIDs === undefined) {
+            this.actor.setFlag(ns, 'simpleBlasts', []);
+            ownedSimpleIDs = [];
+        }
+        // Set owned talents
+        let allSimpleBlasts = getSimpleBlasts();
+        let ownedSimpleBlasts = [];
+        for (let key of Object.keys(allSimpleBlasts)) {
+            if (ownedSimpleIDs.indexOf(allSimpleBlasts[key].id) > -1) ownedSimpleBlasts.push(allSimpleBlasts[key]);
+        }
+
+        // Get list of all form infusions and owned form infusions and compare
+        let ownedFormIDs = this.actor.getFlag(ns, 'formInfusions');
+        // Populate and set flag if not yet defined.
+        if (ownedFormIDs === undefined) {
+            this.actor.setFlag(ns, 'formInfusions', []);
+            ownedFormIDs = [];
+        }
+        // Set owned form infusions
+        let allFormInfusions = formInfusions;
+        let ownedFormInfusions = [];
+        for (let key of Object.keys(allFormInfusions)) {
+            if (ownedFormIDs.indexOf(key) > -1) ownedFormInfusions.push(allFormInfusions[key]);
+        }
+
         return foundry.utils.mergeObject(super.getData(), {
-            simple: simple,
-            composite: getCompositeBlasts(simple),
+            simple: ownedSimpleBlasts,
+            formInfusions: ownedFormInfusions,
+            composite: getCompositeBlasts(ownedSimpleBlasts),
             actor: this.actor,
         });
+        // TODO: name on final attack is not changing with form infusion
+        // TODO: Add substance infusion (as effect notes, saves, etc)
     }
 
     async getOrCreateManagedBlast() {
@@ -144,8 +174,9 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Get form infusion from form
         let formInfusionId = null;
+        console.log('formData', formData);
         for (let key of Object.keys(formData)) {
-            if (key.startsWith('form-') && formData[key] === true) {
+            if (key.startsWith('form') && formData[key] === true) {
                 formInfusionId = key.slice(5);
                 break;
             }
@@ -154,12 +185,14 @@ export class ApplicationBlastAttack extends FormApplication {
         // Run form infusion transformation
         let formInfusion;
         if (formInfusionId) {
+            // TODO: If key exists in formInfusions, set formInfusion=formInfusions[form-key]
             formInfusion = formInfusions[formInfusionId];
             [dmgParts, blastData] = formInfusion.transform(this, dmgParts, blastData, blastConfig, formData);
         }
 
         // Apply changes to name
         // TODO: Add substance infusion name mutations
+        console.log('working form infusion', formInfusion);
         if (formInfusion) {
             if (formInfusion.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
             if (formInfusion.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;

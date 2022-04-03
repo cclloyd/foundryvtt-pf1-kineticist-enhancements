@@ -1,92 +1,77 @@
 <form id="ke-blast-attack">
-    <div>
-        <h2>Choose a blast</h2>
-        <table>
-            <tr>
-                <th>Simple Blasts</th>
-                <th>Composite Blasts</th>
-            </tr>
-            <tr>
-                <td>
-                    {{#each simple}}
-                        <div>
-                            <label>
-                                <input type="radio" name="blast" id="{{id}}" value="{{id}}" />
-                                {{name}}
-                            </label>
-                        </div>
-                    {{/each}}
-                </td>
-                <td>
-                    {{#each composite}}
-                        <div>
-                            <label>
-                                <input type="radio" name="blast" id="{{id}}" value="{{id}}" />
-                                {{name}}
-                            </label>
-                        </div>
-                    {{/each}}
-                </td>
-            </tr>
-        </table>
+    <div style="display: flex;">
+        <div style="margin-right: 5px;">
+            <h2>Choose a blast</h2>
+            <table>
+                <tr>
+                    <th colspan="2">Simple Blasts</th>
+                </tr>
+                {{#each simple}}
+                    <tr>
+                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" />
+                        <td><label>{{name}}</label></td>
+                        </td>
+                    </tr>
+                {{/each}}
 
-        <div style="height: 20px; width: 1px;"></div>
-        <h2>Apply Metakinesis</h2>
-        <label>
-            <input type="checkbox" name="meta-maximize" id="meta-maximize" />
-            Maximize
-        </label>
-        <label>
-            <input type="checkbox" name="meta-empower" id="meta-empower" />
-            Empower
-        </label>
-        <label>
-            <input type="checkbox" name="meta-quicken" id="meta-quicken" />
-            Quicken
-        </label>
-        <label>
-            <input type="checkbox" name="meta-twice" id="meta-twice" />
-            Twice
-        </label>
-
-
-        <div style="height: 20px; width: 1px;"></div>
-        <h2>Apply Form Infusion</h2>
-        <label>
-            <input type="checkbox" name="form-long-range" id="form-long-range" />
-            Long Range (1)
-        </label>
-        <label>
-            <input type="checkbox" name="form-flurry" id="form-flurry" />
-            Flurry of Blasts (2)
-        </label>
-        <label>
-            <input type="checkbox" name="form-blade" id="form-blade" />
-            Blade
-        </label>
-        <label>
-            <input type="checkbox" name="form-whip" id="form-whip" />
-            Whip
-        </label>
-
-
-        <div style="height: 20px; width: 1px;"></div>
-        <h2>Apply Substance Infusion</h2>
-        <label>
-            <input type="checkbox" name="substance-thundering" id="substance-thundering" />
-            Thundering (1)
-        </label>
-        <label>
-            <input type="checkbox" name="substance-synaptic" id="substance-synaptic" />
-            Synaptic (3)
-        </label>
-
-
-        <div style="text-align: center; margin-top: 30px;">
-            <button class="ke-button roll-blast-attack-button" type="submit"><i class="fas fa-solid fa-undo"></i>Roll
-                attack
-            </button>
+                <tr>
+                    <th colspan="2">Composite Blasts</th>
+                </tr>
+                {{#each composite}}
+                    <tr>
+                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" />
+                        <td><label>{{name}}</label></td>
+                        </td>
+                    </tr>
+                {{/each}}
+            </table>
         </div>
+
+        <div style="margin-right: 5px;">
+            <h2>Apply Metakinesis</h2>
+            <table>
+                <tr>
+                    <th colspan="2">Metakinesis</th>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="meta-maximize" id="meta-maximize" value="meta-maximize" />
+                    <td><label>Maximize</label></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="meta-empower" id="meta-empower" value="meta-empower" />
+                    <td><label>Empower</label></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="meta-quicken" id="meta-quicken" value="meta-quicken" />
+                    <td><label>Quicken</label></td>
+                </tr>
+                <tr>
+                    <td><input type="checkbox" name="meta-twice" id="meta-twice" value="meta-twice" />
+                    <td><label>Twice</label></td>
+                </tr>
+            </table>
+        </div>
+
+        <div style="margin-right: 5px;">
+            <h2>Apply A Form Infusion</h2>
+            <table>
+                {{#each formInfusions}}
+                    <tr>
+                        <td><input type="radio" name="form" id="form-{{id}}" value="{{id}}" />
+                        <td><label>{{name}}</label></td>
+                        </td>
+                    </tr>
+                {{/each}}
+            </table>
+        </div>
+    </div>
+
+
+    <div style="text-align: center; margin-top: 30px;">
+        <button class="ke-button roll-blast-attack-button" type="submit"><i class="fas fa-solid fa-undo"></i>Roll
+            attack
+        </button>
+    </div>
     </div>
 </form>
 
