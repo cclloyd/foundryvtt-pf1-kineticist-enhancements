@@ -18,7 +18,7 @@ build:
     - sed -i "s/CI_COMMIT_TAG/${CI_COMMIT_TAG}/g" dist/module.json
     - mv dist pf1-kineticist-enhancements
     - cp pf1-kineticist-enhancements/module.json ./
-    - zip -q pf1-kineticist-enhancements.zip -r pf1-kineticist-enhancements
+    - zip -q pf1-kineticist-enhancements.zip -r pf1-kineticist-enhancements/*
     - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file pf1-kineticist-enhancements.zip ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/pf1kerelease/${CI_COMMIT_TAG}/pf1-kineticist-enhancements.zip
     - |
