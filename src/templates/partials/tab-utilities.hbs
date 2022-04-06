@@ -1,1 +1,19 @@
-<div>utilities tab content</div>
+<div style="display: flex; justify-content: space-between">
+    <div style="width: 65%; margin: auto">
+
+        <table>
+            <tr>
+                <th colspan="2">Form Infusions</th>
+            </tr>
+
+            {{#each utilityTalents}}
+                <tr>
+                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="utility-{{id}}"
+                                                                        id="utility-{{id}}"
+                                                                        value="{{id}}" {{owned}}/></td>
+                    <td style="text-align: left;"><label for="utility-{{id}}">{{name}}</label>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>

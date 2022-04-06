@@ -7,4 +7,5 @@ module.exports = {
     error: {
         endOfLine: 'crlf',
     },
+    quoteProps: 'as-needed',
 };

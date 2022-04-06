@@ -1,1 +1,16 @@
-<button class="blasts-config-open">Open Blast Configuration</button>
+<div>
+    <p>Check off each simple blast you can use.</p>
+    <table>
+        {{#each simpleBlasts}}
+            <tr>
+                <td style="width: 40px; text-align: center;"><input type="checkbox"
+                                                                    name="simple-{{id}}"
+                                                                    id="simple-{{id}}"
+                                                                    value="{{id}}" {{owned}} />
+                </td>
+                <td style="text-align: left;"><label for="simple-{{id}}">{{name}}</label>
+                </td>
+            </tr>
+        {{/each}}
+    </table>
+</div>

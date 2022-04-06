@@ -1,6 +1,8 @@
 import { ns } from '../lib/config';
-import { getSimpleBlasts } from '../lib/common';
-import { wildTalents } from '../lib/blastData/wildTalents';
+import { formInfusions } from '../lib/generated/formInfusions';
+import { substanceInfusions } from '../lib/generated/substanceInfusions';
+import { simpleBlasts } from '../lib/generated/simpleBlasts';
+import { utilityTalents } from '../lib/generated/utilityTalents';
 
 export class ApplicationActorConfig extends FormApplication {
     constructor(options = {}, actor = null) {
@@ -19,9 +21,12 @@ export class ApplicationActorConfig extends FormApplication {
             id: `ke-actor-config`,
             classes: [ns],
             template: `modules/${ns}/templates/actor-config.hbs`,
-            width: 400,
-            height: 600,
+            popOut: true,
+            resizable: true,
+            width: 500,
+            height: 700,
             title: 'Kineticist Enhanced Actor Configuration',
+            tabs: [{ navSelector: '.ke-setup-tabs', contentSelector: '.ke-setup-body', initial: 'blastsconfig' }],
         });
     }
 
@@ -43,58 +48,77 @@ export class ApplicationActorConfig extends FormApplication {
     getData() {
         let owned = this.actor.getFlag(ns, 'simpleBlasts');
         if (owned === undefined) owned = [];
-        const simple = getSimpleBlasts();
-        const allSimple = [];
-        for (let blast of simple) {
-            let isOwned = false;
-            for (let b of owned) {
-                if (b === blast.id) {
-                    isOwned = true;
-                    break;
-                }
+
+        // Get all simple blasts with `owned = false`
+        const allSimple = Object.entries(simpleBlasts).map((i) => {
+            i[1].owned = '';
+            return i[1];
+        });
+
+        // Set which blasts are owned
+        for (let o of owned) {
+            const index = allSimple.map((e) => e.id).indexOf(o);
+            if (allSimple[index]) {
+                allSimple[index].owned = 'checked';
+                console.log(allSimple[index]);
             }
-            allSimple.push({
-                blast: blast,
-                isOwned: isOwned ? 'checked' : '',
-            });
         }
 
-        let ownedSimple = {};
-        for (let blast of owned) {
-            ownedSimple[blast] = true;
+        // Set owned form infusions
+        let ownedFormInfusions = this.actor.getFlag(ns, 'formInfusions') ?? [];
+        let allFormInfusionTalents = formInfusions;
+        for (let key of Object.keys(allFormInfusionTalents)) {
+            allFormInfusionTalents[key].owned =
+                ownedFormInfusions?.indexOf(allFormInfusionTalents[key].id) > -1 ? 'checked' : '';
         }
 
-        // Get list of all wild talents and owned wild talents and compare
-        let ownedTalents = this.actor.getFlag(ns, 'wildTalents');
-        // Populate and set flag if not yet defined.
-        if (ownedTalents === undefined) {
-            this.actor.setFlag(ns, 'wildTalents', []);
-            ownedTalents = [];
+        // Set owned substance infusions
+        let ownedSubstanceInfusions = this.actor.getFlag(ns, 'substanceInfusions') ?? [];
+        let allSubstanceInfusionTalents = substanceInfusions;
+        for (let key of Object.keys(allSubstanceInfusionTalents)) {
+            allSubstanceInfusionTalents[key].owned =
+                ownedSubstanceInfusions?.indexOf(allSubstanceInfusionTalents[key].id) > -1 ? 'checked' : '';
         }
-        // Set owned talents
-        let allTalents = wildTalents;
-        for (let key of Object.keys(allTalents)) {
-            allTalents[key].isOwned = ownedTalents.indexOf(allTalents[key].id) > -1 ? 'checked' : '';
+
+        // Set owned utility talents
+        let ownedUtilityTalents = this.actor.getFlag(ns, 'utilityTalents') ?? [];
+        let allUtilityTalents = utilityTalents;
+        for (let key of Object.keys(allUtilityTalents)) {
+            allUtilityTalents[key].owned =
+                ownedUtilityTalents?.indexOf(allUtilityTalents[key].id) > -1 ? 'checked' : '';
         }
 
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
             simpleBlasts: allSimple,
-            wildTalents: allTalents,
+            utilityTalents: allUtilityTalents,
+            formInfusions: allFormInfusionTalents,
+            substanceInfusions: allSubstanceInfusionTalents,
         });
     }
 
     _updateObject(event, formData) {
-        console.debug('formData', formData);
+        console.debug('KE formData', formData);
         // Save simple blasts
-        const simpleBlasts = [];
-        for (let key in formData) if (key.startsWith('simple-') && formData[key]) simpleBlasts.push(key.substring(7));
-        this.actor.setFlag(ns, 'simpleBlasts', simpleBlasts);
+        const ownedSimple = [];
+        for (let key in formData) if (key.startsWith('simple-') && formData[key]) ownedSimple.push(key.substring(7));
+        this.actor.setFlag(ns, 'simpleBlasts', ownedSimple);
 
-        // Save wild talents
-        const talents = [];
-        for (let key in formData) if (key.startsWith('talent-') && formData[key]) talents.push(key.substring(7));
-        this.actor.setFlag(ns, 'wildTalents', talents);
+        // Save form infusions
+        const ownedForm = [];
+        for (let key in formData) if (key.startsWith('form-') && formData[key]) ownedForm.push(key.substring(5));
+        this.actor.setFlag(ns, 'formInfusions', ownedForm);
+
+        // Save substance infusions
+        const ownedSubstance = [];
+        for (let key in formData)
+            if (key.startsWith('substance-') && formData[key]) ownedSubstance.push(key.substring(10));
+        this.actor.setFlag(ns, 'substanceInfusions', ownedSubstance);
+
+        // Save utility talents
+        const ownedUtility = [];
+        for (let key in formData) if (key.startsWith('utility-') && formData[key]) ownedUtility.push(key.substring(8));
+        this.actor.setFlag(ns, 'utilityTalents', ownedUtility);
 
         // Mark actor setup completed if not setup before
         if (!this.actor.getFlag(ns, 'firstSetupCompleted')) this.actor.setFlag(ns, 'firstSetupCompleted', true);
@@ -110,5 +134,6 @@ export class ApplicationActorConfig extends FormApplication {
      */
     activateListeners(html) {
         super.activateListeners(html);
+        //html.on(jquery.click, '.save-config-button', this.upd);
     }
 }

@@ -55,7 +55,7 @@ export class ApplicationActorHUD extends Application {
             {
                 id: 'ke-button-actorconfig',
                 classes: [],
-                text: 'Configs',
+                text: 'KE Config',
             },
         ];
         if (this.actor.getFlag(ns, 'firstSetupCompleted')) {
@@ -85,7 +85,8 @@ export class ApplicationActorHUD extends Application {
     }
 
     doActorConfig(actor) {
-        new ApplicationActorConfig({}, this.actor).render(true);
+        let app = new ApplicationActorConfig({}, actor);
+        app.render(true);
     }
 
     /**

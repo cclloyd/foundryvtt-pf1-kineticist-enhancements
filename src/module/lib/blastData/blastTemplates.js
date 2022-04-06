@@ -286,6 +286,18 @@ const baseBlast = {
     },
 };
 
+export const templateSimple = merge(
+    { ...baseBlast },
+    {
+        name: 'KE Managed Blast',
+        img: 'systems/pf1/icons/spells/lighting-sky-1.jpg',
+        data: {
+            identifiedName: 'KE Managed Blast',
+            attackBonus:
+                'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+        },
+    },
+);
 export const simplePhysical = merge(
     { ...baseBlast },
     {

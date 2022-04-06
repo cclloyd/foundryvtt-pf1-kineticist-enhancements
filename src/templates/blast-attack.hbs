@@ -1,65 +1,104 @@
 <form id="ke-blast-attack">
-    <div style="display: flex;">
-        <div style="margin-right: 5px;">
-            <h2>Choose a blast</h2>
-            <table>
+    <div style="display: flex; justify-content: center;">
+        <div class="ke-blast-attack-section">
+            <h2 class="ke-blast-attack-h2">Choose a blast</h2>
+            <table class="ke-attack-table">
                 <tr>
                     <th colspan="2">Simple Blasts</th>
                 </tr>
                 {{#each simple}}
                     <tr>
-                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" />
-                        <td><label>{{name}}</label></td>
-                        </td>
+                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" required /></td>
+                        <td><label for="{{id}}">{{name}}</label></td>
                     </tr>
                 {{/each}}
 
+                <tr>
+                    <td colspan="2">
+                        <div style="width: 1px; height: 17px;"></div>
+                    </td>
+                </tr>
                 <tr>
                     <th colspan="2">Composite Blasts</th>
                 </tr>
                 {{#each composite}}
                     <tr>
-                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" />
-                        <td><label>{{name}}</label></td>
-                        </td>
+                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" required /></td>
+                        <td><label for="{{id}}">{{name}}</label></td>
                     </tr>
                 {{/each}}
             </table>
         </div>
 
-        <div style="margin-right: 5px;">
-            <h2>Apply Metakinesis</h2>
-            <table>
+        <div class="ke-blast-attack-section">
+            <h2 class="ke-blast-attack-h2">Form Infusion</h2>
+            <table class="ke-attack-table">
                 <tr>
-                    <th colspan="2">Metakinesis</th>
+                    <th colspan="2">Form</th>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" name="meta-maximize" id="meta-maximize" value="meta-maximize" />
-                    <td><label>Maximize</label></td>
+                    <td><input type="radio" name="form" id="form-none" value="none" checked /></td>
+                    <td><label for="form-none"><i>None</i></label></td>
+                </tr>
+                {{#each formInfusions}}
+                    <tr>
+                        <td><input type="radio" name="form" id="form-{{id}}" value="{{id}}" /></td>
+                        <td><label for="form-{{id}}">{{name}} ({{burn}})</label></td>
+                    </tr>
+                {{/each}}
+            </table>
+        </div>
+        <div class="ke-blast-attack-section">
+            <h2 class="ke-blast-attack-h2">Substance Infusion</h2>
+            <table class="ke-attack-table">
+                <tr>
+                    <th colspan="2">Substance</th>
                 </tr>
                 <tr>
-                    <td><input type="checkbox" name="meta-empower" id="meta-empower" value="meta-empower" />
-                    <td><label>Empower</label></td>
+                    <td><input type="radio" name="substance" id="substance-none" value="none" checked /></td>
+                    <td><label for="substance-none"><i>None</i></label></td>
                 </tr>
-                <tr>
-                    <td><input type="checkbox" name="meta-quicken" id="meta-quicken" value="meta-quicken" />
-                    <td><label>Quicken</label></td>
-                </tr>
-                <tr>
-                    <td><input type="checkbox" name="meta-twice" id="meta-twice" value="meta-twice" />
-                    <td><label>Twice</label></td>
-                </tr>
+                {{#each substanceInfusions}}
+                    <tr>
+                        <td><input type="radio" name="substance" id="substance-{{id}}" value="{{id}}" /></td>
+                        <td><label for="substance-{{id}}">{{name}} ({{burn}})</label></td>
+                    </tr>
+                {{/each}}
             </table>
         </div>
 
-        <div style="margin-right: 5px;">
-            <h2>Apply A Form Infusion</h2>
-            <table>
-                {{#each formInfusions}}
+
+        <div class="ke-blast-attack-section">
+            <h2 class="ke-blast-attack-h2">Apply Metakinesis</h2>
+            <table class="ke-attack-table">
+                <tr>
+                    <th colspan="2">Metakinesis</th>
+                </tr>
+
+                {{#each metakinesis}}
                     <tr>
-                        <td><input type="radio" name="form" id="form-{{id}}" value="{{id}}" />
-                        <td><label>{{name}}</label></td>
+                        <td><input type="checkbox" name="meta-{{id}}" id="meta-{{id}}" value="meta-{{id}}" /></td>
+                        <td><label for="meta-{{id}}">{{name}} ({{burn}})</label></td>
+                    </tr>
+                {{/each}}
+            </table>
+        </div>
+
+
+        <div class="ke-blast-attack-section">
+            <h2 class="ke-blast-attack-h2">Active Utilities</h2>
+            <table class="ke-attack-table">
+                <tr>
+                    <th colspan="2">Metakinesis</th>
+                </tr>
+
+                {{#each utilityTalents}}
+                    <tr>
+                        <td>
+                            <input type="checkbox" name="utility-{{id}}" id="utility-{{id}}"
+                                   value="utility-{{id}}" {{active}}/>
                         </td>
+                        <td><label for="utility-{{id}}">{{name}} ({{burn}})</label></td>
                     </tr>
                 {{/each}}
             </table>
@@ -67,7 +106,7 @@
     </div>
 
 
-    <div style="text-align: center; margin-top: 30px;">
+    <div style="text-align: center; margin-top: 20px;">
         <button class="ke-button roll-blast-attack-button" type="submit"><i class="fas fa-solid fa-undo"></i>Roll
             attack
         </button>

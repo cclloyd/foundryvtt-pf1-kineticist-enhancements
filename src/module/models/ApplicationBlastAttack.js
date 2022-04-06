@@ -1,9 +1,22 @@
-import { defaultBlasts, ns } from '../lib/config';
-import { defaultCompositeTransform, getCompositeBlasts, getSimpleBlasts } from '../lib/common';
-import { compositeEnergy, compositePhysical, simpleEnergy, simplePhysical } from '../lib/blastData/simple';
-import { metaActions } from '../lib/blastData/metaActions';
-import { formInfusions } from '../lib/blastData/formInfusionConfig';
-import { wildTalents } from '../lib/blastData/wildTalents';
+import { ns } from '../lib/config';
+import { defaultCompositeTransform, getCompositeBlasts } from '../lib/common';
+import {
+    compositeEnergy,
+    compositePhysical,
+    simpleEnergy,
+    simplePhysical,
+    templateSimple,
+} from '../lib/blastData/blastTemplates';
+import { metaTransforms } from '../lib/blastData/metaTransforms';
+import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts';
+import { compositeBlasts } from '../lib/generated/compositeBlasts';
+import { formInfusions } from '../lib/generated/formInfusions';
+import { formTransforms } from '../lib/blastData/formTransforms';
+import { substanceInfusions } from '../lib/generated/substanceInfusions';
+import { substanceTransforms } from '../lib/blastData/substanceTransforms';
+import { metakinesis } from '../lib/generated/metakinesis';
+import { utilityTalents, utilityTalentsAsArray } from '../lib/generated/utilityTalents';
+import { utilityTransforms } from '../lib/blastData/utilityTransforms';
 
 export class ApplicationBlastAttack extends FormApplication {
     constructor(options = {}) {
@@ -11,6 +24,12 @@ export class ApplicationBlastAttack extends FormApplication {
         this.actor = options.actor;
         //if (options.actor) {}
     }
+
+    // TODO: Add description to blastData
+    // TODO: Customize icons for the blasts
+    // TODO: Check damage numbers
+    // TODO: Add 3rd party stuff
+    // TODO: Make HUD align with TokenActionHUD or even integrate into it
 
     /**
      * Default Application options
@@ -23,8 +42,9 @@ export class ApplicationBlastAttack extends FormApplication {
             id: `ke-blast-attack`,
             classes: [ns],
             template: `modules/${ns}/templates/blast-attack.hbs`,
-            width: 600,
-            height: 400,
+            width: 1130,
+            height: 500,
+            resizable: true,
             title: 'Kinetic Blast Attack',
         });
     }
@@ -52,20 +72,16 @@ export class ApplicationBlastAttack extends FormApplication {
             this.actor.setFlag(ns, 'simpleBlasts', []);
             ownedSimpleIDs = [];
         }
-        // Set owned talents
-        let allSimpleBlasts = getSimpleBlasts();
-        let ownedSimpleBlasts = [];
-        for (let key of Object.keys(allSimpleBlasts)) {
-            if (ownedSimpleIDs.indexOf(allSimpleBlasts[key].id) > -1) ownedSimpleBlasts.push(allSimpleBlasts[key]);
-        }
+
+        // Set owned simple blasts
+        const ownedSimpleBlasts = simpleBlastsAsArray().filter((b) => {
+            if (ownedSimpleIDs.indexOf(b.id) > -1) return b;
+        });
 
         // Get list of all form infusions and owned form infusions and compare
-        let ownedFormIDs = this.actor.getFlag(ns, 'formInfusions');
-        // Populate and set flag if not yet defined.
-        if (ownedFormIDs === undefined) {
-            this.actor.setFlag(ns, 'formInfusions', []);
-            ownedFormIDs = [];
-        }
+        let ownedFormIDs = this.actor.getFlag(ns, 'formInfusions') ?? [];
+        let ownedSubstanceIDs = this.actor.getFlag(ns, 'substanceInfusions') ?? [];
+
         // Set owned form infusions
         let allFormInfusions = formInfusions;
         let ownedFormInfusions = [];
@@ -73,57 +89,87 @@ export class ApplicationBlastAttack extends FormApplication {
             if (ownedFormIDs.indexOf(key) > -1) ownedFormInfusions.push(allFormInfusions[key]);
         }
 
-        return foundry.utils.mergeObject(super.getData(), {
-            simple: ownedSimpleBlasts,
-            formInfusions: ownedFormInfusions,
-            composite: getCompositeBlasts(ownedSimpleBlasts),
-            actor: this.actor,
+        // Set owned substance infusions
+        let allSubstanceInfusions = substanceInfusions;
+        let ownedSubstanceInfusions = [];
+        for (let key of Object.keys(allSubstanceInfusions)) {
+            if (ownedSubstanceIDs.indexOf(key) > -1) ownedSubstanceInfusions.push(allSubstanceInfusions[key]);
+        }
+
+        // Get all owned utility talents
+        let ownedUtilityIDs = this.actor.getFlag(ns, 'utilityTalents');
+        let activeUtilityIDs = this.actor.getFlag(ns, 'attack-utilityTalents');
+        const ownedUtilityTalents = utilityTalentsAsArray().filter((b) => {
+            if (ownedUtilityIDs.indexOf(b.id) > -1) return b;
         });
-        // TODO: name on final attack is not changing with form infusion
-        // TODO: Add substance infusion (as effect notes, saves, etc)
+        const activeUtilityTalents = ownedUtilityTalents.map((b) => {
+            b.active = activeUtilityIDs.indexOf(b.id) > -1 ? 'checked' : '';
+            return b;
+        });
+
+        return foundry.utils.mergeObject(super.getData(), {
+            actor: this.actor,
+            simple: ownedSimpleBlasts,
+            composite: getCompositeBlasts(ownedSimpleBlasts),
+            formInfusions: ownedFormInfusions,
+            substanceInfusions: ownedSubstanceInfusions,
+            utilityTalents: activeUtilityTalents,
+            metakinesis: metakinesis,
+        });
     }
 
-    async getOrCreateManagedBlast() {
-        const managedID = this.actor.getFlag(ns, 'managedBlast');
-        if (managedID === undefined) {
-            const oldItems = this.actor.items.filter((o) => o.data.name === 'KE Managed Blast');
-            const oldIDs = [];
-            for (let i of oldItems) oldIDs.push(i.data._id);
+    async getOrCreateManagedBlast(force) {
+        const managedBlast = this.actor.getFlag(ns, 'managedBlast');
+
+        // Return if found and is a valid item
+        if (managedBlast && managedBlast.toObject) return managedBlast;
+
+        // Create new managed blast
+
+        // Delete existing managed blast items
+        const oldItems = this.actor.items.filter((o) => o.data.name.startsWith('KE Managed Blast'));
+        const oldIDs = oldItems.map((i) => i.data._id);
+        try {
             await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
-            const newItem = (await this.actor.createEmbeddedDocuments('Item', [simplePhysical]))[0];
-            this.actor.setFlag(ns, 'managedBlast', newItem.data._id);
-            return newItem;
-        } else {
-            let blastItem = this.actor.items.filter((o) => o.data._id === managedID)[0];
-            if (blastItem) {
-                return blastItem;
-            } else {
-                const oldItems = this.actor.items.filter((o) => o.data.name === 'KE Managed Blast');
-                const oldIDs = [];
-                for (let i of oldItems) oldIDs.push(i.data._id);
-                await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
-                const newItem = (await this.actor.createEmbeddedDocuments('Item', [simplePhysical]))[0];
-                this.actor.setFlag(ns, 'managedBlast', newItem.data._id);
-                return newItem;
-            }
+        } catch (error) {
+            console.error('error deleting documents');
+            console.error(error);
         }
+
+        // Create new managed blast item
+        console.log('Creating new managed blast');
+        const newItem = (await this.actor.createEmbeddedDocuments('Item', [templateSimple]))[0];
+        this.actor.setFlag(ns, 'managedBlast', newItem);
+        return newItem;
     }
 
     async _asyncUpdateObject(event, formData) {
-        /*
-        for (let item of this.actor.items) {
-            item.unsetFlag(ns, 'managedBlast');
-        }
-        this.actor.unsetFlag(ns, 'managedBlast');
-
-         */
+        // Fetch (or create) template item to copy and morph
         let blastItem = await this.getOrCreateManagedBlast(formData['blast']);
+
         // Get blast config from module config
-        let blastConfig = defaultBlasts.filter((o) => o.id === formData['blast'])[0];
+        let blastConfig = simpleBlasts[formData['blast']];
+        if (!blastConfig) blastConfig = compositeBlasts[formData['blast']];
         console.log('blastConfig', blastConfig);
 
+        // Get utility info early to save it to remember later
+        const activeUtilityIDs = [];
+        for (let key in formData)
+            if (key.startsWith('utility-') && formData[key]) activeUtilityIDs.push(key.substring(8));
+        this.actor.setFlag(ns, 'attack-utilityTalents', activeUtilityIDs);
+
+        const allUtilityTalents = utilityTalents;
+        for (let key of Object.keys(utilityTalents))
+            allUtilityTalents[key].owned = activeUtilityIDs.indexOf(allUtilityTalents[key].id) > -1 ? 'checked' : '';
+        const activeUtilityTalents = Object.entries(allUtilityTalents)
+            .map((i) => i[1])
+            .filter((i) => i.owned === 'checked');
+
+        // Get blast data
         let blastData = blastItem.toObject();
+
         console.log('Start of blastData mutation', blastData);
+        // Set base blast by energy type and class
         let baseBlast;
         if (blastConfig.class === 'simple') {
             if (blastConfig.type === 'energy') baseBlast = simpleEnergy;
@@ -136,12 +182,14 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Merge template item with blast config data
         blastData = foundry.utils.mergeObject(blastData, baseBlast);
+
         // Merge template item with data based on form input
         blastData = foundry.utils.mergeObject(blastData, {
             name: `${blastConfig.name}`,
             img: blastConfig.icon,
         });
 
+        // Create empty attack notes in case it doesn't exist
         blastData.data.attackNotes = [];
 
         // TODO: Create pipeline of functions that accept blastData, formData as input and output modified blastData
@@ -160,9 +208,10 @@ export class ApplicationBlastAttack extends FormApplication {
             blastData.data.attackNotes.push(`Not Touch Attack`);
         } else {
             blastData.data.attackNotes.push(`Touch Attack`);
+            blastData.data.ability.damageMult = 0.5;
         }
 
-        // Add elemental overflows
+        // Add elemental overflow
         dmgParts.push(EO);
 
         // Apply custom transform function if found (mainly used for special composite blasts)
@@ -172,50 +221,43 @@ export class ApplicationBlastAttack extends FormApplication {
             [dmgParts, blastData] = defaultCompositeTransform(dmgParts, blastData, blastConfig, formData);
         }
 
-        // Get form infusion from form
-        let formInfusionId = null;
-        console.log('formData', formData);
-        for (let key of Object.keys(formData)) {
-            if (key.startsWith('form') && formData[key] === true) {
-                formInfusionId = key.slice(5);
-                break;
-            }
-        }
+        // TODO: Apply damage type name from blastConfig
 
-        // Run form infusion transformation
-        let formInfusion;
-        if (formInfusionId) {
-            // TODO: If key exists in formInfusions, set formInfusion=formInfusions[form-key]
-            formInfusion = formInfusions[formInfusionId];
-            [dmgParts, blastData] = formInfusion.transform(this, dmgParts, blastData, blastConfig, formData);
+        // Get form infusion from form
+        let substanceInfusion = substanceInfusions[formData.substance];
+        let substanceTransform = substanceTransforms[formData.substance];
+        if (substanceInfusion) {
+            if (substanceInfusion.prepend) blastData.name = `${substanceInfusion.prependText} ${blastData.name}`;
+            if (substanceInfusion.append) blastData.name = `${blastData.name} ${substanceInfusion.appendText}`;
+            [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
         }
 
         // Apply changes to name
-        // TODO: Add substance infusion name mutations
-        console.log('working form infusion', formInfusion);
+        let formInfusion = formInfusions[formData.form];
+        let formTransform = formTransforms[formData.form];
+        console.log('Applying form infusion', formInfusion, formTransform);
         if (formInfusion) {
             if (formInfusion.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
             if (formInfusion.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
             if (!formInfusion.noBlastText) blastData.name += ' Blast';
+            [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
         }
-        if (!formInfusion) {
-            blastData.name += ' Blast';
-        }
+
+        // Add 'blast' to name if no form infusion set.
+        if (!formInfusion) blastData.name += ' Blast';
+
+        // Apply utility talents
+        activeUtilityTalents.map((talent) => {
+            [dmgParts, blastData] = utilityTransforms[talent.id](this, dmgParts, blastData, blastConfig, formData);
+        });
 
         // Apply metakinesis
         for (let key of Object.keys(formData)) {
             // If the key starts with meta and the key is checked
             if (key.startsWith('meta-') && formData[key] === true) {
                 // Run blastData through the meta action
-                [dmgParts, blastData] = metaActions[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
+                metaTransforms[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
             }
-        }
-
-        // Apply wild talents
-        let talentIDs = this.actor.getFlag(ns, 'wildTalents');
-        for (let talentId of talentIDs) {
-            let t = wildTalents[talentId];
-            if (t.transformBlast) t.transformBlast(dmgParts, blastData, blastConfig, formData);
         }
 
         // Build damage string
@@ -227,7 +269,7 @@ export class ApplicationBlastAttack extends FormApplication {
         }
 
         // Set damage string
-        blastData.data.damage.parts[0] = [damage, blastConfig.damageName];
+        blastData.data.damage.parts[0] = [damage, blastConfig.damageType.join('/')];
 
         console.log('End of blastData mutation', blastData);
 
@@ -239,7 +281,7 @@ export class ApplicationBlastAttack extends FormApplication {
         try {
             await newBlast.use({ skipDialog: false });
         } catch (err) {
-            //console.log('error rolling', err);
+            console.error('Error using new item', err);
         }
         // Delete item after used
         console.log('Deleting item...', newBlast.data._id);
@@ -247,7 +289,7 @@ export class ApplicationBlastAttack extends FormApplication {
             await this.actor.deleteEmbeddedDocuments('Item', [newBlast.data._id]);
             console.log('Deleted item');
         } catch (err) {
-            console.log('Error deleting item', err);
+            console.error('Error deleting item', err);
         }
     }
 
