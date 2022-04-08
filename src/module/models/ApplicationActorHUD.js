@@ -85,6 +85,7 @@ export class ApplicationActorHUD extends Application {
     }
 
     doActorConfig(actor) {
+        console.log('Opening KE enhanced actor config');
         let app = new ApplicationActorConfig({}, actor);
         app.render(true);
     }

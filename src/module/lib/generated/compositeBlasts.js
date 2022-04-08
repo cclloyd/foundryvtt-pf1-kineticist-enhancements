@@ -1,3 +1,5 @@
+import { compositeBlasts3pp } from './3pp/compositeBlasts';
+
 export const compositeBlasts = {
     autumn: {
         name: 'Autumn',
@@ -360,4 +362,7 @@ export const compositeBlasts = {
     },
 };
 
-export const compositeBlastsAsArray = () => Object.entries(compositeBlasts).map((i) => i[1]);
+export const compositeBlastsAsArray = (include3pp = true) =>
+    Object.entries(include3pp ? { ...compositeBlasts, ...compositeBlasts3pp } : compositeBlasts).map((i) => i[1]);
+
+export const compositeBlastsWith3pp = { ...compositeBlasts, ...compositeBlasts3pp };

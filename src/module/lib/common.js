@@ -14,8 +14,8 @@ export const getAllPlayersActors = async () => {
     return actors;
 };
 
-export const getCompositeBlasts = (simpleBlasts) => {
-    return compositeBlastsAsArray().filter((b) => {
+export const getCompositeBlasts = (simpleBlasts, include3pp = true) => {
+    return compositeBlastsAsArray(include3pp).filter((b) => {
         let count = 0;
 
         for (let s of simpleBlasts) {

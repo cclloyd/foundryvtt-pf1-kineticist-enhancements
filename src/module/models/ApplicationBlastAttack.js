@@ -8,8 +8,8 @@ import {
     templateSimple,
 } from '../lib/blastData/blastTemplates';
 import { metaTransforms } from '../lib/blastData/metaTransforms';
-import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts';
-import { compositeBlasts } from '../lib/generated/compositeBlasts';
+import { simpleBlasts, simpleBlastsAsArray, simpleBlastsWith3pp } from '../lib/generated/simpleBlasts';
+import { compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
 import { formInfusions } from '../lib/generated/formInfusions';
 import { formTransforms } from '../lib/blastData/formTransforms';
 import { substanceInfusions } from '../lib/generated/substanceInfusions';
@@ -74,7 +74,7 @@ export class ApplicationBlastAttack extends FormApplication {
         }
 
         // Set owned simple blasts
-        const ownedSimpleBlasts = simpleBlastsAsArray().filter((b) => {
+        const ownedSimpleBlasts = simpleBlastsAsArray(true).filter((b) => {
             if (ownedSimpleIDs.indexOf(b.id) > -1) return b;
         });
 
@@ -98,7 +98,7 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Get all owned utility talents
         let ownedUtilityIDs = this.actor.getFlag(ns, 'utilityTalents');
-        let activeUtilityIDs = this.actor.getFlag(ns, 'attack-utilityTalents');
+        let activeUtilityIDs = this.actor.getFlag(ns, 'attack-utilityTalents') ?? [];
         const ownedUtilityTalents = utilityTalentsAsArray().filter((b) => {
             if (ownedUtilityIDs.indexOf(b.id) > -1) return b;
         });
@@ -110,7 +110,7 @@ export class ApplicationBlastAttack extends FormApplication {
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
             simple: ownedSimpleBlasts,
-            composite: getCompositeBlasts(ownedSimpleBlasts),
+            composite: getCompositeBlasts(ownedSimpleBlasts, true),
             formInfusions: ownedFormInfusions,
             substanceInfusions: ownedSubstanceInfusions,
             utilityTalents: activeUtilityTalents,
@@ -148,8 +148,8 @@ export class ApplicationBlastAttack extends FormApplication {
         let blastItem = await this.getOrCreateManagedBlast(formData['blast']);
 
         // Get blast config from module config
-        let blastConfig = simpleBlasts[formData['blast']];
-        if (!blastConfig) blastConfig = compositeBlasts[formData['blast']];
+        let blastConfig = simpleBlastsWith3pp[formData['blast']];
+        if (!blastConfig) blastConfig = compositeBlastsWith3pp[formData['blast']];
         console.log('blastConfig', blastConfig);
 
         // Get utility info early to save it to remember later
@@ -226,10 +226,12 @@ export class ApplicationBlastAttack extends FormApplication {
         // Get form infusion from form
         let substanceInfusion = substanceInfusions[formData.substance];
         let substanceTransform = substanceTransforms[formData.substance];
+        console.log('substance', formData.substance, substanceTransform);
         if (substanceInfusion) {
             if (substanceInfusion.prepend) blastData.name = `${substanceInfusion.prependText} ${blastData.name}`;
             if (substanceInfusion.append) blastData.name = `${blastData.name} ${substanceInfusion.appendText}`;
-            [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
+            if (substanceTransform !== undefined)
+                [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
         }
 
         // Apply changes to name
@@ -240,7 +242,8 @@ export class ApplicationBlastAttack extends FormApplication {
             if (formInfusion.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
             if (formInfusion.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
             if (!formInfusion.noBlastText) blastData.name += ' Blast';
-            [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
+            if (formTransform !== undefined)
+                [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
         }
 
         // Add 'blast' to name if no form infusion set.

@@ -1,3 +1,5 @@
+import { simpleBlasts3pp } from './3pp/simpleBlasts';
+
 export const simpleBlasts = {
     telekinetic: {
         id: 'telekinetic',
@@ -103,4 +105,7 @@ export const simpleBlasts = {
     },
 };
 
-export const simpleBlastsAsArray = () => Object.entries(simpleBlasts).map((i) => i[1]);
+export const simpleBlastsAsArray = (include3pp = true) =>
+    Object.entries(include3pp ? { ...simpleBlasts, ...simpleBlasts3pp } : simpleBlasts).map((i) => i[1]);
+
+export const simpleBlastsWith3pp = { ...simpleBlasts, ...simpleBlasts3pp };

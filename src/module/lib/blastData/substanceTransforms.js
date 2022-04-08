@@ -9,6 +9,7 @@ export const substanceTransforms = {
             description: 'Will negates',
             type: 'will',
         };
+        return [dmgParts, blastData];
     },
     thundering: (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Thundering Infusion`);
@@ -18,5 +19,6 @@ export const substanceTransforms = {
             description: 'Fortitude negates',
             type: 'fort',
         };
+        return [dmgParts, blastData];
     },
 };

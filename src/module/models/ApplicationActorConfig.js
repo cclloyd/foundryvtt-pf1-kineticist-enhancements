@@ -1,7 +1,7 @@
 import { ns } from '../lib/config';
 import { formInfusions } from '../lib/generated/formInfusions';
 import { substanceInfusions } from '../lib/generated/substanceInfusions';
-import { simpleBlasts } from '../lib/generated/simpleBlasts';
+import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts';
 import { utilityTalents } from '../lib/generated/utilityTalents';
 
 export class ApplicationActorConfig extends FormApplication {
@@ -50,9 +50,9 @@ export class ApplicationActorConfig extends FormApplication {
         if (owned === undefined) owned = [];
 
         // Get all simple blasts with `owned = false`
-        const allSimple = Object.entries(simpleBlasts).map((i) => {
-            i[1].owned = '';
-            return i[1];
+        const allSimple = simpleBlastsAsArray(true).map((i) => {
+            i.owned = '';
+            return i;
         });
 
         // Set which blasts are owned

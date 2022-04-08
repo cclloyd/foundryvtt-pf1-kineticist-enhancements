@@ -2,7 +2,6 @@ import { ns } from './config.js';
 
 export async function preloadTemplates() {
     const templatePaths = [
-        'setup.hbs',
         'partials/tab-content.hbs',
         'partials/tab-blasts.hbs',
         'partials/tab-infusions.hbs',
