@@ -4,31 +4,31 @@ import { melee } from './blastTemplates';
 export const formTransforms = {
     'kinetic-blade': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Kinetic Blade Infusion`);
-        blastData.data.formulaicAttacks = melee;
-        blastData.data.range.value = '5';
+        blastData.data.actions[0].formulaicAttacks = melee;
+        blastData.data.actions[0].range.value = '5';
         return [dmgParts, blastData];
     },
     'extended-range': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Extended-Range Infusion`);
-        blastData.data.range.value = '120';
+        blastData.data.actions[0].range.value = '120';
         return [dmgParts, blastData];
     },
     'extreme-range': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Extreme-Range Infusion`);
-        blastData.data.range.value = '480';
+        blastData.data.actions[0].range.value = '480';
         return [dmgParts, blastData];
     },
     'flurry-of-blasts': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Flurry of Blasts`);
-        blastData.data.formulaicAttacks.bonus.formula = '@formulaicAttack * -5';
+        blastData.data.actions[0].formulaicAttacks.bonus.formula = '@formulaicAttack * -5';
 
         if (instance.actor.data.data.classes.kineticist.level >= 20)
-            blastData.data.formulaicAttacks.count.formula = '4';
+            blastData.data.actions[0].formulaicAttacks.count.formula = '4';
         else if (instance.actor.data.data.classes.kineticist.level >= 16)
-            blastData.data.formulaicAttacks.count.formula = '3';
+            blastData.data.actions[0].formulaicAttacks.count.formula = '3';
         else if (instance.actor.data.data.classes.kineticist.level >= 10)
             blastData.data.formulaicAttacks.count.formula = '2';
-        else blastData.data.formulaicAttacks.count.formula = '1';
+        else blastData.data.actions[0].formulaicAttacks.count.formula = '1';
 
         // Base simple blast
         let BASE = ['1d6', 'Simple'];
@@ -53,13 +53,13 @@ export const formTransforms = {
     },
     'kinetic-whip': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Kinetic Whip Infusion`);
-        blastData.data.formulaicAttacks = melee;
-        blastData.data.range.value = 15;
+        blastData.data.actions[0].formulaicAttacks = melee;
+        blastData.data.actions[0].range.value = 15;
         return [dmgParts, blastData];
     },
     'whip-hurricane': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Whip Hurricane Infusion`);
-        blastData.data.range.value = 15;
+        blastData.data.actions[0].range.value = 15;
         return [dmgParts, blastData];
     },
 };

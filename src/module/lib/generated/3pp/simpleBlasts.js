@@ -1,5 +1,6 @@
 export const simpleBlasts3pp = {
     bone: {
+        class: 'simple',
         id: 'bone',
         name: 'Bone',
         type: 'physical',
@@ -10,6 +11,7 @@ export const simpleBlasts3pp = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     chrono: {
+        class: 'simple',
         id: 'chrono',
         name: 'Chrono',
         type: 'energy',
@@ -20,6 +22,7 @@ export const simpleBlasts3pp = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     light: {
+        class: 'simple',
         id: 'light',
         name: 'Light',
         type: 'physical',
@@ -29,6 +32,7 @@ export const simpleBlasts3pp = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     poison: {
+        class: 'simple',
         id: 'poison',
         name: 'Poison',
         type: 'energy',
@@ -38,6 +42,7 @@ export const simpleBlasts3pp = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     sonic: {
+        class: 'simple',
         id: 'sonic',
         name: 'Sonic',
         type: 'energy',
@@ -48,6 +53,7 @@ export const simpleBlasts3pp = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     vibration: {
+        class: 'simple',
         id: 'vibration',
         name: 'Vibration',
         type: 'physical',

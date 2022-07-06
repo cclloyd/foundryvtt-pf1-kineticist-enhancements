@@ -23,4 +23,14 @@ export const utilityTalents = {
         description:
             'When using air blasts, air wild talents, or composite blasts that include air, double the blast’s effective range. This effect applies after altering the range due to effects such as the extended range infusion. This doubles only the blast’s effective range, not the area of effect for infusions like cloud and cyclone.',
     },
+    'push-special': {
+        id: 'push-special',
+        name: 'Special Push',
+        element: ['air'],
+        type: 'Su',
+        level: '1',
+        burn: '-',
+        prerequisites: [],
+        description: 'Dash forward in a flash of lightning and forcefully throw the enemy while dealing damage.',
+    },
 };

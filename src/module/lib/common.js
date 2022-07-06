@@ -30,6 +30,9 @@ export const getCompositeBlasts = (simpleBlasts, include3pp = true) => {
     });
 };
 
+/**
+ * Catch-all transform for composite blasts.  Converts damage to match that of a composite blast.
+ */
 export const defaultCompositeTransform = (dmgParts, blastData, blastConfig, formData) => {
     blastData.data.attackNotes.push(`Composite Blast`);
     dmgParts[0][0] = dmgParts[0][0].replace(/ceil\(@classes.kineticist.level\s?\/2\)d/, '(@classes.kineticist.level)d');

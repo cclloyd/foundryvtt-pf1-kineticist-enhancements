@@ -2,6 +2,7 @@ import { simpleBlasts3pp } from './3pp/simpleBlasts';
 
 export const simpleBlasts = {
     telekinetic: {
+        class: 'simple',
         id: 'telekinetic',
         name: 'Telekinetic',
         type: 'physical',
@@ -12,6 +13,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     air: {
+        class: 'simple',
         id: 'air',
         name: 'Air',
         type: 'physical',
@@ -21,6 +23,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     electric: {
+        class: 'simple',
         id: 'electric',
         name: 'Electric',
         type: 'energy',
@@ -30,6 +33,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/lighting-sky-1.jpg',
     },
     earth: {
+        class: 'simple',
         id: 'earth',
         name: 'Earth',
         type: 'physical',
@@ -39,6 +43,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     fire: {
+        class: 'simple',
         id: 'fire',
         name: 'Fire',
         type: 'energy',
@@ -48,6 +53,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     gravity: {
+        class: 'simple',
         id: 'gravity',
         name: 'Gravity',
         type: 'physical',
@@ -57,6 +63,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     negative: {
+        class: 'simple',
         id: 'negative',
         name: 'Negative',
         type: 'energy',
@@ -67,6 +74,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     cold: {
+        class: 'simple',
         id: 'cold',
         name: 'Cold',
         type: 'energy',
@@ -76,6 +84,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/beam-blue-1.jpg',
     },
     water: {
+        class: 'simple',
         id: 'water',
         name: 'Water',
         type: 'physical',
@@ -95,6 +104,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     wood: {
+        class: 'simple',
         id: 'wood',
         name: 'Wood',
         type: 'physical',
