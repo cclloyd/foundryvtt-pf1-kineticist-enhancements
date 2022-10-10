@@ -57,6 +57,16 @@ export const formTransforms = {
         blastData.data.actions[0].range.value = 15;
         return [dmgParts, blastData];
     },
+    torrent: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.attackNotes.push(`Torrent Infusion`);
+        blastData.data.actions[0].range.value = '30';
+        blastData.data.actions[0].save = {
+            dc: '10 + @classes.kineticist.level + @abilities.con.mod',
+            description: 'Reflex half',
+            type: 'reflex',
+        };
+        return [dmgParts, blastData];
+    },
     'whip-hurricane': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.attackNotes.push(`Whip Hurricane Infusion`);
         blastData.data.actions[0].range.value = 15;
