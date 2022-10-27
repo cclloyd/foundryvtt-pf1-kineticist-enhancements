@@ -1,25 +1,93 @@
 /* eslint-disable no-unused-vars */
-import { melee } from './blastTemplates';
+import { measure, melee, save } from './blastTemplates';
 
 export const formTransforms = {
-    'kinetic-blade': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Kinetic Blade Infusion`);
-        blastData.data.actions[0].formulaicAttacks = melee;
+    'blade-rush': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.actions[0].range.value = '5';
         return [dmgParts, blastData];
     },
+    'blade-rush-whip': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].range.value = '15';
+        return [dmgParts, blastData];
+    },
+    'blade-whirlwind': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].range.value = '5';
+        return [dmgParts, blastData];
+    },
+    chain: (instance, dmgParts, blastData, blastConfig, formData) => {
+        // TODO: Add decreasing damage
+        blastData.data.actions[0].formulaicAttacks = {
+            count: { formula: 'ceil(@classes.kineticist.level / 2)' },
+            bonus: { formula: '0' },
+            label: 'Attack #{0}',
+        };
+        return [dmgParts, blastData];
+    },
+    cloud: (instance, dmgParts, blastData, blastConfig, formData) => {
+        // TODO: Add measure templates.  Override texture to be cloud w/ lightning
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].spellArea = '20-ft. radius';
+        blastData.data.actions[0].range.value = '120';
+        blastData.data.actions[0].measureTemplate = measure(20);
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
+    cyclone: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '0';
+        blastData.data.actions[0].measureTemplate = measure(20);
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
+    'deadly-earth': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '120';
+        blastData.data.actions[0].measureTemplate = measure(20);
+        return [dmgParts, blastData];
+    },
+    detonation: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.effectNotes.push(`Detonation Infusion`);
+        blastData.data.actions[0].range.value = '0';
+        blastData.data.actions[0].measureTemplate = measure(20);
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
+    eruption: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '120';
+        blastData.data.actions[0].measureTemplate = measure(10);
+        save(blastData, 'ref');
+        // TODO: Half damage for physical blast
+        if (blastConfig.type === 'physical')
+            for (let i = 0; i < dmgParts.length; i++) {
+                dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
+            }
+        return [dmgParts, blastData];
+    },
+    explosion: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '120';
+        blastData.data.actions[0].measureTemplate = measure(20);
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
     'extended-range': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Extended-Range Infusion`);
         blastData.data.actions[0].range.value = '120';
         return [dmgParts, blastData];
     },
     'extreme-range': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Extreme-Range Infusion`);
         blastData.data.actions[0].range.value = '480';
         return [dmgParts, blastData];
     },
+    'fan-of-flames': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '0';
+        blastData.data.actions[0].measureTemplate = measure(15, 'cone');
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
     'flurry-of-blasts': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Flurry of Blasts`);
         blastData.data.actions[0].formulaicAttacks.bonus.formula = '@formulaicAttack * -5';
 
         if (instance.actor.data.data.classes.kineticist.level >= 20)
@@ -51,24 +119,92 @@ export const formTransforms = {
 
         return [dmgParts, blastData];
     },
-    'kinetic-whip': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Kinetic Whip Infusion`);
+    'focused-blast': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].attackBonus += ' +1';
+        return [dmgParts, blastData];
+    },
+    'foe-throw': (instance, dmgParts, blastData, blastConfig, formData) => {
+        save(blastData, 'fort');
+        return [dmgParts, blastData];
+    },
+    'force-hook': (instance, dmgParts, blastData, blastConfig, formData) => {
+        return [dmgParts, blastData];
+    },
+    fragmentation: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].range.value = '120';
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
+    impale: (instance, dmgParts, blastData, blastConfig, formData) => {
+        save(blastData, 'ref');
+        blastData.data.actions[0].measureTemplate = measure(30, 'ray');
+        return [dmgParts, blastData];
+    },
+    'kinetic-blade': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.data.actions[0].formulaicAttacks = melee;
-        blastData.data.actions[0].range.value = 15;
+        blastData.data.actions[0].range.value = '5';
+        return [dmgParts, blastData];
+    },
+    'kinetic-fist': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].formulaicAttacks = melee;
+        blastData.data.actions[0].range.value = '5';
+        return [dmgParts, blastData];
+    },
+    'kinetic-whip': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].formulaicAttacks = melee;
+        blastData.data.actions[0].range.value = '15';
+        return [dmgParts, blastData];
+    },
+    'many-throw': (instance, dmgParts, blastData, blastConfig, formData) => {
+        save(blastData, 'fort');
+        return [dmgParts, blastData];
+    },
+    'mobile-blast': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        save(blastData, 'ref');
+        return [dmgParts, blastData];
+    },
+    singularity: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        save(blastData, 'ref');
+        blastData.data.actions[0].measureTemplate = measure(15);
+        return [dmgParts, blastData];
+    },
+    snake: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].range.value = '120';
+        return [dmgParts, blastData];
+    },
+    spindle: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '30';
+        save(blastData, 'ref');
+        blastData.data.actions[0].measureTemplate = measure(10, 'ray');
+        return [dmgParts, blastData];
+    },
+    spray: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.data.actions[0].actionType = 'save';
+        blastData.data.actions[0].range.value = '0';
+        save(blastData, 'ref');
+        blastData.data.actions[0].measureTemplate = measure(30, 'cone');
+        return [dmgParts, blastData];
+    },
+    'telekinetic-boomerang': (instance, dmgParts, blastData, blastConfig, formData) => {
         return [dmgParts, blastData];
     },
     torrent: (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Torrent Infusion`);
+        blastData.data.actions[0].actionType = 'save';
         blastData.data.actions[0].range.value = '30';
-        blastData.data.actions[0].save = {
-            dc: '10 + @classes.kineticist.level + @abilities.con.mod',
-            description: 'Reflex half',
-            type: 'reflex',
-        };
+        save(blastData, 'ref');
+        blastData.data.actions[0].measureTemplate = measure(30, 'ray');
+        return [dmgParts, blastData];
+    },
+    tremor: (instance, dmgParts, blastData, blastConfig, formData) => {
+        return [dmgParts, blastData];
+    },
+    wall: (instance, dmgParts, blastData, blastConfig, formData) => {
         return [dmgParts, blastData];
     },
     'whip-hurricane': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Whip Hurricane Infusion`);
         blastData.data.actions[0].range.value = 15;
         return [dmgParts, blastData];
     },

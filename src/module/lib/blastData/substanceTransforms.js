@@ -1,24 +1,23 @@
 /* eslint-disable no-unused-vars */
 
+import { defaultDC } from '../config';
+import { save, saveFort, saveFortPartial, saveWill } from './blastTemplates';
+
 export const substanceTransforms = {
+    blocking: (instance, dmgParts, blastData, blastConfig, formData) => {
+        save(blastData, 'fort', 'partial');
+        return [dmgParts, blastData];
+    },
+    bowling: (instance, dmgParts, blastData, blastConfig, formData) => {
+        save(blastData, 'fort', 'partial');
+        return [dmgParts, blastData];
+    },
     synaptic: (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Synaptic Infusion`);
-        blastData.data.description.value = `Staggers for [[1]] round on a failed save.`;
-        blastData.data.actions[0].save = {
-            dc: '10 + @classes.kineticist.level + @abilities.con.mod',
-            description: 'Will negates',
-            type: 'will',
-        };
+        save(blastData, 'will');
         return [dmgParts, blastData];
     },
     thundering: (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.data.attackNotes.push(`Thundering Infusion`);
-        blastData.data.description.value = `<b>Permanently</b> deafens on a failed save.`;
-        blastData.data.actions[0].save = {
-            dc: '10 + @classes.kineticist.level + @abilities.con.mod',
-            description: 'Fortitude negates',
-            type: 'fort',
-        };
+        save(blastData, 'fort');
         return [dmgParts, blastData];
     },
 };

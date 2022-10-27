@@ -74,7 +74,7 @@ export const substanceInfusions = {
         blasts: ['blizzard', 'cold', 'ice'],
         save: 'Fortitude negates',
         description:
-            'Your kinetic blast chills your foes to the bone, making their movements sluggish. Whenever an infused blast deals cold damage to a foe, that foe is staggered for 1 round.',
+            'Your kinetic blast chills your foes to the bone, making their movements sluggish. Whenever an infused blast deals cold damage to a foe, that foe is staggered for [[1]] round.',
         id: 'chilling',
         prepend: true,
         append: false,
@@ -110,7 +110,7 @@ export const substanceInfusions = {
         id: 'darkness',
         prepend: true,
         append: false,
-        prependText: 'Darkness',
+        prependText: 'Dark',
         appendText: null,
     },
     'darkness-greater': {
@@ -127,7 +127,7 @@ export const substanceInfusions = {
         id: 'darkness, greater',
         prepend: true,
         append: false,
-        prependText: 'Darkness, Greater',
+        prependText: 'Super Dark',
         appendText: null,
     },
     dazzling: {
@@ -234,11 +234,11 @@ export const substanceInfusions = {
         blasts: ['blue-flame', 'fire', 'plasma'],
         save: 'Will negates',
         description:
-            "Your kinetic blast is so bright that it blinds your foes. Whenever an infused blast hits a foe and penetrates its spell resistance, that foe must succeed at a Will save or be blinded for 1 round, regardless of whether it takes damage from the blast. You can reduce the blast's damage by half to increase the DC of this save by 2.",
+            "Your kinetic blast is so bright that it blinds your foes. Whenever an infused blast hits a foe and penetrates its spell resistance, that foe must succeed at a Will save or be blinded for [[1]] round, regardless of whether it takes damage from the blast. You can reduce the blast's damage by half to increase the DC of this save by 2.",
         id: 'flash',
         prepend: true,
         append: false,
-        prependText: 'Flash',
+        prependText: 'Flashing',
         appendText: null,
     },
     foxfire: {
@@ -283,7 +283,7 @@ export const substanceInfusions = {
         blasts: ['air', 'blizzard', 'sandstorm', 'thunderstorm'],
         save: 'Fortitude negates',
         description:
-            'The wind from your infusion causes your blast to act as an instantaneous gust of wind. If your blast has a clear path, you can accept 2 additional points of burn or reduce the damage to 0 in order to cause the gust of wind effect to persist for 1 round along that path.',
+            'The wind from your infusion causes your blast to act as an instantaneous gust of wind. If your blast has a clear path, you can accept 2 additional points of burn or reduce the damage to 0 in order to cause the gust of wind effect to persist for [[1]] round along that path.',
         id: 'gusting',
         prepend: true,
         append: false,
@@ -300,12 +300,13 @@ export const substanceInfusions = {
         blasts: ['charged-water', 'water'],
         save: 'Reflex partial',
         description:
-            "You create a 20-foot-radius whirling maelstrom in a body of water within 120 feet (the area of the maelstrom does not include any squares in the radius that aren't in the water). Any creature in the maelstrom immediately takes one-quarter your blast's normal damage regardless of whether it succeeds at its save. A creature that succeeds at its Reflex save can choose to exit the area at the closest space. A creature in the maelstrom must succeed at a DC 35 Swim check in order to swim, and any creature that enters the maelstrom or ends its turn in the maelstrom takes half your blast's normal damage. As a free action at the beginning of your turn, you can position each creature in the maelstrom anywhere you choose within the affected area. This effect lasts for a number of rounds equal to your Constitution modifier or until you use this infusion again. You can use grappling infusion with this infusion.",
+            "You create a 20-foot-radius whirling maelstrom in a body of water within 120 feet (the area of the maelstrom does not include any squares in the radius that aren't in the water). Any creature in the maelstrom immediately takes one-quarter your blast's normal damage regardless of whether it succeeds at its save. A creature that succeeds at its Reflex save can choose to exit the area at the closest space. A creature in the maelstrom must succeed at a DC 35 Swim check in order to swim, and any creature that enters the maelstrom or ends its turn in the maelstrom takes half your blast's normal damage. As a free action at the beginning of your turn, you can position each creature in the maelstrom anywhere you choose within the affected area. This effect lasts for a number of rounds equal to your Constitution modifier ([[@abilities.con.mod]]) or until you use this infusion again. You can use grappling infusion with this infusion.",
         id: 'maelstrom',
-        prepend: true,
-        append: false,
-        prependText: 'Maelstrom',
-        appendText: null,
+        prepend: false,
+        append: true,
+        prependText: null,
+        appendText: 'Maelstrom',
+        noBlastText: true,
     },
     magnetic: {
         name: 'Magnetic',
@@ -469,7 +470,7 @@ export const substanceInfusions = {
         id: 'shepherd-of souls',
         prepend: true,
         append: false,
-        prependText: 'Shepherd of Souls',
+        prependText: 'Shepherding',
         appendText: null,
     },
     slick: {
@@ -482,7 +483,7 @@ export const substanceInfusions = {
         blasts: ['blizzard', 'charged-water', 'cold', 'ice', 'water'],
         save: 'Reflex negates',
         description:
-            'Your blast leaves behind slippery water or ice in its area for as long as the blast is in that area and for 1 round thereafter, making the area difficult terrain and increasing the DC of Acrobatics checks attempted in the area by 5. You can use this infusion only if you also use a form infusion that has an area of effect.',
+            'Your blast leaves behind slippery water or ice in its area for as long as the blast is in that area and for [[1]] round thereafter, making the area difficult terrain and increasing the DC of Acrobatics checks attempted in the area by 5. You can use this infusion only if you also use a form infusion that has an area of effect.',
         id: 'slick',
         prepend: true,
         append: false,
@@ -498,12 +499,13 @@ export const substanceInfusions = {
         blasts: ['autumn', 'spring', 'summer', 'verdant', 'winter', 'wood'],
         save: 'Fortitude negates',
         description:
-            'Creatures that take slashing or piercing damage from your blast are infected with spores. If the target fails its Fortitude save, it takes 1d6 points of damage per round for 10 rounds as plants and fungi grow out of its body. At the end of that time, the target is exposed to the pulsing puffs disease. This infusion is a disease effect. When using a wood kinetic blasts against a creature infected by this infusion, you gain a +2 bonus on attack rolls, to saving throw DCs, and on caster level checks to overcome spell resistance.',
+            'Creatures that take slashing or piercing damage from your blast are infected with spores. If the target fails its Fortitude save, it takes 1d6 points of damage per round for [[10]] rounds as plants and fungi grow out of its body. At the end of that time, the target is exposed to the pulsing puffs disease. This infusion is a disease effect. When using a wood kinetic blasts against a creature infected by this infusion, you gain a +2 bonus on attack rolls, to saving throw DCs, and on caster level checks to overcome spell resistance.',
         id: 'spore',
-        prepend: true,
-        append: false,
-        prependText: 'Spore',
-        appendText: null,
+        prepend: false,
+        append: true,
+        prependText: null,
+        appendText: 'Spore',
+        noBlastText: false,
     },
     stylish: {
         name: 'Stylish',
@@ -531,7 +533,7 @@ export const substanceInfusions = {
         blasts: ['electric', 'thunderstorm'],
         save: 'Fortitude negates',
         description:
-            "Your lightning brings with it a peal of thunder. Whenever your infused blast hits a foe and penetrates spell resistance, that foe becomes deafened, even if the blast doesn't deal damage.",
+            "Your lightning brings with it a peal of thunder. Whenever your infused blast hits a foe and penetrates spell resistance, that foe becomes deafened, even if the blast doesn't deal damage.\n\n*Permanently* deafens on failed save.",
         id: 'thundering',
         prepend: true,
         append: false,
@@ -547,7 +549,7 @@ export const substanceInfusions = {
         blasts: ['electric', 'charged-water', 'thunderstorm'],
         save: 'Will negates',
         description:
-            "Your blast sends strange electric signals through the target's body, scrambling its synapses and causing it to become staggered for 1 round. The target is aware it can choose to take a move action to remove the staggered condition inflicted by this infusion. This infusion is a mind-affecting effect.",
+            "Your blast sends strange electric signals through the target's body, scrambling its synapses and causing it to become staggered for [[1]] round. The target is aware it can choose to take a move action to remove the staggered condition inflicted by this infusion. This infusion is a mind-affecting effect.",
         id: 'synaptic',
         prepend: true,
         append: false,
@@ -563,7 +565,7 @@ export const substanceInfusions = {
         blasts: ['autumn', 'spring', 'summer', 'verdant', 'winter', 'wood'],
         save: 'Fortitude negates',
         description:
-            'The plants in your blast are mildly toxic. All creatures that take piercing or slashing damage from your blast are sickened for 1 round.',
+            'The plants in your blast are mildly toxic. All creatures that take piercing or slashing damage from your blast are sickened for [[1]] round.',
         id: 'toxic',
         prepend: true,
         append: false,
@@ -584,17 +586,17 @@ export const substanceInfusions = {
         id: 'toxic, greater',
         prepend: true,
         append: false,
-        prependText: 'Toxic, Greater',
+        prependText: 'Super-Toxic',
         appendText: null,
     },
     'turning-blast': {
         name: 'Turning Blast',
         description:
-            'Your kinetic blast causes undead creatures to flee in terror.\n\nElements void, wood; Type substance infusion; Level 4; Burn 3Prerequisite(s): duskwalker, or Planar InfusionAssociated Blast(s): positive, negativeSaving Throw Will negates\n\nUndead that take damage from a turning blast must succeed at a Will save or flee for 1 round. An undead creature that succeeds at its saving throw against a turning blast is immune to this effect for 24 hours.',
+            'Your kinetic blast causes undead creatures to flee in terror.\n\nElements void, wood; Type substance infusion; Level 4; Burn 3Prerequisite(s): duskwalker, or Planar InfusionAssociated Blast(s): positive, negativeSaving Throw Will negates\n\nUndead that take damage from a turning blast must succeed at a Will save or flee for [[1]] round. An undead creature that succeeds at its saving throw against a turning blast is immune to this effect for 24 hours.',
         id: 'turning-blast',
         prepend: true,
         append: false,
-        prependText: 'Turning Blast',
+        prependText: 'Undead-Turning',
         appendText: null,
     },
     'unblinking-flame': {
@@ -607,7 +609,7 @@ export const substanceInfusions = {
         blasts: ['blue-flame', 'fire'],
         save: null,
         description:
-            'The flame of your infused blast illuminates and reveals the target as it really is. If you hit the target with an unarmed strike with the infused blast, creatures can see the target as if using true seeing for 1 round, although only the target is revealed in this way. You can use this infusion only while also using the kinetic fist form infusion.',
+            'The flame of your infused blast illuminates and reveals the target as it really is. If you hit the target with an unarmed strike with the infused blast, creatures can see the target as if using true seeing for [[1]] round, although only the target is revealed in this way. You can use this infusion only while also using the kinetic fist form infusion.',
         id: 'unblinking-flame infusion',
         prepend: true,
         append: false,
@@ -674,7 +676,7 @@ export const substanceInfusions = {
         blasts: ['negative', 'void'],
         save: 'Will negates',
         description:
-            "Your kinetic blast sends the fear of oblivion into your foes. Whenever an infused blast deals negative energy damage to a living foe, it is shaken for 1 round. This shaken condition doesn't stack with itself.",
+            "Your kinetic blast sends the fear of oblivion into your foes. Whenever an infused blast deals negative energy damage to a living foe, it is shaken for [[1]] round. This shaken condition doesn't stack with itself.",
         id: 'unnerving',
         prepend: true,
         append: false,

@@ -144,6 +144,7 @@
     },
 };*/
 import { merge } from 'lodash-es';
+import { defaultDC } from '../config';
 
 const baseBlast = {
     //_id: 'DnYYjPRTPydgAtzz',
@@ -357,4 +358,59 @@ export const melee = {
         formula: '@formulaicAttack * -5',
     },
     label: 'Attack #{0}',
+};
+
+/**
+ * Create measure template from settings
+ * @param {number} size
+ * @param {string} [shape=circle]
+ * @param {string} [color]
+ * @param {string} [texture]
+ * @returns {{customColor: string, size: number, overrideColor: boolean, overrideTexture: boolean, customTexture: string, type: string}}
+ */
+export const measure = (size, shape, color, texture) => {
+    return {
+        size: size ?? 10,
+        type: shape ?? 'circle',
+        overrideColor: color !== undefined,
+        customColor: color ?? '',
+        overrideTexture: texture !== undefined,
+        customTexture: texture ?? '',
+    };
+};
+
+export const save = (blastData, type, negate, dc) => {
+    // Exit without modification if a save is already set
+    if (blastData.data.actions[0].save.type !== '') return;
+
+    if (type === 'ref' && !negate) negate = 'half';
+    let saveName = 'Fortitude';
+    if (type === 'ref') saveName = 'Reflex';
+    else if (type === 'will') saveName = 'Will';
+    blastData.data.actions[0].save = {
+        dc: dc ?? defaultDC,
+        description: `${saveName} ${negate ?? 'negates'}`,
+        type: type ?? 'fort',
+    };
+};
+
+export const saveRef = {
+    dc: defaultDC,
+    description: 'Reflex half',
+    type: 'ref',
+};
+export const saveFort = {
+    dc: defaultDC,
+    description: 'Fortitude negates',
+    type: 'fort',
+};
+export const saveFortPartial = {
+    dc: defaultDC,
+    description: 'Fortitude partial',
+    type: 'fort',
+};
+export const saveWill = {
+    dc: defaultDC,
+    description: 'Will negates',
+    type: 'will',
 };

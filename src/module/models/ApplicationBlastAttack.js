@@ -199,9 +199,7 @@ export class ApplicationBlastAttack extends FormApplication {
         // Add physical bonus
         if (blastConfig.type === 'physical') {
             dmgParts.push(PB);
-            blastData.data.attackNotes.push(`Not Touch Attack`);
         } else {
-            blastData.data.attackNotes.push(`Touch Attack`);
             blastData.data.actions[0].ability.damageMult = 0.5;
         }
 
@@ -215,31 +213,48 @@ export class ApplicationBlastAttack extends FormApplication {
             [dmgParts, blastData] = defaultCompositeTransform(dmgParts, blastData, blastConfig, formData);
         }
 
-        // Get form infusion from form
-        let substanceInfusion = substanceInfusions[formData.substance];
-        let substanceTransform = substanceTransforms[formData.substance];
-        console.log('substance', formData.substance, substanceTransform);
-        if (substanceInfusion) {
-            if (substanceInfusion.prepend) blastData.name = `${substanceInfusion.prependText} ${blastData.name}`;
-            if (substanceInfusion.append) blastData.name = `${blastData.name} ${substanceInfusion.appendText}`;
-            if (substanceTransform !== undefined)
-                [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
-        }
-
-        // Apply changes to name
+        // Fetch infusions
         let formInfusion = formInfusions[formData.form];
         let formTransform = formTransforms[formData.form];
-        console.log('Applying form infusion', formInfusion, formTransform);
-        if (formInfusion) {
-            if (formInfusion.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
-            if (formInfusion.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
-            if (!formInfusion.noBlastText) blastData.name += ' Blast';
-            if (formTransform !== undefined)
-                [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
+        let substanceInfusion = substanceInfusions[formData.substance];
+        let substanceTransform = substanceTransforms[formData.substance];
+
+        // Set long description
+        blastData.data.description.value = blastConfig.description;
+        if (formInfusion) blastData.data.description.value += ` <hr/>${formInfusion.description}`;
+        if (substanceInfusion) blastData.data.description.value += ` <hr/>${substanceInfusion.description}`;
+        blastData.data.description.value = blastData.data.description.value.replaceAll('\n', '<br/>');
+
+        // Apply changes to name
+        if (formInfusion?.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
+        if (formInfusion?.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
+        if (substanceInfusion?.prepend) blastData.name = `${substanceInfusion.prependText} ${blastData.name}`;
+        if (substanceInfusion?.append) blastData.name = `${blastData.name} ${substanceInfusion.appendText}`;
+        if (!formInfusion?.noBlastText && !substanceInfusion?.noBlastText) blastData.name += ' Blast';
+
+        // Apply transformations
+        if (formTransform) {
+            [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
+            if (blastData.data.actions[0].actionType === 'save')
+                blastData.data.effectNotes.push(`${formInfusion.name} Infusion`);
+            else blastData.data.attackNotes.push(`${formInfusion.name} Infusion`);
+        }
+        if (substanceTransform) {
+            [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
+            if (blastData.data.actions[0].actionType === 'save')
+                blastData.data.effectNotes.push(`${substanceInfusion.name} Infusion`);
+            else blastData.data.attackNotes.push(`${substanceInfusion.name} Infusion`);
         }
 
-        // Add 'blast' to name if no form infusion set.
-        if (!formInfusion) blastData.name += ' Blast';
+        // Apply bold to asterisks in descriptions
+        blastData.data.description.value = blastData.data.description.value.replaceAll(/\*(.+)\*/g, '<b>$1</b>');
+
+        // Add touch attack notes
+        if (blastData.data.actions[0].actionType === 'save')
+            blastData.data.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
+        else blastData.data.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
+
+        // TODO: Add option on form to roll damage as 1/2 or 1/4 damage (no attack roll)
 
         // Apply utility talents
         activeUtilityTalents.map((talent) => {
@@ -266,9 +281,6 @@ export class ApplicationBlastAttack extends FormApplication {
         // Set damage string
         blastData.data.actions[0].damage.parts[0] = [damage, { values: blastConfig.damageType }];
         console.log('damage type', blastData.data.actions[0].damage.parts[0]);
-
-        // Set long description
-        blastData.data.description.value = blastConfig.description;
 
         console.log('End of blastData mutation', blastData);
 

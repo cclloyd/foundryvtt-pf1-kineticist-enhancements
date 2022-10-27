@@ -2,7 +2,7 @@
     "name": "pf1-kineticist-enhancements",
     "title": "Kineticist Enhancements for pf1e",
     "description": "Enhances the Kineticist experience on Pathfinder 1st Edition.",
-    "version": "v0.1.5",
+    "version": "v0.1.6",
     "author": "cclloyd",
     "minimumCoreVersion": "9.236",
     "compatibleCoreVersion": "9",
