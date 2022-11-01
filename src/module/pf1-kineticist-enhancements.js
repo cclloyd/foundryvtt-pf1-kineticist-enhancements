@@ -23,34 +23,12 @@ Hooks.once('setup', async () => {
     // Do anything after initialization but before ready
 });
 
-/*
-Hooks.on('getSceneControlButtons', (buttons) => {
-    let tokenButton = buttons.find((button) => button.name === 'token');
-    if (tokenButton) {
-        let tool = {
-            name: 'ke-attack',
-            title: 'Kinetic Blast Attack',
-            layer: 'TokenLayer',
-            icon: 'fas fa-axe',
-            visible: true,
-        };
-        tokenButton.tools.push(tool);
-    }
-});
-
- */
-
-//Hooks.on('canvasReady', () => {
-//    canvas.stage.on('mousemove', (event) => this.mousemoveListener(event));
-//    this.ruler = canvas.controls._rulers[game.user._id];
-//});
-
 Hooks.on('controlToken', (token, selected) => {
-    if (selected && token.actor.data.data.classes.kineticist?.level > 0) {
+    if (selected && token.actor.classes.kineticist?.level > 0) {
         // Set the correct actor to the buttons
         if (game.keTokenHUD.actor === null) {
             game.keTokenHUD.actor = token.actor;
-        } else if (game.keTokenHUD.actor.data.id !== token.data.actorId) {
+        } else if (game.keTokenHUD.actor.id !== token.data.actorId) {
             game.keTokenHUD.actor = game.actors.get(token.data.actorId);
         }
         // Set position of the HUD relative to Token Action HUD
