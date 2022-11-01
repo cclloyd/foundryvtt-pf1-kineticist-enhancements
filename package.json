@@ -21,7 +21,8 @@
     "scripts": {
         "build": "gulp build",
         "watch": "gulp watch",
-        "build:watch": "gulp watch",
+        "build2": "tsc && vite build",
+        "watch2": "tsc && vite watch",
         "link-project": "gulp link",
         "clean": "gulp clean",
         "clean:link": "gulp link --clean",
