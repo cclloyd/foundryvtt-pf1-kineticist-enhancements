@@ -109,40 +109,13 @@ export class ApplicationBlastAttack extends FormApplication {
         });
     }
 
-    async getOrCreateManagedBlast() {
-        const managedBlast = this.actor.getFlag(ns, 'managedBlast');
-
-        const blast = this.actor.items.filter((o) => o.system._id === managedBlast)[0];
-
-        // Return if found and is a valid item
-        if (blast) return blast;
-
-        // Create new managed blast
-        console.log('Managed blast not found.  Creating one.');
-
-        // Delete existing managed blast items
-        const oldItems = this.actor.items.filter((o) => o.data.name.startsWith('KE Managed Blast'));
-        const oldIDs = oldItems.map((i) => i.system._id);
-        try {
-            console.log('Deleting existing blasts', oldIDs);
-            await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
-        } catch (error) {
-            console.error('error deleting documents');
-            console.error(error);
-        }
-
-        // Create new managed blast item
-        console.log('Creating new managed blast');
-
-        const newItem = (await this.actor.createEmbeddedDocuments('Item', getBaseData()))[0];
-        console.log('newItem', newItem);
-        this.actor.setFlag(ns, 'managedBlast', newItem.system._id);
-        return newItem;
+    async getBaseBlast() {
+        return (await this.actor.createEmbeddedDocuments('Item', getBaseData(), { temporary: true }))[0];
     }
 
     async _asyncUpdateObject(event, formData) {
         // Fetch (or create) template item to copy and morph
-        let blastItem = await this.getOrCreateManagedBlast();
+        let blastItem = await this.getBaseBlast();
         console.log('blastItem', blastItem);
 
         // Get blast config from module config
