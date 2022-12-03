@@ -2,7 +2,7 @@
     "name": "pf1-kineticist-enhancements",
     "title": "Kineticist Enhancements for pf1e",
     "description": "Enhances the Kineticist experience on Pathfinder 1st Edition.",
-    "version": "v0.2.2",
+    "version": "v0.2.3",
     "author": "cclloyd",
     "scripts": [],
     "esmodules": ["module/pf1-kineticist-enhancements.js"],

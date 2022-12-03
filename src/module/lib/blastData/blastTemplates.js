@@ -151,7 +151,7 @@ const baseBlast = {
     name: 'KE Managed Blast ',
     type: 'feat',
     img: 'systems/pf1/icons/spells/lighting-sky-1.jpg',
-    data: {
+    system: {
         description: {
             value: '',
             chat: '',
@@ -381,13 +381,13 @@ export const measure = (size, shape, color, texture) => {
 
 export const save = (blastData, type, negate, dc) => {
     // Exit without modification if a save is already set
-    if (blastData.data.actions[0].save.type !== '') return;
+    if (blastData.system.actions[0].save.type !== '') return;
 
     if (type === 'ref' && !negate) negate = 'half';
     let saveName = 'Fortitude';
     if (type === 'ref') saveName = 'Reflex';
     else if (type === 'will') saveName = 'Will';
-    blastData.data.actions[0].save = {
+    blastData.system.actions[0].save = {
         dc: dc ?? defaultDC,
         description: `${saveName} ${negate ?? 'negates'}`,
         type: type ?? 'fort',

@@ -28,8 +28,8 @@ Hooks.on('controlToken', (token, selected) => {
         // Set the correct actor to the buttons
         if (game.keTokenHUD.actor === null) {
             game.keTokenHUD.actor = token.actor;
-        } else if (game.keTokenHUD.actor.id !== token.data.actorId) {
-            game.keTokenHUD.actor = game.actors.get(token.data.actorId);
+        } else if (game.keTokenHUD.actor.id !== token.document.actorId) {
+            game.keTokenHUD.actor = game.actors.get(token.document.actorId);
         }
         // Set position of the HUD relative to Token Action HUD
         const elem = $('#token-action-hud');

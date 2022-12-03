@@ -59,7 +59,8 @@ const baseAction = {
 };
 
 const getDefaultAction = () => {
-    let subAction = game.pf1.documentComponents.ItemAction.defaultData;
+    // eslint-disable-next-line no-undef
+    let subAction = globalThis.pf1.components.ItemAction.defaultData;
     subAction = foundry.utils.mergeObject(subAction, baseAction);
     return subAction;
 };
@@ -69,7 +70,7 @@ export const getBaseData = () => {
         name: 'KE Managed Blast Base',
         type: 'feat',
         img: 'icons/svg/item-bag.svg',
-        data: {
+        system: {
             actions: [getDefaultAction()],
             featType: 'misc',
         },

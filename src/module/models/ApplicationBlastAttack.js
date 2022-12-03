@@ -112,7 +112,7 @@ export class ApplicationBlastAttack extends FormApplication {
     async getOrCreateManagedBlast() {
         const managedBlast = this.actor.getFlag(ns, 'managedBlast');
 
-        const blast = this.actor.items.filter((o) => o.data._id === managedBlast)[0];
+        const blast = this.actor.items.filter((o) => o.system._id === managedBlast)[0];
 
         // Return if found and is a valid item
         if (blast) return blast;
@@ -122,7 +122,7 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Delete existing managed blast items
         const oldItems = this.actor.items.filter((o) => o.data.name.startsWith('KE Managed Blast'));
-        const oldIDs = oldItems.map((i) => i.data._id);
+        const oldIDs = oldItems.map((i) => i.system._id);
         try {
             console.log('Deleting existing blasts', oldIDs);
             await this.actor.deleteEmbeddedDocuments('Item', oldIDs);
@@ -136,7 +136,7 @@ export class ApplicationBlastAttack extends FormApplication {
 
         const newItem = (await this.actor.createEmbeddedDocuments('Item', getBaseData()))[0];
         console.log('newItem', newItem);
-        this.actor.setFlag(ns, 'managedBlast', newItem.data._id);
+        this.actor.setFlag(ns, 'managedBlast', newItem.system._id);
         return newItem;
     }
 
@@ -179,9 +179,10 @@ export class ApplicationBlastAttack extends FormApplication {
             name: `${blastConfig.name}`,
             img: blastConfig.icon,
         });
+        blastData.system.identifiedName = blastConfig.name;
 
         // Create empty attack notes in case it doesn't exist
-        blastData.data.attackNotes = [];
+        blastData.system.attackNotes = [];
 
         // TODO: Create pipeline of functions that accept blastData, formData as input and output modified blastData
         // Base simple blast
@@ -200,7 +201,7 @@ export class ApplicationBlastAttack extends FormApplication {
         if (blastConfig.type === 'physical') {
             dmgParts.push(PB);
         } else {
-            blastData.data.actions[0].ability.damageMult = 0.5;
+            blastData.system.actions[0].ability.damageMult = 0.5;
         }
 
         // Add elemental overflow
@@ -220,39 +221,44 @@ export class ApplicationBlastAttack extends FormApplication {
         let substanceTransform = substanceTransforms[formData.substance];
 
         // Set long description
-        blastData.data.description.value = blastConfig.description;
-        if (formInfusion) blastData.data.description.value += ` <hr/>${formInfusion.description}`;
-        if (substanceInfusion) blastData.data.description.value += ` <hr/>${substanceInfusion.description}`;
-        blastData.data.description.value = blastData.data.description.value.replaceAll('\n', '<br/>');
+        blastData.system.description.value = blastConfig.description;
+        if (formInfusion) blastData.system.description.value += ` <hr/>${formInfusion.description}`;
+        if (substanceInfusion) blastData.system.description.value += ` <hr/>${substanceInfusion.description}`;
+        blastData.system.description.value = blastData.system.description.value.replaceAll('\n', '<br/>');
 
         // Apply changes to name
-        if (formInfusion?.prepend) blastData.name = `${formInfusion.prependText} ${blastData.name}`;
-        if (formInfusion?.append) blastData.name = `${blastData.name} ${formInfusion.appendText}`;
-        if (substanceInfusion?.prepend) blastData.name = `${substanceInfusion.prependText} ${blastData.name}`;
-        if (substanceInfusion?.append) blastData.name = `${blastData.name} ${substanceInfusion.appendText}`;
-        if (!formInfusion?.noBlastText && !substanceInfusion?.noBlastText) blastData.name += ' Blast';
+        if (formInfusion?.prepend)
+            blastData.system.identifiedName = `${formInfusion.prependText} ${blastData.system.identifiedName}`;
+        if (formInfusion?.append)
+            blastData.system.identifiedName = `${blastData.system.identifiedName} ${formInfusion.appendText}`;
+        if (substanceInfusion?.prepend)
+            blastData.system.identifiedName = `${substanceInfusion.prependText} ${blastData.system.identifiedName}`;
+        if (substanceInfusion?.append)
+            blastData.system.identifiedName = `${blastData.system.identifiedName} ${substanceInfusion.appendText}`;
+        if (!formInfusion?.noBlastText && !substanceInfusion?.noBlastText) blastData.system.identifiedName += ' Blast';
 
         // Apply transformations
+        if (!Array.isArray(blastData.system.effectNotes)) blastData.system.effectNotes = [];
         if (formTransform) {
             [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
-            if (blastData.data.actions[0].actionType === 'save')
-                blastData.data.effectNotes.push(`${formInfusion.name} Infusion`);
-            else blastData.data.attackNotes.push(`${formInfusion.name} Infusion`);
+            if (blastData.system.actions[0].actionType === 'save')
+                blastData.system.effectNotes.push(`${formInfusion.name} Infusion`);
+            else blastData.system.attackNotes.push(`${formInfusion.name} Infusion`);
         }
         if (substanceTransform) {
             [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
-            if (blastData.data.actions[0].actionType === 'save')
-                blastData.data.effectNotes.push(`${substanceInfusion.name} Infusion`);
-            else blastData.data.attackNotes.push(`${substanceInfusion.name} Infusion`);
+            if (blastData.system.actions[0].actionType === 'save')
+                blastData.system.effectNotes.push(`${substanceInfusion.name} Infusion`);
+            else blastData.system.attackNotes.push(`${substanceInfusion.name} Infusion`);
         }
 
         // Apply bold to asterisks in descriptions
-        blastData.data.description.value = blastData.data.description.value.replaceAll(/\*(.+)\*/g, '<b>$1</b>');
+        blastData.system.description.value = blastData.system.description.value.replaceAll(/\*(.+)\*/g, '<b>$1</b>');
 
         // Add touch attack notes
-        if (blastData.data.actions[0].actionType === 'save')
-            blastData.data.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
-        else blastData.data.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
+        if (blastData.system.actions[0].actionType === 'save')
+            blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
+        else blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
 
         // TODO: Add option on form to roll damage as 1/2 or 1/4 damage (no attack roll)
 
@@ -262,9 +268,11 @@ export class ApplicationBlastAttack extends FormApplication {
         });
 
         // Apply metakinesis
+        console.error('Checking for metakinesis');
         for (let key of Object.keys(formData)) {
             // If the key starts with meta and the key is checked
-            if (key.startsWith('meta-') && formData[key] === true) {
+            //console.error('key', key, formData[key], typeof formData[key])
+            if (key.startsWith('meta-') && formData[key] != null) {
                 // Run blastData through the meta action
                 metaTransforms[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
             }
@@ -279,28 +287,20 @@ export class ApplicationBlastAttack extends FormApplication {
         }
 
         // Set damage string
-        blastData.data.actions[0].damage.parts[0] = [damage, { values: blastConfig.damageType }];
-        console.log('damage type', blastData.data.actions[0].damage.parts[0]);
+        blastData.system.actions[0].damage.parts[0] = [damage, { values: blastConfig.damageType }];
+        console.log('damage type', blastData.system.actions[0].damage.parts[0]);
 
         console.log('End of blastData mutation', blastData);
 
         // Create new item from data
-        const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData]))[0];
-        console.log('newBlast', newBlast);
+        const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData], { temporary: true }))[0];
 
         // Pull up the dialog to use the blast
         try {
+            console.log('newBlast', newBlast);
             await newBlast.use({ skipDialog: false });
         } catch (err) {
             console.error('Error using new item', err);
-        }
-        // Delete item after used
-        console.log('Deleting item...', newBlast.data._id);
-        try {
-            await this.actor.deleteEmbeddedDocuments('Item', [newBlast.data._id]);
-            console.log('Deleted item');
-        } catch (err) {
-            console.error('Error deleting item', err);
         }
     }
 
