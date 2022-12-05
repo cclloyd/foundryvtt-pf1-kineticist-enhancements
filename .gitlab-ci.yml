@@ -25,6 +25,8 @@ build:
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file pf1-kineticist-enhancements.zip ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/${CI_COMMIT_TAG}/pf1-kineticist-enhancements.zip
     - |
       curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file module.json ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/${CI_COMMIT_TAG}/module.json
+    - |
+      curl --header "JOB-TOKEN: ${CI_JOB_TOKEN}" --upload-file module.json ${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/latest/module.json
   artifacts:
     paths:
       - pf1-kineticist-enhancements.zip
@@ -71,6 +73,8 @@ release:
           url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/${CI_COMMIT_TAG}/pf1-kineticist-enhancements.zip"
         - name: 'module.json'
           url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/${CI_COMMIT_TAG}/module.json"
+        - name: 'module.json'
+          url: "${CI_API_V4_URL}/projects/${CI_PROJECT_ID}/packages/generic/permalink/latest/module.json"
   script:
     - echo "running release_job for $CI_COMMIT_TAG"
     #- sed -i "s/$VERSION/$CI_COMMIT_TAG" filename
