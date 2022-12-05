@@ -1,7 +1,7 @@
 import { ns } from '../lib/config';
 import { defaultCompositeTransform, getCompositeBlasts } from '../lib/common';
 import { metaTransforms } from '../lib/blastData/metaTransforms';
-import { simpleBlasts, simpleBlastsAsArray, simpleBlastsWith3pp } from '../lib/generated/simpleBlasts';
+import { simpleBlastsAsArray, simpleBlastsWith3pp } from '../lib/generated/simpleBlasts';
 import { compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
 import { formInfusions } from '../lib/generated/formInfusions';
 import { formTransforms } from '../lib/blastData/formTransforms';

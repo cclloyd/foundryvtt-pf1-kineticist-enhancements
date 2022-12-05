@@ -5,22 +5,13 @@ import { ApplicationActorHUD } from './models/ApplicationActorHUD';
 // Initialize module
 Hooks.once('init', async () => {
     //CONFIG.debug.hooks = true;
-    console.log('pf1-kineticist-enhancements | Initializing pf1-kineticist-enhancements');
-
-    // Assign custom classes and constants here
+    console.log('pf1ke | Initializing pf1-kineticist-enhancements');
 
     // Register custom module settings
     registerSettings();
 
     // Preload Handlebars templates
     await preloadTemplates();
-
-    // Register custom sheets (if any)
-});
-
-// Setup module
-Hooks.once('setup', async () => {
-    // Do anything after initialization but before ready
 });
 
 Hooks.on('controlToken', (token, selected) => {
@@ -46,12 +37,4 @@ Hooks.on('canvasReady', async () => {
     if (!game.keTokenHUD) {
         game.keTokenHUD = new ApplicationActorHUD({}, game.user);
     }
-    //CONFIG.debug.hooks = true;
 });
-
-//Hooks.on('renderTokenActionHUD', (app, html, data) => {});
-
-//Hooks.on('renderActorSheetPFCharacter', async (app, html, data) => {});
-
-// When ready
-//Hooks.once('ready', async () => {});
