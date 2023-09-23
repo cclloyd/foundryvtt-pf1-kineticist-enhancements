@@ -30,6 +30,14 @@ export class ApplicationActorConfig extends FormApplication {
 
     getData() {
         let actorConfig = this.actor.getFlag(ns, 'actorConfig');
+        if (!actorConfig) {
+            actorConfig = {
+                simple: [],
+                form: [],
+                substance: [],
+                utility: [],
+            };
+        }
         let owned = this.actor.getFlag(ns, 'simpleBlasts');
         if (owned === undefined) owned = [];
 
