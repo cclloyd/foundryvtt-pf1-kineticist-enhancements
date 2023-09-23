@@ -28,7 +28,7 @@ export const formInfusions = {
         save: null,
         description:
             "You use your element's power to instantly move 30 feet in any direction (even straight up), manifest a kinetic blade, and attack once. You gain a +2 bonus on the attack roll and take a –2 penalty to your AC until the start of your next turn. The movement doesn't provoke attacks of opportunity, though activating blade rush does. If you have the kinetic whip infusion, you can manifest a kinetic whip instead of a kinetic blade at the end of your movement by increasing the burn cost of this infusion by 1. The blade or whip vanishes instantly after the rush.",
-        id: 'blade-rush',
+        id: 'blade-rush-whip',
         prepend: false,
         append: true,
         prependText: null,

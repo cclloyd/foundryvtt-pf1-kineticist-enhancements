@@ -52,7 +52,7 @@
         attackName: '',
         actionType: 'rwak',
         attackBonus:
-            'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+            'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         critConfirmBonus: '',
         damage: {
             parts: [
@@ -199,8 +199,7 @@ const baseBlast = {
         },
         attackName: '',
         actionType: 'rwak',
-        attackBonus:
-            'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+        attackBonus: 'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         critConfirmBonus: '',
         damage: {
             parts: [['10d6', 'Bludgeoning']],
@@ -295,7 +294,7 @@ export const templateSimple = merge(
         data: {
             identifiedName: 'KE Managed Blast',
             attackBonus:
-                'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+                'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         },
     },
 );
@@ -307,7 +306,7 @@ export const simplePhysical = merge(
         data: {
             identifiedName: 'KE Managed Blast SP',
             attackBonus:
-                'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+                'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         },
     },
 );
@@ -320,7 +319,7 @@ export const simpleEnergy = merge(
         data: {
             identifiedName: 'KE Managed Blast SE',
             attackBonus:
-                'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+                'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         },
     },
 );
@@ -333,7 +332,7 @@ merge(mergedCompositePhysical, [
         img: 'systems/pf1/icons/spells/lighting-sky-1.jpg',
         data: {
             attackBonus:
-                'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+                'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
         },
     },
 ]);
@@ -344,8 +343,7 @@ merge(baseBlast, {
     name: 'KE Managed Blast CE',
     img: 'systems/pf1/icons/spells/lighting-sky-1.jpg',
     data: {
-        attackBonus:
-            'min(@resources.burn.max - @resources.burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+        attackBonus: 'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
     },
 });
 export const compositeEnergy = { ...mergedCompositeEnergy };

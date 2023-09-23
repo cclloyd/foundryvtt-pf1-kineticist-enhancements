@@ -23,14 +23,36 @@ Hooks.on('controlToken', (token, selected) => {
             game.keTokenHUD.actor = game.actors.get(token.document.actorId);
         }
         // Set position of the HUD relative to Token Action HUD
-        const elem = $('#token-action-hud');
-        game.keTokenHUD.setPosition({ top: parseInt(elem.css('top')) + 40, left: parseInt(elem.css('left')) });
+        const tah = game.tokenActionHud;
+        let topPos = tah.hudPosition.top;
+        let leftPos = tah.hudPosition.left;
+        console.log('old pos', topPos, leftPos);
+
+        if (topPos >= window.innerHeight * 0.7) {
+            console.log('putting menu above');
+            topPos -= 40;
+        } else {
+            topPos += 40;
+        }
+        game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
+        console.log('new pos', topPos, leftPos);
 
         // Render the application
         game.keTokenHUD.render(true);
     } else {
         game.keTokenHUD.close().then();
     }
+
+    const sc = new SceneControls();
+    sc.controls[0].icon = 'fas fa-ruler-combined';
+    sc.render();
+    console.log('sc', sc);
+    console.log('game', game);
+    console.log('flags', token.actor.flags);
+});
+
+Hooks.on('getSceneControlButtons', (controls) => {
+    console.log('controls', controls);
 });
 
 Hooks.on('canvasReady', async () => {

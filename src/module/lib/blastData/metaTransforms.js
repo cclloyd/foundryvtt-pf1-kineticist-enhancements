@@ -3,11 +3,16 @@ export const metaTransforms = {
     empower: (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.system.attackNotes.push(`Empowered`);
         // Alter the rest of damage sources
-        console.log('dmgParts', dmgParts);
+        dmgParts.unshift(['0', 'Base']);
+
         for (let i = 0; i < dmgParts.length; i++) {
-            dmgParts[i][0] = `floor(${dmgParts[i][0]}*1.5)`;
-            dmgParts[i][1] = ', Empowered';
+            dmgParts[i][0] = `floor(${dmgParts[i][0]} *1.5)`;
+            dmgParts[i][1] += ' (Empowered)';
         }
+        dmgParts.push([
+            blastConfig.type === 'physical' ? 'floor(@abilities.con.mod * 0.5)' : 'floor(@abilities.con.mod * 0.25)',
+            'Constitution (Empowered)',
+        ]);
     },
     maximize: (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.system.attackNotes.push(`Maximized`);
@@ -21,6 +26,7 @@ export const metaTransforms = {
             );
         else dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase}*${dmgStep})`);
         dmgParts[0][0] = dmg;
-        dmgParts[0][1] = 'Maximized';
+        dmgParts[0][1] += ' (Maximized)';
+        dmgParts.unshift(['0', 'Base']);
     },
 };

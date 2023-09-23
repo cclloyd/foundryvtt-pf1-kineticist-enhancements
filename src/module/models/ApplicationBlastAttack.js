@@ -22,12 +22,6 @@ export class ApplicationBlastAttack extends FormApplication {
     // TODO: Clean up flow.  Maybe separate out some into functions.  Maybe make full pipeline that inputs blastData and outputs blastData<modified> for each thing.
     // TODO: Make HUD align with TokenActionHUD or even integrate into it
 
-    /**
-     * Default Application options
-     *
-     * @returns {object} options - Application options.
-     * @see https://foundryvtt.com/api/Application.html#options
-     */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: `ke-blast-attack`,
@@ -40,58 +34,37 @@ export class ApplicationBlastAttack extends FormApplication {
         });
     }
 
-    /**
-     * Handle closing any confirm delete quest dialog attached to QuestLog.
-     *
-     * @override
-     * @inheritDoc
-     */
     async close(options) {
         return super.close(options);
     }
 
-    /**
-     * @override
-     * @inheritDoc
-     * @see https://foundryvtt.com/api/FormApplication.html#getData
-     */
     getData() {
         // Get list of all wild talents and owned wild talents and compare
-        let ownedSimpleIDs = this.actor.getFlag(ns, 'simpleBlasts');
-        // Populate and set flag if not yet defined.
-        if (ownedSimpleIDs === undefined) {
-            this.actor.setFlag(ns, 'simpleBlasts', []);
-            ownedSimpleIDs = [];
-        }
+        const actorConfig = this.actor.getFlag(ns, 'actorConfig');
 
         // Set owned simple blasts
         const ownedSimpleBlasts = simpleBlastsAsArray(true).filter((b) => {
-            if (ownedSimpleIDs.indexOf(b.id) > -1) return b;
+            if (actorConfig.simple.indexOf(b.id) > -1) return b;
         });
-
-        // Get list of all form infusions and owned form infusions and compare
-        let ownedFormIDs = this.actor.getFlag(ns, 'formInfusions') ?? [];
-        let ownedSubstanceIDs = this.actor.getFlag(ns, 'substanceInfusions') ?? [];
 
         // Set owned form infusions
         let allFormInfusions = formInfusions;
         let ownedFormInfusions = [];
         for (let key of Object.keys(allFormInfusions)) {
-            if (ownedFormIDs.indexOf(key) > -1) ownedFormInfusions.push(allFormInfusions[key]);
+            if (actorConfig.form.indexOf(key) > -1) ownedFormInfusions.push(allFormInfusions[key]);
         }
 
         // Set owned substance infusions
         let allSubstanceInfusions = substanceInfusions;
         let ownedSubstanceInfusions = [];
         for (let key of Object.keys(allSubstanceInfusions)) {
-            if (ownedSubstanceIDs.indexOf(key) > -1) ownedSubstanceInfusions.push(allSubstanceInfusions[key]);
+            if (actorConfig.substance.indexOf(key) > -1) ownedSubstanceInfusions.push(allSubstanceInfusions[key]);
         }
 
         // Get all owned utility talents
-        let ownedUtilityIDs = this.actor.getFlag(ns, 'utilityTalents');
         let activeUtilityIDs = this.actor.getFlag(ns, 'attack-utilityTalents') ?? [];
         const ownedUtilityTalents = utilityTalentsAsArray().filter((b) => {
-            if (ownedUtilityIDs.indexOf(b.id) > -1) return b;
+            if (actorConfig.utility.indexOf(b.id) > -1) return b;
         });
         const activeUtilityTalents = ownedUtilityTalents.map((b) => {
             b.active = activeUtilityIDs.indexOf(b.id) > -1 ? 'checked' : '';
@@ -116,12 +89,12 @@ export class ApplicationBlastAttack extends FormApplication {
     async _asyncUpdateObject(event, formData) {
         // Fetch (or create) template item to copy and morph
         let blastItem = await this.getBaseBlast();
-        console.log('blastItem', blastItem);
+        console.log('Foundry VTT | blastItem', blastItem);
 
         // Get blast config from module config
         let blastConfig = simpleBlastsWith3pp[formData['blast']];
         if (!blastConfig) blastConfig = compositeBlastsWith3pp[formData['blast']];
-        console.log('blastConfig', blastConfig);
+        console.log('Foundry VTT | blastConfig', blastConfig);
 
         // Get utility info early to save it to remember later
         const activeUtilityIDs = [];
@@ -138,12 +111,12 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Get blast data
         if (blastItem === undefined) {
-            console.error('Blast Item not found', blastItem);
+            console.error('Foundry VTT | Blast Item not found', blastItem);
             return;
         }
         let blastData = blastItem.toObject();
 
-        console.log('Start of blastData mutation', blastData);
+        console.log('Foundry VTT | Start of blastData mutation', blastData);
         // Merge template item with blast config data
         blastData = foundry.utils.mergeObject(blastData, getBaseData());
 
@@ -162,18 +135,21 @@ export class ApplicationBlastAttack extends FormApplication {
         let BASE = ['ceil(@classes.kineticist.level /2)d6', 'Simple'];
         // Elemental Overflow
         let EO = [
-            '(min(@resources.burn.max - @resources.burn.value , floor(@classes.kineticist.level /3))*2)',
+            '(min(@resources.classFeat_burn.value  , floor(@classes.kineticist.level /3))*2)',
             'Elemental Overflow',
         ];
-        // Physical blast bonus
-        let PB = ['@classes.kineticist.level', 'Physical blast'];
         // Array of damage parts in the form of [str:damage string, str:description]
         let dmgParts = [BASE];
 
         // Add physical bonus
         if (blastConfig.type === 'physical') {
-            dmgParts.push(PB);
-        } else {
+            dmgParts.push([
+                blastConfig.class === 'composite' ? '@classes.kineticist.level' : 'ceil(@classes.kineticist.level /2)',
+                'Physical blast',
+            ]);
+        }
+        // Apply energy penalty
+        else {
             blastData.system.actions[0].ability.damageMult = 0.5;
         }
 
@@ -213,12 +189,14 @@ export class ApplicationBlastAttack extends FormApplication {
         // Apply transformations
         if (!Array.isArray(blastData.system.effectNotes)) blastData.system.effectNotes = [];
         if (formTransform) {
+            console.log('Foundry VTT | Applying form infusions');
             [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
             if (blastData.system.actions[0].actionType === 'save')
                 blastData.system.effectNotes.push(`${formInfusion.name} Infusion`);
             else blastData.system.attackNotes.push(`${formInfusion.name} Infusion`);
         }
         if (substanceTransform) {
+            console.log('Foundry VTT | Applying substance infusions');
             [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
             if (blastData.system.actions[0].actionType === 'save')
                 blastData.system.effectNotes.push(`${substanceInfusion.name} Infusion`);
@@ -236,12 +214,13 @@ export class ApplicationBlastAttack extends FormApplication {
         // TODO: Add option on form to roll damage as 1/2 or 1/4 damage (no attack roll)
 
         // Apply utility talents
+        console.log('Foundry VTT | Applying utility talents');
         activeUtilityTalents.map((talent) => {
             [dmgParts, blastData] = utilityTransforms[talent.id](this, dmgParts, blastData, blastConfig, formData);
         });
 
         // Apply metakinesis
-        console.error('Checking for metakinesis');
+        console.log('Foundry VTT | Applying metakinesis');
         for (let key of Object.keys(formData)) {
             // If the key starts with meta and the key is checked
             //console.error('key', key, formData[key], typeof formData[key])
@@ -255,39 +234,36 @@ export class ApplicationBlastAttack extends FormApplication {
         let damage = `${dmgParts[0][0]}`;
         if (dmgParts.length > 1) {
             for (let p of dmgParts.slice(1)) {
+                console.log(p[0]);
                 damage += ` + ${p[0]}[${p[1]}]`;
             }
         }
 
         // Set damage string
-        blastData.system.actions[0].damage.parts[0] = [damage, { values: blastConfig.damageType }];
-        console.log('damage type', blastData.system.actions[0].damage.parts[0]);
+        blastData.system.actions[0].damage.parts[0] = {
+            formula: damage,
+            type: { values: ['cold'] },
+        };
 
-        console.log('End of blastData mutation', blastData);
+        console.log('Foundry VTT | End of blastData mutation', blastData);
 
         // Create new item from data
         const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData], { temporary: true }))[0];
 
         // Pull up the dialog to use the blast
         try {
-            console.log('newBlast', newBlast);
+            console.log('Foundry VTT | newBlast', newBlast);
             await newBlast.use({ skipDialog: false });
         } catch (err) {
-            console.error('Error using new item', err);
+            console.error('Foundry VTT | Error using new item', err);
         }
     }
+    // actor.system.resources.classFeat_burn.value,max,_id
 
     _updateObject(event, formData) {
         this._asyncUpdateObject(event, formData);
     }
 
-    /**
-     * Defines all jQuery control callbacks with event listeners for click, drag, drop via various CSS selectors.
-     *
-     * @param {JQuery}  html - The jQuery instance for the window content of this Application.
-     *
-     * @see https://foundryvtt.com/api/FormApplication.html#activateListeners
-     */
     activateListeners(html) {
         super.activateListeners(html);
     }

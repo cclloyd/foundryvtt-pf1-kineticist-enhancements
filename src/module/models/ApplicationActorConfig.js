@@ -10,12 +10,6 @@ export class ApplicationActorConfig extends FormApplication {
         this.actor = actor;
     }
 
-    /**
-     * Default Application options
-     *
-     * @returns {object} options - Application options.
-     * @see https://foundryvtt.com/api/Application.html#options
-     */
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
             id: `ke-actor-config`,
@@ -30,22 +24,12 @@ export class ApplicationActorConfig extends FormApplication {
         });
     }
 
-    /**
-     * Handle closing any confirm delete quest dialog attached to QuestLog.
-     *
-     * @override
-     * @inheritDoc
-     */
     async close(options) {
         return super.close(options);
     }
 
-    /**
-     * @override
-     * @inheritDoc
-     * @see https://foundryvtt.com/api/FormApplication.html#getData
-     */
     getData() {
+        let actorConfig = this.actor.getFlag(ns, 'actorConfig');
         let owned = this.actor.getFlag(ns, 'simpleBlasts');
         if (owned === undefined) owned = [];
 
@@ -60,32 +44,27 @@ export class ApplicationActorConfig extends FormApplication {
             const index = allSimple.map((e) => e.id).indexOf(o);
             if (allSimple[index]) {
                 allSimple[index].owned = 'checked';
-                console.log(allSimple[index]);
             }
         }
 
         // Set owned form infusions
-        let ownedFormInfusions = this.actor.getFlag(ns, 'formInfusions') ?? [];
         let allFormInfusionTalents = formInfusions;
         for (let key of Object.keys(allFormInfusionTalents)) {
             allFormInfusionTalents[key].owned =
-                ownedFormInfusions?.indexOf(allFormInfusionTalents[key].id) > -1 ? 'checked' : '';
+                actorConfig.form.indexOf(allFormInfusionTalents[key].id) > -1 ? 'checked' : '';
         }
 
         // Set owned substance infusions
-        let ownedSubstanceInfusions = this.actor.getFlag(ns, 'substanceInfusions') ?? [];
         let allSubstanceInfusionTalents = substanceInfusions;
         for (let key of Object.keys(allSubstanceInfusionTalents)) {
             allSubstanceInfusionTalents[key].owned =
-                ownedSubstanceInfusions?.indexOf(allSubstanceInfusionTalents[key].id) > -1 ? 'checked' : '';
+                actorConfig.substance.indexOf(allSubstanceInfusionTalents[key].id) > -1 ? 'checked' : '';
         }
 
         // Set owned utility talents
-        let ownedUtilityTalents = this.actor.getFlag(ns, 'utilityTalents') ?? [];
         let allUtilityTalents = utilityTalents;
         for (let key of Object.keys(allUtilityTalents)) {
-            allUtilityTalents[key].owned =
-                ownedUtilityTalents?.indexOf(allUtilityTalents[key].id) > -1 ? 'checked' : '';
+            allUtilityTalents[key].owned = actorConfig.utility.indexOf(allUtilityTalents[key].id) > -1 ? 'checked' : '';
         }
 
         return foundry.utils.mergeObject(super.getData(), {
@@ -97,41 +76,49 @@ export class ApplicationActorConfig extends FormApplication {
         });
     }
 
-    _updateObject(event, formData) {
+    async _updateObject(event, formData) {
+        // TODO: Unselected talents are not properly being saved as unselected.
         console.debug('KE formData', formData);
+        await this.actor.unsetFlag(ns, 'actorConfig');
+
         // Save simple blasts
         const ownedSimple = [];
         for (let key in formData) if (key.startsWith('simple-') && formData[key]) ownedSimple.push(key.substring(7));
-        this.actor.setFlag(ns, 'simpleBlasts', ownedSimple);
+        //this.actor.setFlag(ns, 'simpleBlasts', ownedSimple);
 
         // Save form infusions
         const ownedForm = [];
-        for (let key in formData) if (key.startsWith('form-') && formData[key]) ownedForm.push(key.substring(5));
-        this.actor.setFlag(ns, 'formInfusions', ownedForm);
+        for (let key in formData)
+            if (key.startsWith('form-') && formData[key]?.length > 1) ownedForm.push(key.substring(5));
+        //this.actor.setFlag(ns, 'formInfusions', ownedForm);
 
         // Save substance infusions
         const ownedSubstance = [];
         for (let key in formData)
             if (key.startsWith('substance-') && formData[key]) ownedSubstance.push(key.substring(10));
-        this.actor.setFlag(ns, 'substanceInfusions', ownedSubstance);
+        //this.actor.setFlag(ns, 'substanceInfusions', ownedSubstance);
 
         // Save utility talents
         const ownedUtility = [];
         for (let key in formData) if (key.startsWith('utility-') && formData[key]) ownedUtility.push(key.substring(8));
-        this.actor.setFlag(ns, 'utilityTalents', ownedUtility);
+        //this.actor.setFlag(ns, 'utilityTalents', ownedUtility);
+
+        const actorConfig = {
+            simple: ownedSimple,
+            form: ownedForm,
+            substance: ownedSubstance,
+            utility: ownedUtility,
+        };
+        await this.actor.setFlag(ns, 'formData', formData);
+        console.log('formData', formData);
+        console.log('actorConfig', actorConfig);
+        await this.actor.setFlag(ns, 'actorConfig', actorConfig);
 
         // Mark actor setup completed if not setup before
-        if (!this.actor.getFlag(ns, 'firstSetupCompleted')) this.actor.setFlag(ns, 'firstSetupCompleted', true);
+        if (!this.actor.getFlag(ns, 'firstSetupCompleted')) await this.actor.setFlag(ns, 'firstSetupCompleted', true);
         // TODO: Application requires you to unselect token once to refresh after configuring for first time.
     }
 
-    /**
-     * Defines all jQuery control callbacks with event listeners for click, drag, drop via various CSS selectors.
-     *
-     * @param {JQuery}  html - The jQuery instance for the window content of this Application.
-     *
-     * @see https://foundryvtt.com/api/FormApplication.html#activateListeners
-     */
     activateListeners(html) {
         super.activateListeners(html);
         //html.on(jquery.click, '.save-config-button', this.upd);
