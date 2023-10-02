@@ -1,4 +1,10 @@
 export const metakinesis = {
+    minimize: {
+        id: 'minimize',
+        name: 'Minimize',
+        burn: '0',
+        description: 'Minimizes damage to your blast.',
+    },
     empower: {
         id: 'empower',
         name: 'Empower',

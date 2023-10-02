@@ -24,8 +24,8 @@ Hooks.on('controlToken', (token, selected) => {
         }
         // Set position of the HUD relative to Token Action HUD
         const tah = game.tokenActionHud;
-        let topPos = tah.hudPosition.top;
-        let leftPos = tah.hudPosition.left;
+        let topPos = tah.hudPosition?.topPos ?? window.innerHeight - 80;
+        let leftPos = tah.hudPosition?.leftPos ?? 220;
         console.log('old pos', topPos, leftPos);
 
         if (topPos >= window.innerHeight * 0.7) {
