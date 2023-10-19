@@ -122,7 +122,7 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Merge template item with data based on form input
         blastData = foundry.utils.mergeObject(blastData, {
-            name: `${blastConfig.name}`,
+            //name: `${blastConfig.name}`,
             img: blastConfig.icon,
         });
         blastData.system.identifiedName = blastConfig.name;
@@ -229,7 +229,7 @@ export class ApplicationBlastAttack extends FormApplication {
                 metaTransforms[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
             }
         }
-        console.log('BUILDING DAMAGE');
+
         // Build damage string
         let damage = `${dmgParts[0][0]}`;
         if (dmgParts.length > 1) {
@@ -244,6 +244,8 @@ export class ApplicationBlastAttack extends FormApplication {
             formula: damage,
             type: { values: blastConfig.damageType },
         };
+
+        blastData.name = blastData.system.identifiedName;
 
         console.log('Foundry VTT | End of blastData mutation', blastData);
 

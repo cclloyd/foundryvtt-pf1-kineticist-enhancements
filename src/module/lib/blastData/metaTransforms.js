@@ -1,6 +1,7 @@
 /* eslint-disable no-unused-vars */
 export const metaTransforms = {
     empower: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.identifiedName += '(Empowered)';
         blastData.system.attackNotes.push(`Empowered`);
         // Alter the rest of damage sources
         dmgParts.unshift(['0', 'Base']);
@@ -15,6 +16,7 @@ export const metaTransforms = {
         ]);
     },
     maximize: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.identifiedName += '(Maximized)';
         blastData.system.attackNotes.push(`Maximized`);
         let dmg = dmgParts[0][0];
         let [, dmgBase, dmgStep] = dmg.match(/((?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\))d(\d+)/);
@@ -30,6 +32,7 @@ export const metaTransforms = {
         dmgParts.unshift(['0', 'Base']);
     },
     minimize: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.identifiedName += '(Minimized)';
         blastData.system.attackNotes.push(`Minimized`);
         let dmg = dmgParts[0][0];
         let [, dmgBase, dmgStep] = dmg.match(/((?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\))d(\d+)/);
