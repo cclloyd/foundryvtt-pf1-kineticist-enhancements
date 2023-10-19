@@ -36,7 +36,7 @@ export const metaTransforms = {
 
         if (blastData.system.attackNotes.includes('Empowered'))
             dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `floor(${dmgBase}*1.5)`);
-        else dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase}})`);
+        else dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase})`);
         dmgParts[0][0] = dmg;
         dmgParts[0][1] += ' (Minimized)';
         dmgParts.unshift(['0', 'Base']);

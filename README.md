@@ -1,16 +1,30 @@
-# pf1-kineticist-enhancements
+# Kineticist Enhancements for Pathfinder 1st Edition
 
-Add your description here.
+This is a module for FoundryVTT that streamlines using the Kinetic Blast class feature of the Kineticist class in Pathfinder 1.
 
-## Installation
+# Screenshots
 
-Add your installation instructions here.
+- HUD for selected Kineticist token
+  - ![HUD Screenshot](docs/screenshots/hud.png?raw=true 'HUD screenshot')
+- Infusions Config
+  - ![Infusions Config Screenshot](docs/screenshots/infusions.png?raw=true 'HUD screenshot')
+- Attack Screen
+  - ![Attack Screenshot](docs/screenshots/blastattack.png?raw=true 'Attack screenshot')
+- Chat Card:
+  - ![Chat Card Screenshot](docs/screenshots/blastcard.png?raw=true 'Chat Card screenshot')
 
-## Development
+# Installation
+
+Install through the FoundryVTT admin interface.
+
+Manifest URL:
+- **Latest:** https://gitlab.com/api/v4/projects/29080072/packages/generic/permalink/latest/module.json
+- **Specific Version:** https://gitlab.com/api/v4/projects/29080072/packages/generic/permalink/v1.x.x/module.json
+
+# Development
 
 - Clone the repository
-- Switch to `alpha` branch
-- Run `yarn install` (if you don't have yarn, run `npm install -g yarn` (may require admin/root))
+- Run `yarn install`
 - To build:
   - Run `yarn build`
 - To develop:
@@ -18,43 +32,11 @@ Add your installation instructions here.
   - Create a symlink/shortcut from the `dist` folder to your foundry's module directory and name the linked folder `pf1-kineticist-enhancements`
     - Windows default: `%LocalAppData%\FoundryVTT\Data\modules`
     - Linux default: `~/.local/share/FoundryVTT/Data/modules`
+    - Recommended: develop in a docker container, mount the `dist` volume to the above destination
   - Run `yarn watch` (this will watch the src directory for changes and automatically rebuild changes live)
   - Launch Foundry
 
-### Prerequisites
+## Prerequisites
 
-In order to build this module, recent versions of `node` and `yarn/npm` are
+In order to build this module, recent versions of `node` (>= 16) and `yarn/npm` are
 required. If you don't have `yarn`, but have `npm`, just run `npm install -g yarn` to install `yarn`.
-
-### Linking the built project to Foundry VTT
-
-In order to provide a fluent development experience, it is recommended to link
-the built module to your local Foundry VTT installation's data folder. In
-order to do so, first add a file called `foundryconfig.json` to the project root
-with the following content:
-
-```
-{
-  "dataPath": "/absolute/path/to/your/FoundryVTT/Data"
-}
-```
-
-(if you are using Windows, make sure to use `\` as a path separator instead of
-`/`)
-
-Then run
-
-```
-npm run link-project
-```
-
-On Windows, creating symlinks requires administrator privileges so unfortunately
-you need to run the above command in an administrator terminal for it to work.
-
-### Running the tests
-
-You can run the tests with the following command:
-
-```
-npm test
-```

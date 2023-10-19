@@ -229,12 +229,12 @@ export class ApplicationBlastAttack extends FormApplication {
                 metaTransforms[key.slice(5)](this, dmgParts, blastData, blastConfig, formData);
             }
         }
-
+        console.log('BUILDING DAMAGE');
         // Build damage string
         let damage = `${dmgParts[0][0]}`;
         if (dmgParts.length > 1) {
             for (let p of dmgParts.slice(1)) {
-                console.log(p[0]);
+                console.log(p);
                 damage += ` + ${p[0]}[${p[1]}]`;
             }
         }
@@ -242,7 +242,7 @@ export class ApplicationBlastAttack extends FormApplication {
         // Set damage string
         blastData.system.actions[0].damage.parts[0] = {
             formula: damage,
-            type: { values: ['cold'] },
+            type: { values: blastConfig.damageType },
         };
 
         console.log('Foundry VTT | End of blastData mutation', blastData);
