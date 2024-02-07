@@ -7,6 +7,7 @@ export async function preloadTemplates() {
         'partials/tab-infusions.hbs',
         'partials/tab-utilities.hbs',
         'partials/tab-metakinesis.hbs',
+        'partials/tab-feats.hbs',
         'actor-config.hbs',
         'blast-attack.hbs',
         'hud.hbs',

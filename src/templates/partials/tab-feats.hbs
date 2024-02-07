@@ -1,0 +1,36 @@
+<h4 style="text-align: center">If you know of a feat you want support added for, open a GitLab issue.</h4>
+<div style="display: flex; justify-content: space-between">
+    <div style="width: 48%">
+
+        <table>
+            <tr>
+                <th colspan="2">Feats</th>
+            </tr>
+
+            {{#each feats}}
+                <tr>
+                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="feat-{{id}}"
+                                                                        id="feat-{{id}}"
+                                                                        value="{{id}}" {{owned}}/></td>
+                    <td style="text-align: left;"><label for="feat-{{id}}">{{name}}</label>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+
+    <div style="width: 48%">
+        <table>
+            <tr>
+                <th colspan="2">Mythic Feats</th>
+            </tr>
+            {{#each mythicFeats}}
+                <tr>
+                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="mythicFeat-{{id}}"
+                                                                        id="mythicFeat-{{id}}"
+                                                                        value="{{id}}" {{owned}}/></td>
+                    <td style="text-align: left;"><label for="mythicFeat-{{id}}">{{name}}</label>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>

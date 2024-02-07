@@ -24,8 +24,9 @@ Hooks.on('controlToken', (token, selected) => {
         }
         // Set position of the HUD relative to Token Action HUD
         const tah = game.tokenActionHud;
-        let topPos = tah.hudPosition?.topPos ?? window.innerHeight - 80;
-        let leftPos = tah.hudPosition?.leftPos ?? 220;
+        console.log('tah', tah);
+        let topPos = tah?.hudPosition?.top ?? window.innerHeight - 80;
+        let leftPos = tah?.hudPosition?.left ?? 220;
         console.log('old pos', topPos, leftPos);
 
         if (topPos >= window.innerHeight * 0.7) {
@@ -34,25 +35,23 @@ Hooks.on('controlToken', (token, selected) => {
         } else {
             topPos += 40;
         }
-        game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
+        //game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
         console.log('new pos', topPos, leftPos);
 
         // Render the application
-        game.keTokenHUD.render(true);
+        //game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
+        game.keTokenHUD.render(true, { left: leftPos, top: topPos });
+        console.log(game.keTokenHUD.actor);
     } else {
         game.keTokenHUD.close().then();
     }
 
-    const sc = new SceneControls();
-    sc.controls[0].icon = 'fas fa-ruler-combined';
-    sc.render();
-    console.log('sc', sc);
-    console.log('game', game);
-    console.log('flags', token.actor.flags);
-});
-
-Hooks.on('getSceneControlButtons', (controls) => {
-    console.log('controls', controls);
+    // const sc = new SceneControls();
+    // sc.controls[0].icon = 'fas fa-ruler-combined';
+    // sc.render();
+    // console.log('sc', sc);
+    // console.log('game', game);
+    // console.log('flags', token.actor.flags);
 });
 
 Hooks.on('canvasReady', async () => {

@@ -1,116 +1,261 @@
 <form id="ke-blast-attack">
     <div style="display: flex; justify-content: center;">
-        <div class="ke-blast-attack-section">
+
+
+        <div class="ke-blast-attack-section ke-gather-section" style="width: 206px;">
+            <div>
+                <h2 class="ke-blast-attack-h2">Gather Power</h2>
+                <div class="ke-remember">
+                    <input type="checkbox" name="remember-gather" id="remember-gather" />
+                    <label for="remember-gather">Remember Last Choice</label>
+                </div>
+                <table class="ke-attack-table ke-burn-table">
+                    <thead>
+                        <tr>
+                            <th></th>
+                            <th>Duration</th>
+                            <th>Burn</th>
+                        </tr>
+                    </thead>
+
+                    <tr>
+                        <td><input type="radio" name="gather" id="gather-none" value="none" required checked/></td>
+                        <td><label for="gather-none">None</label></td>
+                        <td><label for="gather-none">-0</label></td>
+                    </tr>
+                    {{#each gather}}
+                        <tr>
+                            <td><input type="radio" name="gather" id="gather-{{id}}" value="{{id}}" required/></td>
+                            <td><label for="gather-{{id}}">{{name}}</label></td>
+                            <td><label for="gather-{{id}}">-{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </table>
+            </div>
+        </div>
+
+
+        <div class="ke-blast-attack-section" style="width: 210px;">
             <h2 class="ke-blast-attack-h2">Choose a blast</h2>
-            <table class="ke-attack-table">
+            <div class="ke-remember">
+                <input type="checkbox" name="remember-blast" id="remember-blast" />
+                <label for="remember-blast">Remember Last Choice</label>
+            </div>
+            <table class="ke-attack-table ke-burn-table">
+                <thead>
                 <tr>
-                    <th colspan="2">Simple Blasts</th>
+                    <th></th>
+                    <th>Simple Blasts</th>
+                    <th>Burn</th>
                 </tr>
-                {{#each simple}}
+                </thead>
+                <tbody>
+                    {{#each simple}}
+                        <tr>
+                            <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" data-type="simple" required /></td>
+                            <td><label for="{{id}}">{{name}}</label></td>
+                            <td><label for="{{id}}">0</label></td>
+                        </tr>
+                    {{/each}}
                     <tr>
-                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" required /></td>
-                        <td><label for="{{id}}">{{name}}</label></td>
+                        <td colspan="3">
+                            <div style="width: 1px; height: 17px;"></div>
+                        </td>
                     </tr>
-                {{/each}}
-
+                </tbody>
+                <thead>
                 <tr>
-                    <td colspan="2">
-                        <div style="width: 1px; height: 17px;"></div>
-                    </td>
+                    <th></th>
+                    <th>Composite Blasts</th>
+                    <th>Burn</th>
                 </tr>
-                <tr>
-                    <th colspan="2">Composite Blasts</th>
-                </tr>
-                {{#each composite}}
-                    <tr>
-                        <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" required /></td>
-                        <td><label for="{{id}}">{{name}}</label></td>
-                    </tr>
-                {{/each}}
+                </thead>
+                <tbody>
+                    {{#each composite}}
+                        <tr>
+                            <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" data-type="composite" required /></td>
+                            <td><label for="{{id}}">{{name}}</label></td>
+                            <td><label for="{{id}}">{{ burn }}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
             </table>
         </div>
 
-        <div class="ke-blast-attack-section">
+
+        <div class="ke-blast-attack-section" style="width: 180px;">
             <h2 class="ke-blast-attack-h2">Form Infusion</h2>
-            <table class="ke-attack-table">
-                <tr>
-                    <th colspan="2">Form</th>
-                </tr>
-                <tr>
-                    <td><input type="radio" name="form" id="form-none" value="none" checked /></td>
-                    <td><label for="form-none"><i>None</i></label></td>
-                </tr>
-                {{#each formInfusions}}
+            <div class="ke-remember">
+                <input type="checkbox" name="remember-form" id="remember-form" />
+                <label for="remember-form">Remember Last Choice</label>
+            </div>
+            <table class="ke-attack-table ke-burn-table">
+                <thead>
                     <tr>
-                        <td><input type="radio" name="form" id="form-{{id}}" value="{{id}}" /></td>
-                        <td><label for="form-{{id}}">{{name}} ({{burn}})</label></td>
+                        <th></th>
+                        <th>Infusion</th>
+                        <th>Burn</th>
                     </tr>
-                {{/each}}
+                </thead>
+                <tbody>
+                    <tr>
+                        <td><input type="radio" name="form" id="form-none" value="none" checked /></td>
+                        <td><label for="form-none"><i>None</i></label></td>
+                        <td><label for="form-none">0</label></td>
+                    </tr>
+                    {{#each formInfusions}}
+                        <tr>
+                            <td><input type="radio" name="form" id="form-{{id}}" value="{{id}}" /></td>
+                            <td><label for="form-{{id}}">{{name}}</label></td>
+                            <td><label for="form-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
             </table>
         </div>
-        <div class="ke-blast-attack-section">
+
+
+        <div class="ke-blast-attack-section" style="width: 190px;">
             <h2 class="ke-blast-attack-h2">Substance Infusion</h2>
-            <table class="ke-attack-table">
+            <div class="ke-remember">
+                <input type="checkbox" name="remember-substance" id="remember-substance" />
+                <label for="remember-substance">Remember Last Choice</label>
+            </div>
+            <table class="ke-attack-table ke-burn-table">
+                <thead>
                 <tr>
-                    <th colspan="2">Substance</th>
+                    <th></th>
+                    <th>Infusion</th>
+                    <th>Burn</th>
                 </tr>
-                <tr>
-                    <td><input type="radio" name="substance" id="substance-none" value="none" checked /></td>
-                    <td><label for="substance-none"><i>None</i></label></td>
-                </tr>
-                {{#each substanceInfusions}}
+                </thead>
+                <tbody>
                     <tr>
-                        <td><input type="radio" name="substance" id="substance-{{id}}" value="{{id}}" /></td>
-                        <td><label for="substance-{{id}}">{{name}} ({{burn}})</label></td>
+                        <td><input type="radio" name="substance" id="substance-none" value="none" checked /></td>
+                        <td><label for="substance-none"><i>None</i></label></td>
+                        <td><label for="substance-none">0</label></td>
                     </tr>
-                {{/each}}
+                    {{#each substanceInfusions}}
+                        <tr>
+                            <td><input type="radio" name="substance" id="substance-{{id}}" value="{{id}}" /></td>
+                            <td><label for="substance-{{id}}">{{name}}</label></td>
+                            <td><label for="substance-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
             </table>
         </div>
 
 
-        <div class="ke-blast-attack-section">
+        <div class="ke-blast-attack-section" style="width: 180px;">
             <h2 class="ke-blast-attack-h2">Apply Metakinesis</h2>
-            <table class="ke-attack-table">
-                <tr>
-                    <th colspan="2">Metakinesis</th>
-                </tr>
-
-                {{#each metakinesis}}
+            <div class="ke-remember">
+                <input type="checkbox" name="remember-meta" id="remember-meta" />
+                <label for="remember-meta">Remember Last Choice</label>
+            </div>
+            <table class="ke-attack-table ke-burn-table">
+                <thead>
                     <tr>
-                        <td><input type="checkbox" name="meta-{{id}}" id="meta-{{id}}" value="meta-{{id}}" /></td>
-                        <td><label for="meta-{{id}}">{{name}} ({{burn}})</label></td>
+                        <th></th>
+                        <th>Metakinesis</th>
+                        <th>Burn</th>
                     </tr>
-                {{/each}}
+                </thead>
+                <tbody>
+                    {{#each metakinesis}}
+                        <tr>
+                            <td><input type="checkbox" name="meta-{{id}}" id="meta-{{id}}" value="meta-{{id}}" /></td>
+                            <td><label for="meta-{{id}}">{{name}}</label></td>
+                            <td><label for="meta-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
             </table>
         </div>
 
 
         <div class="ke-blast-attack-section">
             <h2 class="ke-blast-attack-h2">Active Utilities</h2>
-            <table class="ke-attack-table">
-                <tr>
-                    <th colspan="2">Metakinesis</th>
-                </tr>
-
-                {{#each utilityTalents}}
+            <div class="ke-remember">
+                <input type="checkbox" name="remember-utility" id="remember-utility" />
+                <label for="remember-utility">Remember Last Choice</label>
+            </div>
+            <table class="ke-attack-table ke-burn-table">
+                <thead>
                     <tr>
-                        <td>
-                            <input type="checkbox" name="utility-{{id}}" id="utility-{{id}}"
-                                   value="utility-{{id}}" {{active}}/>
-                        </td>
-                        <td><label for="utility-{{id}}">{{name}} ({{burn}})</label></td>
+                        <th></th>
+                        <th>Wild Talent</th>
+                        <th>Burn</th>
                     </tr>
-                {{/each}}
+                </thead>
+                <tbody>
+                    {{#each utilityTalents}}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="utility-{{id}}" id="utility-{{id}}"
+                                       value="utility-{{id}}" {{active}}/>
+                            </td>
+                            <td><label for="utility-{{id}}">{{name}}</label></td>
+                            <td><label for="utility-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
             </table>
+            <table class="ke-attack-table ke-burn-table" style="margin-top: 1rem;">
+                <thead>
+                    <tr>
+                        <th></th>
+                        <th>Feat</th>
+                        <th>Burn</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {{#each feats}}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="feat-{{id}}" id="feat-{{id}}" value="feat-{{id}}" {{active}} checked disabled/>
+                            </td>
+                            <td><label for="feat-{{id}}">{{name}}</label></td>
+                            <td><label for="feat-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                </tbody>
+            </table>
+            <div style="font-style: italic; font-size: 8pt; width: 100%; text-align: center">Toggling feats is WIP</div>
         </div>
     </div>
 
 
-    <div style="text-align: center; margin-top: 20px;">
-        <button class="ke-button roll-blast-attack-button" type="submit"><i class="fas fa-solid fa-undo"></i>Roll
-            attack
-        </button>
-    </div>
+    <div class="ke-attack-buttons">
+        <div class="ke-attack-button-wrapper">
+            <button class="ke-button roll-blast-attack-button" type="submit"><i class="fas fa-solid fa-undo"></i>Roll
+                attack
+            </button>
+        </div>
+        <div class="ke-attack-info">
+            <div><span>Current Burn: </span><span id="current-burn">{{burn}}</span></div>
+            <div><span>Burn Cost: </span><span id="burn-cost">0</span></div>
+            <div><span>Infusion Specialization: </span><span id="infusion-specialization">{{ infusionSpecialization }}</span></div>
+        </div>
+
+        <div class="ke-attack-mods">
+            <div class="ke-checkbox">
+                <input type="checkbox" name="apply-burn" id="apply-burn" />
+                <label for="apply-burn">Apply Burn Automatically</label>
+            </div>
+            <div class="ke-checkbox">
+                <input type="checkbox" name="skip-templates" id="skip-templates" />
+                <label for="skip-templates">Skip Measure Templates</label>
+            </div>
+            <div class="ke-checkbox">
+                <input type="checkbox" name="double-damage" id="double-damage" />
+                <label for="double-damage">x2 Damage</label>
+            </div>
+            <div class="ke-checkbox">
+                <input type="checkbox" name="double-area" id="double-area" />
+                <label for="double-area">x2 Area</label>
+            </div>
+        </div>
     </div>
 </form>
 

@@ -90,6 +90,13 @@ export class ApplicationActorHUD extends Application {
         app.render(true);
     }
 
+    debug() {
+        console.log('Debug');
+        //const newPos = this.setPosition({left: 500, top: 500});
+        game.keTokenHUD.render(true, { left: 500, top: 500 });
+        //console.log("New Pos", newPos);
+    }
+
     /**
      * Defines all jQuery control callbacks with event listeners for click, drag, drop via various CSS selectors.
      *
@@ -101,5 +108,6 @@ export class ApplicationActorHUD extends Application {
         super.activateListeners(html);
         html.on(jquery.click, '#ke-button-actorconfig', void 0, () => this.doActorConfig(this.actor));
         html.on(jquery.click, '#ke-button-attack', void 0, () => this.doAttack(this.actor));
+        html.on(jquery.click, '#ke-debug', void 0, () => this.debug());
     }
 }

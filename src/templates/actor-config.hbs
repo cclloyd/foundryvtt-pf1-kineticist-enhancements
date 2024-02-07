@@ -7,7 +7,7 @@
             <a class="item" data-tab="blastconfig">Blasts</a>
             <a class="item" data-tab="infusionconfig">Infusions</a>
             <a class="item" data-tab="utilityconfig">Utilities</a>
-            <a class="item">Metakinesis (WIP)</a>
+            <a class="item" data-tab="featconfig">Feats</a>
         </nav>
         <hr>
         <div style="width: 100%; height: 8px;"></div>
@@ -27,7 +27,8 @@
             <div class="tab" data-tab="utilityconfig" data-group="primary-tabs">
                 {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-utilities.hbs" tabname="utilityconfig" utilityTalents=utilityTalents }}
             </div>
-            <div class="tab disabled" data-tab="metakinesisconfig" data-group="primary-tabs">
+            <div class="tab" data-tab="featconfig" data-group="primary-tabs">
+                {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-feats.hbs" tabname="featconfig" feats=feats }}
             </div>
         </section>
 

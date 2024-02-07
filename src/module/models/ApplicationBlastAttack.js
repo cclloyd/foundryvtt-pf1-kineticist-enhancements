@@ -1,8 +1,8 @@
 import { ns } from '../lib/config';
-import { defaultCompositeTransform, getCompositeBlasts } from '../lib/common';
+import { defaultCompositeTransform, getCompositeBlasts, jquery } from '../lib/common';
 import { metaTransforms } from '../lib/blastData/metaTransforms';
 import { simpleBlastsAsArray, simpleBlastsWith3pp } from '../lib/generated/simpleBlasts';
-import { compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
+import { compositeBlasts, compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
 import { formInfusions } from '../lib/generated/formInfusions';
 import { formTransforms } from '../lib/blastData/formTransforms';
 import { substanceInfusions } from '../lib/generated/substanceInfusions';
@@ -11,11 +11,14 @@ import { metakinesis } from '../lib/generated/metakinesis';
 import { utilityTalents, utilityTalentsAsArray } from '../lib/generated/utilityTalents';
 import { utilityTransforms } from '../lib/blastData/utilityTransforms';
 import { getBaseData } from '../lib/blastData/newBlastTemplates';
+import { Kineticist } from './Kineticist';
+import { feats, mythicFeats } from '../lib/blastData/feats';
 
 export class ApplicationBlastAttack extends FormApplication {
     constructor(options = {}) {
         super(options);
         this.actor = options.actor;
+        this.kineticist = new Kineticist(this.actor);
         //if (options.actor) {}
     }
 
@@ -27,8 +30,8 @@ export class ApplicationBlastAttack extends FormApplication {
             id: `ke-blast-attack`,
             classes: [ns],
             template: `modules/${ns}/templates/blast-attack.hbs`,
-            width: 1130,
-            height: 500,
+            width: 1350,
+            height: 600,
             resizable: true,
             title: 'Kinetic Blast Attack',
         });
@@ -70,6 +73,28 @@ export class ApplicationBlastAttack extends FormApplication {
             b.active = activeUtilityIDs.indexOf(b.id) > -1 ? 'checked' : '';
             return b;
         });
+        const flags = this.kineticist.getBurnFlags();
+
+        const gatherTemplate = {
+            none: { name: 'None', id: 'none' },
+            swift: { name: 'Swift Action', id: 'swift' },
+            move: { name: 'Move Action', id: 'move' },
+            move2: { name: '2 Move Actions', id: 'move2' },
+            move3: { name: '3 Move Actions', id: 'move3' },
+            standard: { name: 'Standard Action', id: 'standard' },
+            full: { name: 'Full-Round Action', id: 'full' },
+            fullmove: { name: 'Full+Move Action', id: 'fullmove' },
+        };
+        const gatherBurn = this.kineticist.getGatherPowerReductions();
+        const gather = {};
+        for (let key in gatherTemplate) {
+            if (gatherBurn[key] > 0) gather[key] = { ...gatherTemplate[key], burn: gatherBurn[key] };
+        }
+
+        const allFeats = Object.values(feats).concat(Object.values(mythicFeats));
+        const ownedFeats = allFeats.filter((f) => {
+            return flags[f.id];
+        });
 
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
@@ -79,6 +104,11 @@ export class ApplicationBlastAttack extends FormApplication {
             substanceInfusions: ownedSubstanceInfusions,
             utilityTalents: activeUtilityTalents,
             metakinesis: metakinesis,
+            feats: ownedFeats,
+            infusionSpecialization: this.kineticist.getInfusionSpecialization(),
+            flags: flags, // TODO: use flags instead of the variables below
+            gather: Object.values(gather),
+            burn: this.kineticist.getBurn(),
         });
     }
 
@@ -266,7 +296,50 @@ export class ApplicationBlastAttack extends FormApplication {
         this._asyncUpdateObject(event, formData);
     }
 
+    updateForm() {
+        let formInfusion = formInfusions[$('#ke-blast-attack input[name="form"]:checked').val()];
+        let substanceInfusion = substanceInfusions[$('#ke-blast-attack input[name="substance"]:checked').val()];
+        let burnCost = 0;
+
+        const flags = this.kineticist.getBurnFlags();
+
+        // Apply infusion cost and reductions
+        let infusionCost = -this.kineticist.getInfusionSpecialization();
+        infusionCost += parseInt(formInfusion?.burn ?? 0);
+        infusionCost += parseInt(substanceInfusion?.burn ?? 0);
+        infusionCost = Math.max(0, infusionCost); // Don't let Infusion Specialization reduce below 0
+        burnCost += infusionCost;
+
+        // Apply composite blast cost and reductions
+        const selectedBlast = $('#ke-blast-attack input[name="blast"]:checked').val();
+        const blast = compositeBlastsWith3pp[selectedBlast] ?? simpleBlastsWith3pp[selectedBlast];
+        let blastCost = blast?.burn ?? 0;
+        if (this.kineticist.getLevel() >= 16) blastCost -= 1;
+        blastCost = Math.max(0, blastCost); // Don't let Infusion Specialization reduce below 0
+        burnCost += blastCost;
+
+        // Apply metakinesis cost and reductions
+        let metaCost = 0;
+        $('#ke-blast-attack input[name^="meta-"]:checked').each((i, elem) => {
+            const m = metakinesis[elem.id.substring(5)];
+            if (m) metaCost += parseInt(m.burn) ?? 0;
+        });
+        metaCost = Math.max(0, metaCost);
+        burnCost += metaCost;
+        // TODO: Apply Metakinetic Master here
+
+        // Apply reduction from gather power
+        const selectedGather = $('#ke-blast-attack input[name="gather"]:checked').val();
+        const reductions = this.kineticist.getGatherPowerReductions();
+        burnCost -= reductions[selectedGather] ?? 0;
+
+        if (burnCost < 0) {
+            $('#burn-cost').text(`0 (${burnCost})`);
+        } else $('#burn-cost').text(burnCost);
+    }
+
     activateListeners(html) {
         super.activateListeners(html);
+        html.on('click', 'input', void 0, () => this.updateForm());
     }
 }
