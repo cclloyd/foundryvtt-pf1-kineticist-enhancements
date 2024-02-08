@@ -13,6 +13,7 @@ import { utilityTransforms } from '../lib/blastData/utilityTransforms';
 import { getBaseData } from '../lib/blastData/newBlastTemplates';
 import { Kineticist } from './Kineticist';
 import { feats, mythicFeats } from '../lib/blastData/feats';
+import { specialTransforms } from '../lib/blastData/specialTransforms';
 
 export class ApplicationBlastAttack extends FormApplication {
     constructor(options = {}) {
@@ -109,6 +110,9 @@ export class ApplicationBlastAttack extends FormApplication {
             flags: flags, // TODO: use flags instead of the variables below
             gather: Object.values(gather),
             burn: this.kineticist.getBurn(),
+            compositeSpecializationActive: this.actor.classes.kineticist.level >= 16,
+            actorFlags: this.actor.flags[ns],
+            // TODO: just move these to some onload or something or figure out handlebar/conditionals better
         });
     }
 
@@ -219,14 +223,12 @@ export class ApplicationBlastAttack extends FormApplication {
         // Apply transformations
         if (!Array.isArray(blastData.system.effectNotes)) blastData.system.effectNotes = [];
         if (formTransform) {
-            console.log('Foundry VTT | Applying form infusions');
             [dmgParts, blastData] = formTransform(this, dmgParts, blastData, blastConfig, formData);
             if (blastData.system.actions[0].actionType === 'save')
                 blastData.system.effectNotes.push(`${formInfusion.name} Infusion`);
             else blastData.system.attackNotes.push(`${formInfusion.name} Infusion`);
         }
         if (substanceTransform) {
-            console.log('Foundry VTT | Applying substance infusions');
             [dmgParts, blastData] = substanceTransform(this, dmgParts, blastData, blastConfig, formData);
             if (blastData.system.actions[0].actionType === 'save')
                 blastData.system.effectNotes.push(`${substanceInfusion.name} Infusion`);
@@ -244,13 +246,11 @@ export class ApplicationBlastAttack extends FormApplication {
         // TODO: Add option on form to roll damage as 1/2 or 1/4 damage (no attack roll)
 
         // Apply utility talents
-        console.log('Foundry VTT | Applying utility talents');
         activeUtilityTalents.map((talent) => {
             [dmgParts, blastData] = utilityTransforms[talent.id](this, dmgParts, blastData, blastConfig, formData);
         });
 
         // Apply metakinesis
-        console.log('Foundry VTT | Applying metakinesis');
         for (let key of Object.keys(formData)) {
             // If the key starts with meta and the key is checked
             //console.error('key', key, formData[key], typeof formData[key])
@@ -260,13 +260,33 @@ export class ApplicationBlastAttack extends FormApplication {
             }
         }
 
+        // Apply special case transforms
+        if (formData['double-area'])
+            [dmgParts, blastData] = specialTransforms['double-area'](this, dmgParts, blastData, blastConfig, formData);
+        if (formData['double-damage'])
+            [dmgParts, blastData] = specialTransforms['double-damage'](
+                this,
+                dmgParts,
+                blastData,
+                blastConfig,
+                formData,
+            );
+        if (formData['skip-templates'])
+            [dmgParts, blastData] = specialTransforms['skip-templates'](
+                this,
+                dmgParts,
+                blastData,
+                blastConfig,
+                formData,
+            );
+
         // Build damage string
-        let damage = `${dmgParts[0][0]}`;
-        if (dmgParts.length > 1) {
-            for (let p of dmgParts.slice(1)) {
-                console.log(p);
-                damage += ` + ${p[0]}[${p[1]}]`;
-            }
+        let damage = '';
+        if (blastData.flags.baseDamageModified) {
+            for (let p of dmgParts) damage += ` + ${p[0]} [${p[1]}]`;
+        } else {
+            damage = `${dmgParts[0][0]}`;
+            for (let p of dmgParts.slice(1)) damage += ` + ${p[0]} [${p[1]}]`;
         }
 
         // Set damage string
@@ -282,10 +302,49 @@ export class ApplicationBlastAttack extends FormApplication {
         // Create new item from data
         const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData], { temporary: true }))[0];
 
+        // Save inputs
+        this.actor.setFlag(ns, 'remember-gather', formData['remember-gather']);
+        if (formData['remember-gather']) this.actor.setFlag(ns, 'remember-gather-value', formData['gather']);
+        this.actor.setFlag(ns, 'remember-blast', formData['remember-blast']);
+        if (formData['remember-blast']) this.actor.setFlag(ns, 'remember-blast-value', formData['blast']);
+        this.actor.setFlag(ns, 'remember-form', formData['remember-form']);
+        if (formData['remember-form']) this.actor.setFlag(ns, 'remember-form-value', formData['form']);
+        this.actor.setFlag(ns, 'remember-substance', formData['remember-substance']);
+        if (formData['remember-substance']) this.actor.setFlag(ns, 'remember-substance-value', formData['substance']);
+        this.actor.setFlag(ns, 'remember-meta', formData['remember-meta']);
+        if (formData['remember-meta']) {
+            const activeMetaIDs = [];
+            for (let key in formData)
+                if (key.startsWith('meta-') && formData[key]) activeMetaIDs.push(key.substring(5));
+            this.actor.setFlag(ns, 'remember-meta-value', activeMetaIDs);
+        }
+        this.actor.setFlag(ns, 'remember-utility', formData['remember-utility']);
+        if (formData['remember-utility']) {
+            const activeMetaIDs = [];
+            for (let key in formData)
+                if (key.startsWith('utility-') && formData[key]) activeMetaIDs.push(key.substring(8));
+            this.actor.setFlag(ns, 'remember-utility-value', activeMetaIDs);
+        }
+
+        this.actor.setFlag(ns, 'remember-apply-burn', formData['apply-burn']);
+        this.actor.setFlag(ns, 'remember-skip-templates', formData['skip-templates']);
+        this.actor.setFlag(ns, 'remember-double-damage', formData['double-damage']);
+        this.actor.setFlag(ns, 'remember-double-area', formData['double-area']);
+
+        // if (formData['remember-meta']) {
+        //     this.actor.setFlag(ns, 'remember-meta', true);
+        //     this.actor.setFlag(ns, 'remember-meta-value', formData['blast']);
+        // }
+        // if (formData['remember-utility']) {
+        //     this.actor.setFlag(ns, 'remember-utility', true);
+        //     this.actor.setFlag(ns, 'remember-utility-value', formData['blast']);
+        // }
+
         // Pull up the dialog to use the blast
         try {
             console.log('Foundry VTT | newBlast', newBlast);
             await newBlast.use({ skipDialog: false });
+            if (formData['apply-burn']) await this.kineticist.addBurn(formData['burn']);
         } catch (err) {
             console.error('Foundry VTT | Error using new item', err);
         }
@@ -334,12 +393,28 @@ export class ApplicationBlastAttack extends FormApplication {
         burnCost -= reductions[selectedGather] ?? 0;
 
         if (burnCost < 0) {
+            $('#burn').val('0');
             $('#burn-cost').text(`0 (${burnCost})`);
-        } else $('#burn-cost').text(burnCost);
+        } else {
+            $('#burn').val(`${burnCost}`);
+            $('#burn-cost').text(burnCost);
+        }
+    }
+
+    loadForm() {
+        if (this.actor.getFlag(ns, 'remember-gather'))
+            $(`#gather-${this.actor.getFlag(ns, 'remember-gather-value')}`).prop('checked', true);
+        if (this.actor.getFlag(ns, 'remember-blast'))
+            $(`#${this.actor.getFlag(ns, 'remember-blast-value')}`).prop('checked', true);
+        if (this.actor.getFlag(ns, 'remember-form'))
+            $(`#form-${this.actor.getFlag(ns, 'remember-form-value')}`).prop('checked', true);
+        if (this.actor.getFlag(ns, 'remember-substance'))
+            $(`#substance-${this.actor.getFlag(ns, 'remember-substance-value')}`).prop('checked', true);
     }
 
     activateListeners(html) {
         super.activateListeners(html);
         html.on('click', 'input', void 0, () => this.updateForm());
+        html.find('#ke-managed-blast').ready(this.loadForm());
     }
 }

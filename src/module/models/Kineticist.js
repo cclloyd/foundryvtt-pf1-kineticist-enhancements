@@ -17,18 +17,29 @@ export class Kineticist {
         return this.actor.classes.kineticist.level;
     }
 
-    getClassFeature(featureName) {
+    getClassFeature(identifier) {
+        const items = this.actor.items.filter((item) => item.system.tag === identifier);
+        if (items.length > 0) return items[0];
+        return null;
+    }
+
+    getClassFeatureByName(featureName) {
         const items = this.actor.items.filter((item) => item.name === featureName);
         if (items.length > 0) return items[0];
         return null;
     }
 
+    async addBurn(amount) {
+        let burn = this.getClassFeature('classFeat_burn'); // returns the Item object
+        const newBurn = { _id: burn._id, system: { uses: { value: parseInt(amount) + burn.system.uses.value } } };
+        await this.actor.updateEmbeddedDocuments('Item', [newBurn]);
+    }
+
     getGatherPowerReductions() {
+        // Generates an object with the action type and burn reductions, based on feats
         const flags = this.getBurnFlags();
         let gather = {
-            //swift: 1,
             move: 1,
-            //standard: 2,
             full: 2,
             fullmove: 3,
         };

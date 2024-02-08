@@ -2,6 +2,17 @@
 
 This is a module for FoundryVTT that streamlines using the Kinetic Blast class feature of the Kineticist class in Pathfinder 1.
 
+# Features:
+-
+- Automatiaclly apply burn
+- Automatically detect feats/class features on your sheet
+  - Requires the identifier to follow a specific standard
+    - feat: `feat_camelCase` (Be wary of exceptions in the compendium, such as `feat_twoweaponFighting`)
+    - class feature: `classFeat_camelCase`
+- Support for various feats/class features right out of the box (more on request, just open an issue!)
+-
+
+
 # Screenshots
 
 - HUD for selected Kineticist token
