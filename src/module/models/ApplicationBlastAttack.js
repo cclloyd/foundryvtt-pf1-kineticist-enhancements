@@ -287,7 +287,7 @@ export class ApplicationBlastAttack extends FormApplication {
         } else {
             damage = `${dmgParts[0][0]}`;
             for (let p of dmgParts.slice(1)) {
-                if (p[1] === 'Physical Blast') damage += ` + ${p[0]}[${p[1]}]`;
+                if (p[1].includes('Physical ')) damage += ` + ${p[0]}[${p[1]}]`;
                 else damage += ` + ${p[0]} [${p[1]}]`;
             }
         }

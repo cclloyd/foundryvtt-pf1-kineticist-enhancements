@@ -5,7 +5,7 @@ export const sleep = (time) => {
 };
 
 export const debug = () => {
-    CONFIG.debug.hooks = true;
+    //CONFIG.debug.hooks = true;
 };
 
 export const getAllPlayersActors = async () => {

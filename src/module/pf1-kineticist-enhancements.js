@@ -32,7 +32,7 @@ Hooks.once('init', async () => {
 // });
 
 Hooks.on('controlToken', (token, selected) => {
-    CONFIG.debug.hooks = true;
+    //CONFIG.debug.hooks = true;
 
     if (selected && token.actor.classes.kineticist?.level > 0) {
         // Set the correct actor to the buttons
