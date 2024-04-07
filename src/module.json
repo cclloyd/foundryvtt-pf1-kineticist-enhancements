@@ -8,7 +8,6 @@
             "name": "cclloyd"
         }
     ],
-    "scripts": [],
     "esmodules": ["module/pf1-kineticist-enhancements.js"],
     "styles": ["styles/pf1-kineticist-enhancements.css"],
     "packs": [],

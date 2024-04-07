@@ -90,11 +90,14 @@ export class ApplicationActorHUD extends Application {
         app.render(true);
     }
 
-    debug() {
+    async debug() {
         console.log('Debug');
         //const newPos = this.setPosition({left: 500, top: 500});
-        game.keTokenHUD.render(true, { left: 500, top: 500 });
+        //game.keTokenHUD.render(true, { left: 500, top: 500 });
         //console.log("New Pos", newPos);
+        // const fileData = SOME_FILE_DATA; // You need to have this data available
+        // const targetPath = `worlds/myworld/uploads/myfile.jpg`; // Target path
+        // await FilePicker.upload('data', targetPath, fileData, {overwrite: true});
     }
 
     /**

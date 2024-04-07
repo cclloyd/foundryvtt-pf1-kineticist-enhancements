@@ -2,6 +2,8 @@ cache:
   paths:
     - node_modules/
 
+# TODO: https://foundryvtt.com/article/package-release-api/
+
 stages:
   - build
   - release

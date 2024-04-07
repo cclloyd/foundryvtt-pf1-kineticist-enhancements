@@ -1,6 +1,7 @@
 import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
 import { ApplicationActorHUD } from './models/ApplicationActorHUD';
+//import Jimp from 'jimp';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -14,7 +15,25 @@ Hooks.once('init', async () => {
     await preloadTemplates();
 });
 
+// Initialize module
+// Hooks.on('renderFilePicker', async (app, html, config) => {
+//     //CONFIG.debug.hooks = true;
+//     console.log(app, html, config);
+//     console.log(window.location.host);
+//     const baseURL = `${window.location.href.substring(0, window.location.href.length - 5)}/`;
+//     if (!app.request.endsWith('.webp')) {
+//         console.log(`Converting ${app.request} to webp...`);
+//         WebAssembly.instantiateStreaming(fetch("https://oledonline-cclloyd1-a915293e2caa693cb6c0c40e09e4948896958525f39.gitlab.io/oled-wasm.wasm"), {}).then(
+//             (results) => {
+//                 // Do something with the results!
+//             },
+//         );
+//     }
+// });
+
 Hooks.on('controlToken', (token, selected) => {
+    CONFIG.debug.hooks = true;
+
     if (selected && token.actor.classes.kineticist?.level > 0) {
         // Set the correct actor to the buttons
         if (game.keTokenHUD.actor === null) {
