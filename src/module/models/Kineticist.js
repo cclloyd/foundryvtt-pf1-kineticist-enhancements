@@ -43,24 +43,24 @@ export class Kineticist {
             full: 2,
             fullmove: 3,
         };
-        if (flags.feat_acceleratedGathering) {
+        if (flags.acceleratedGathering) {
             gather.standard = gather.full;
         }
-        if (flags.feat_mythicGatherPower) {
+        if (flags.mythicGatherPower) {
             gather.swift = gather.move;
         }
         if (flags.mythicCelerity || flags.mythicHaste) {
             gather.move2 = gather.move;
         }
-        if (flags.classFeat_flashStep) {
+        if (flags.flashStep) {
             if (gather.move2) gather.move3 = gather.move;
             else gather.move2 = gather.move;
         }
-        if (flags.classFeat_supercharge) {
-            const increase = flags.feat_mythicSupercharge ? 2 : 1;
+        if (flags.supercharge) {
+            const increase = flags.mythicSupercharge ? 2 : 1;
             for (let key in gather) gather[key] += increase;
         }
-        if (flags.feat_kineticAcceleration && (flags.haste || flags.celerity || flags.mythicCelerity)) {
+        if (flags.kineticAcceleration && (flags.haste || flags.celerity || flags.mythicCelerity)) {
             for (let key in gather) gather[key] += 1;
         }
 
@@ -70,28 +70,34 @@ export class Kineticist {
         return gather;
     }
 
+    checkFeat(inputFeat, featTag) {
+        if (inputFeat === featTag) return true;
+        else if (inputFeat === `feat_${featTag}`) return true;
+        else if (inputFeat === `classFeat_${featTag}`) return true;
+        return false;
+    }
+
     getBurnFlags() {
         const flags = {};
 
         // Go through items to automatically map stuff from sheet
         this.actor.items.map((item) => {
             // Class Features
-            if (item.system.tag === 'classFeat_compositeSpecialization')
-                flags['classFeat_compositeSpecialization'] = true;
-            else if (item.system.tag === 'classFeat_flashStep') flags['classFeat_flashStep'] = true;
-            else if (item.system.tag === 'classFeat_metakineticMaster') flags['classFeat_metakineticMaster'] = true;
-            else if (item.system.tag === 'classFeat_supercharge') flags['classFeat_supercharge'] = true;
+            if (this.checkFeat(item.system.tag, 'compositeSpecialization')) flags['compositeSpecialization'] = true;
+            else if (this.checkFeat(item.system.tag, 'flashStep')) flags['flashStep'] = true;
+            else if (this.checkFeat(item.system.tag, 'metakineticMaster')) flags['metakineticMaster'] = true;
+            else if (this.checkFeat(item.system.tag, 'supercharge')) flags['supercharge'] = true;
             // Feats
-            else if (item.system.tag === 'feat_acceleratedGathering') flags['feat_acceleratedGathering'] = true;
-            else if (item.system.tag === 'feat_kineticAcceleration') flags['feat_kineticAcceleration'] = true;
+            else if (this.checkFeat(item.system.tag, 'acceleratedGathering')) flags['acceleratedGathering'] = true;
+            else if (this.checkFeat(item.system.tag, 'kineticAcceleration')) flags['kineticAcceleration'] = true;
             // Mythic
-            else if (item.system.tag === 'feat_mythicGatherPower') flags['feat_mythicGatherPower'] = true;
-            else if (item.system.tag === 'feat_mythicSupercharge') flags['feat_mythicSupercharge'] = true;
+            else if (this.checkFeat(item.system.tag, 'mythicGatherPower')) flags['mythicGatherPower'] = true;
+            else if (this.checkFeat(item.system.tag, 'mythicSupercharge')) flags['mythicSupercharge'] = true;
             // Buffs
-            else if (item.system.tag === 'haste') flags['haste'] = item.system.active;
-            else if (item.system.tag === 'celerity') flags['celerity'] = item.system.active;
-            else if (item.system.tag === 'mythicHaste') flags['mythicHaste'] = item.system.active;
-            else if (item.system.tag === 'mythicCelerity') flags['mythicCelerity'] = item.system.active;
+            else if (this.checkFeat(item.system.tag, 'haste')) flags['haste'] = item.system.active;
+            else if (this.checkFeat(item.system.tag, 'celerity')) flags['celerity'] = item.system.active;
+            else if (this.checkFeat(item.system.tag, 'mythicHaste')) flags['mythicHaste'] = item.system.active;
+            else if (this.checkFeat(item.system.tag, 'mythicCelerity')) flags['mythicCelerity'] = item.system.active;
         });
 
         // Also check manually checked stuff from module

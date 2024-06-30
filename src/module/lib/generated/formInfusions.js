@@ -537,6 +537,23 @@ export const formInfusions = {
         appendText: 'Telekinetic Boomerang',
         noBlastText: true,
     },
+    thundercrash: {
+        name: 'Thundercrash',
+        element: ['air'],
+        type: 'form',
+        level: '1',
+        burn: '0',
+        blasts: ['electric'],
+        save: 'Reflex half',
+        description:
+            'The user charges forward unleashing their built up energy in a 10-ft burst centered on them.  The user takes half damage.',
+        id: 'thundercrash',
+        prepend: false,
+        append: true,
+        prependText: null,
+        appendText: 'Thundercrash',
+        noBlastText: true,
+    },
     torrent: {
         name: 'Torrent',
         element: ['air', 'fire,', 'water'],

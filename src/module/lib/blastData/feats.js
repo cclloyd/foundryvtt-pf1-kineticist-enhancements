@@ -1,6 +1,6 @@
 export const feats = {
-    feat_acceleratedGathering: {
-        id: 'feat_acceleratedGathering',
+    acceleratedGathering: {
+        id: 'acceleratedGathering',
         name: 'Accelerated Gathering',
         prerequisites: ['Gather power class feature', '5th-level kineticist'],
         benefit:
@@ -17,8 +17,8 @@ export const feats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    feat_kineticAcceleration: {
-        id: 'feat_kineticAcceleration',
+    kineticAcceleration: {
+        id: 'kineticAcceleration',
         name: 'Kinetic Acceleration',
         prerequisites: ['Character level 7th'],
         benefit:
@@ -46,8 +46,8 @@ export const mythicFeats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    feat_mythicSupercharge: {
-        id: 'feat_mythicSupercharge',
+    mythicSupercharge: {
+        id: 'mythicSupercharge',
         name: 'Mythic Supercharge',
         prerequisites: ['supercharge'],
         benefit: 'The kineticist increases the burn cost reductions gained with supercharge by 1 additional point.',
@@ -62,8 +62,8 @@ export const mythicFeats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    feat_mythicGatherPower: {
-        id: 'feat_mythicGatherPower',
+    mythicGatherPower: {
+        id: 'mythicGatherPower',
         name: 'Mythic Gather Power',
         prerequisites: [],
         benefit:

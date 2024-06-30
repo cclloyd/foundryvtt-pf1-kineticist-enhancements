@@ -57,7 +57,7 @@ const baseAction = {
     attackNotes: [],
 };
 
-const getDefaultAction = () => {
+export const getDefaultAction = () => {
     // eslint-disable-next-line no-undef
     let subAction = globalThis.pf1.components.ItemAction.defaultData;
     subAction = foundry.utils.mergeObject(subAction, baseAction);

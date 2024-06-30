@@ -348,14 +348,19 @@ merge(baseBlast, {
 });
 export const compositeEnergy = { ...mergedCompositeEnergy };
 
-export const melee = {
-    count: {
-        formula: 'ceil(@attributes.bab.total / 5) - 1',
-    },
-    bonus: {
-        formula: '@formulaicAttack * -5',
-    },
-    label: 'Attack #{0}',
+export const melee = (blastData, formData, options = {}) => {
+    blastData.system.actions[0].actionType = 'mwak';
+    blastData.system.actions[0].range.value = `${options.range ?? 5}`;
+    blastData.system.actions[0].formulaicAttacks = {
+        count: {
+            formula: `ceil(@attributes.bab.total / 5) - ${formData['attack-fix'] ? 2 : 1}`,
+        },
+        bonus: {
+            formula: '@formulaicAttack * -5',
+        },
+        label: 'Attack #{0}',
+    };
+    return blastData;
 };
 
 /**

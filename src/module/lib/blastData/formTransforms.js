@@ -37,6 +37,9 @@ export const formTransforms = {
         blastData.system.actions[0].range.value = '0';
         blastData.system.actions[0].measureTemplate = measure(20);
         save(blastData, 'ref');
+        for (let i = 0; i < dmgParts.length; i++) {
+            dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
+        }
         return [dmgParts, blastData];
     },
     'deadly-earth': (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -51,6 +54,7 @@ export const formTransforms = {
         blastData.system.actions[0].range.value = '0';
         blastData.system.actions[0].measureTemplate = measure(20);
         save(blastData, 'ref');
+        // TODO: Move save and measure to Macros class.  Add half, double,  maximize, etc to Macro class.
         return [dmgParts, blastData];
     },
     eruption: (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -89,13 +93,12 @@ export const formTransforms = {
     },
     'flurry-of-blasts': (instance, dmgParts, blastData, blastConfig, formData) => {
         blastData.system.actions[0].formulaicAttacks.bonus.formula = '@formulaicAttack * -5';
-
-        if (instance.actor.data.data.classes.kineticist.level >= 20)
+        if (instance.actor.classes.kineticist.level >= 20)
             blastData.system.actions[0].formulaicAttacks.count.formula = '4';
-        else if (instance.actor.data.data.classes.kineticist.level >= 16)
+        else if (instance.actor.classes.kineticist.level >= 16)
             blastData.system.actions[0].formulaicAttacks.count.formula = '3';
-        else if (instance.actor.data.data.classes.kineticist.level >= 10)
-            blastData.system.formulaicAttacks.count.formula = '2';
+        else if (instance.actor.classes.kineticist.level >= 10)
+            blastData.system.actions[0].formulaicAttacks.count.formula = '2';
         else blastData.system.actions[0].formulaicAttacks.count.formula = '1';
 
         // Base simple blast
@@ -108,11 +111,7 @@ export const formTransforms = {
         dmgParts = [BASE];
 
         // Add physical bonus
-        if (blastConfig.type === 'physical') {
-            dmgParts.push(PB);
-        } else {
-            console.log();
-        }
+        if (blastConfig.type === 'physical') dmgParts.push(PB);
 
         // Add elemental overflow
         dmgParts.push(EO);
@@ -141,18 +140,19 @@ export const formTransforms = {
         return [dmgParts, blastData];
     },
     'kinetic-blade': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.system.actions[0].formulaicAttacks = melee;
-        blastData.system.actions[0].range.value = '5';
+        console.log('blade blastData', blastData);
+        blastData.type = 'attack';
+        blastData = melee(blastData, formData);
         return [dmgParts, blastData];
     },
     'kinetic-fist': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.system.actions[0].formulaicAttacks = melee;
-        blastData.system.actions[0].range.value = '5';
+        blastData.type = 'attack';
+        blastData = melee(blastData, formData);
         return [dmgParts, blastData];
     },
     'kinetic-whip': (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.system.actions[0].formulaicAttacks = melee;
-        blastData.system.actions[0].range.value = '15';
+        blastData.type = 'attack';
+        blastData = melee(blastData, formData, { range: 15 });
         return [dmgParts, blastData];
     },
     'many-throw': (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -189,6 +189,15 @@ export const formTransforms = {
         return [dmgParts, blastData];
     },
     'telekinetic-boomerang': (instance, dmgParts, blastData, blastConfig, formData) => {
+        return [dmgParts, blastData];
+    },
+    thundercrash: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.actions[0].actionType = 'save';
+        blastData.system.actions[0].range.value = '0';
+        blastData.system.actions[0].measureTemplate = measure(10);
+        dmgParts[0][0] = `min(5, ceil(@classes.kineticist.level /2))d6`;
+        blastData.system.actions[0].ability.damageMult = 1;
+        save(blastData, 'ref');
         return [dmgParts, blastData];
     },
     torrent: (instance, dmgParts, blastData, blastConfig, formData) => {

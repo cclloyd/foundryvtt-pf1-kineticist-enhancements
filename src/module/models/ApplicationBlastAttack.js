@@ -10,7 +10,7 @@ import { substanceTransforms } from '../lib/blastData/substanceTransforms';
 import { metakinesis } from '../lib/generated/metakinesis';
 import { utilityTalents, utilityTalentsAsArray } from '../lib/generated/utilityTalents';
 import { utilityTransforms } from '../lib/blastData/utilityTransforms';
-import { getBaseData } from '../lib/blastData/newBlastTemplates';
+import { getBaseData, getDefaultAction } from '../lib/blastData/newBlastTemplates';
 import { Kineticist } from './Kineticist';
 import { feats, mythicFeats } from '../lib/blastData/feats';
 import { specialTransforms } from '../lib/blastData/specialTransforms';
@@ -283,7 +283,7 @@ export class ApplicationBlastAttack extends FormApplication {
         // Build damage string
         let damage = '';
         if (blastData.flags.baseDamageModified) {
-            for (let p of dmgParts) damage += ` + ${p[0]} [${p[1]}]`;
+            for (let p of dmgParts) damage += ` + ${p[0]}[${p[1]}]`;
         } else {
             damage = `${dmgParts[0][0]}`;
             for (let p of dmgParts.slice(1)) {
@@ -291,6 +291,11 @@ export class ApplicationBlastAttack extends FormApplication {
                 else damage += ` + ${p[0]} [${p[1]}]`;
             }
         }
+
+        // Apply melee attack count fix
+        console.log('count2', blastData.system.actions[0].formulaicAttacks.count);
+        // blastData.system.actions[0].formulaicAttacks.count.formula = blastData.system.actions[0].formulaicAttacks.count.formula.slice(0, -1) + `${formData['attack-fix'] ? 1 : 2}`
+        // console.log('count', blastData.system.actions[0].formulaicAttacks.count.formula)
 
         // Set damage string
         blastData.system.actions[0].damage.parts[0] = {
@@ -333,6 +338,7 @@ export class ApplicationBlastAttack extends FormApplication {
         this.actor.setFlag(ns, 'remember-skip-templates', formData['skip-templates']);
         this.actor.setFlag(ns, 'remember-double-damage', formData['double-damage']);
         this.actor.setFlag(ns, 'remember-double-area', formData['double-area']);
+        this.actor.setFlag(ns, 'remember-attack-fix', formData['attack-fix']);
 
         // if (formData['remember-meta']) {
         //     this.actor.setFlag(ns, 'remember-meta', true);
