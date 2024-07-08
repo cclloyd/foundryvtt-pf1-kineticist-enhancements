@@ -1,0 +1,89 @@
+<div id="ke-add-custom-blast">
+    <form id="custom-blast">
+    {{#with defaultData}}
+    <input type="hidden" id="class" name="class" value="{{class}}"/>
+
+    <table>
+        <tr>
+            <th><label for="name">Name</label></th>
+            <td>
+                <input type="text" id="name" name="name" placeholder="Name" autocomplete="off" value="{{name}}"/>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id">ID</label></th>
+            <td>
+                <input type="text" id="id" name="id" placeholder="short-name" autocomplete="off" value="{{id}}"/>
+                <span>ID name this will be referenced by.  No spaces.</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="description">Description</label></th>
+            <td>
+                <textarea rows="6" id="description" name="description" placeholder="A long description">{{description}}</textarea>
+                <span>A long full description of this blasts</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="type">Type</label></th>
+            <td>
+                <select id="type" name="type">
+                    <option value="physical">Physical</option>
+                    <option value="energy">Energy</option>
+                </select>
+            </td>
+        </tr>
+        {{#if (eq class "composite")}}
+            <tr>
+                <th><label for="burn">Burn</label></th>
+                <td>
+                    <input type="text" id="burn" name="burn" value="{{burn}}"/>
+                </td>
+            </tr>
+
+            <tr>
+                <th><label for="blast1">Component Blasts</label></th>
+                <td>
+                    <div style="display: flex; gap: 0.5rem;">
+                        <input type="text" id="blast1" name="blast1" placeholder="blast1" value="{{blast1}}"/>
+                        <input type="text" id="blast2" name="blast2" placeholder="blast2" value="{{blast2}}"/>
+                        <input type="text" id="blast3" name="blast3" placeholder="blast3" value="{{blast3}}"/>
+                    </div>
+                </td>
+            </tr>
+        {{/if}}
+        <tr>
+            <th><label for="damageType">Damage Type</label></th>
+            <td>
+                <input type="text" id="damageType" name="damageType" placeholder="bludgeoning" value="{{damageType}}"/>
+                <span>csv list of damage types this blast does</span>
+            </td>
+        </tr>
+
+        <tr>
+            <th><label for="element">Elements</label></th>
+            <td>
+                <input type="text" id="element" name="element" placeholder="air,earth,etc" value="{{element}}"/>
+                <span>csv list of element IDs this blast is associated with</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="icon">Icon</label></th>
+            <td>
+                <input type="text" id="icon" name="icon" placeholder="/path/to/icon.png" value="{{icon}}"/>
+                <span>Path to icon for this blast</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <button class="ke-button save-simple-button" type="submit" id="save-custom">
+                    <i class="fas fa-solid fa-save"></i> Save New Blast
+                </button>
+            </td>
+        </tr>
+    </table>
+    {{/with}}
+    </form>
+
+</div>

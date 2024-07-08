@@ -1,1 +1,31 @@
-<div>Work in progress...</div>
+<div class="columns">
+    <div class="column" style="max-width: 300px">
+        <table class="ke-table">
+            <tr>
+                <th colspan="2">Metakinesis</th>
+            </tr>
+
+            {{#each metakinesis}}
+                <tr class="settings-custom-row checkbox-row">
+                    <td><input type="checkbox" name="metakinesis-{{id}}" id="metakinesis-{{id}}" value="{{id}}" checked disabled/></td>
+                    <td><label for="metakinesis-{{id}}">{{name}}</label></td>
+                </tr>
+            {{/each}}
+
+
+            <tr>
+                <th colspan="2">Custom Metakinesis</th>
+            </tr>
+            {{#each customMetakinesis}}
+                <tr class="settings-custom-row checkbox-row">
+                    <td><input type="checkbox" name="custom-metakinesis-{{id}}" id="custom-metakinesis-{{id}}" value="custom-{{id}}" {{owned}}/></td>
+                    <td><label for="custom-metakinesis-{{id}}">{{name}}</label></td>
+                </tr>
+            {{/each}}
+        </table>
+    </div>
+</div>
+
+<div style="text-align: center; font-style: italic; user-select: none; padding: 1rem">
+    Add custom metakinesis from the game settings.
+</div>

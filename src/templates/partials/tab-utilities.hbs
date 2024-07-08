@@ -1,19 +1,31 @@
-<div style="display: flex; justify-content: space-between">
-    <div style="width: 65%; margin: auto">
 
-        <table>
+<div class="columns">
+    <div class="column" style="max-width: 300px">
+        <table class="ke-table">
             <tr>
-                <th colspan="2">Form Infusions</th>
+                <th colspan="2">Utility Talents</th>
             </tr>
 
             {{#each utilityTalents}}
-                <tr>
-                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="utility-{{id}}"
-                                                                        id="utility-{{id}}"
-                                                                        value="{{id}}" {{owned}}/></td>
-                    <td style="text-align: left;"><label for="utility-{{id}}">{{name}}</label>
+                <tr class="settings-custom-row checkbox-row">
+                    <td><input type="checkbox" name="utility-{{id}}" id="utility-{{id}}" value="{{id}}" {{owned}}/></td>
+                    <td><label for="utility-{{id}}">{{name}}</label></td>
+                </tr>
+            {{/each}}
+
+            <tr>
+                <th colspan="2">Custom Utility Talents</th>
+            </tr>
+            {{#each customUtilityTalents}}
+                <tr class="settings-custom-row checkbox-row">
+                    <td><input type="checkbox" name="custom-utility-{{id}}" id="custom-utility-{{id}}" value="custom-{{id}}" {{owned}}/></td>
+                    <td><label for="custom-utility-{{id}}">{{name}}</label></td>
                 </tr>
             {{/each}}
         </table>
     </div>
+</div>
+
+<div style="text-align: center; font-style: italic; user-select: none; padding: 1rem">
+    Add custom utility wild talents from the game settings.
 </div>

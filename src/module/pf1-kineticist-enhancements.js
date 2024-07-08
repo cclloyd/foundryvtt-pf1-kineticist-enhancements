@@ -1,7 +1,6 @@
 import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
-import { ApplicationActorHUD } from './models/ApplicationActorHUD';
-//import Jimp from 'jimp';
+import { ApplicationActorHUD } from './applications/ApplicationActorHUD';
 
 // Initialize module
 Hooks.once('init', async () => {
@@ -14,22 +13,6 @@ Hooks.once('init', async () => {
     // Preload Handlebars templates
     await preloadTemplates();
 });
-
-// Initialize module
-// Hooks.on('renderFilePicker', async (app, html, config) => {
-//     //CONFIG.debug.hooks = true;
-//     console.log(app, html, config);
-//     console.log(window.location.host);
-//     const baseURL = `${window.location.href.substring(0, window.location.href.length - 5)}/`;
-//     if (!app.request.endsWith('.webp')) {
-//         console.log(`Converting ${app.request} to webp...`);
-//         WebAssembly.instantiateStreaming(fetch("https://oledonline-cclloyd1-a915293e2caa693cb6c0c40e09e4948896958525f39.gitlab.io/oled-wasm.wasm"), {}).then(
-//             (results) => {
-//                 // Do something with the results!
-//             },
-//         );
-//     }
-// });
 
 Hooks.on('controlToken', (token, selected) => {
     //CONFIG.debug.hooks = true;
@@ -64,13 +47,6 @@ Hooks.on('controlToken', (token, selected) => {
     } else {
         game.keTokenHUD.close().then();
     }
-
-    // const sc = new SceneControls();
-    // sc.controls[0].icon = 'fas fa-ruler-combined';
-    // sc.render();
-    // console.log('sc', sc);
-    // console.log('game', game);
-    // console.log('flags', token.actor.flags);
 });
 
 Hooks.on('canvasReady', async () => {

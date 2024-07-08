@@ -1,5 +1,5 @@
 export const feats = {
-    acceleratedGathering: {
+    feat_acceleratedGathering: {
         id: 'acceleratedGathering',
         name: 'Accelerated Gathering',
         prerequisites: ['Gather power class feature', '5th-level kineticist'],
@@ -17,7 +17,7 @@ export const feats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    kineticAcceleration: {
+    feat_kineticAcceleration: {
         id: 'kineticAcceleration',
         name: 'Kinetic Acceleration',
         prerequisites: ['Character level 7th'],
@@ -46,7 +46,7 @@ export const mythicFeats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    mythicSupercharge: {
+    feat_mythicSupercharge: {
         id: 'mythicSupercharge',
         name: 'Mythic Supercharge',
         prerequisites: ['supercharge'],
@@ -62,7 +62,7 @@ export const mythicFeats = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
         burn: '-',
     },
-    mythicGatherPower: {
+    feat_mythicGatherPower: {
         id: 'mythicGatherPower',
         name: 'Mythic Gather Power',
         prerequisites: [],

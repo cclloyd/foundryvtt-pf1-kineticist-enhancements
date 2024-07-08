@@ -1,35 +1,69 @@
-<div style="display: flex; justify-content: space-between">
-    <div style="width: 48%">
+<div>
+    <div class="columns">
+        <div class="column">
 
-        <table>
-            <tr>
-                <th colspan="2">Form Infusions</th>
-            </tr>
-
-            {{#each formInfusions}}
+            <table class="ke-table actor-setting-table">
                 <tr>
-                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="form-{{id}}"
-                                                                        id="form-{{id}}"
-                                                                        value="{{id}}" {{owned}}/></td>
-                    <td style="text-align: left;"><label for="form-{{id}}">{{name}}</label>
+                    <th colspan="2">Form Infusions</th>
                 </tr>
-            {{/each}}
-        </table>
+
+                {{#each formInfusions}}
+                    <tr>
+                        <td><input type="checkbox" name="form-{{id}}" id="form-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><label for="form-{{id}}">{{name}}</label>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <th colspan="2">Custom Form Infusions</th>
+                </tr>
+
+                {{#each customFormInfusions}}
+                    <tr class="custom-infusions">
+
+                        <td><input type="checkbox" name="custom-form-{{id}}" id="custom-form-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td>
+                            <label for="custom-form-{{id}}">{{name}}</label>
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </table>
+        </div>
+
+        <div class="column">
+
+            <table class="ke-table actor-setting-table">
+                <tr>
+                    <th colspan="2">Substance Infusions</th>
+                </tr>
+
+                {{#each substanceInfusions}}
+                    <tr>
+                        <td><input type="checkbox" name="substance-{{id}}" id="substance-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><label for="substance-{{id}}">{{name}}</label>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <th colspan="2">Custom Substance Infusions</th>
+                </tr>
+
+                {{#each customSubstanceInfusions}}
+                    <tr class="custom-infusions">
+
+                        <td><input type="checkbox" name="custom-substance-{{id}}" id="custom-substance-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td>
+                            <label for="custom-substance-{{id}}">{{name}}</label>
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </table>
+        </div>
+
     </div>
-
-    <div style="width: 48%">
-        <table>
-            <tr>
-                <th colspan="2">Substance Infusions</th>
-            </tr>
-            {{#each substanceInfusions}}
-                <tr>
-                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="substance-{{id}}"
-                                                                        id="substance-{{id}}"
-                                                                        value="{{id}}" {{owned}}/></td>
-                    <td style="text-align: left;"><label for="substance-{{id}}">{{name}}</label>
-                </tr>
-            {{/each}}
-        </table>
+    <div style="text-align: center; font-style: italic; user-select: none; padding: 1rem">
+        Add custom infusions from the game settings.
     </div>
 </div>

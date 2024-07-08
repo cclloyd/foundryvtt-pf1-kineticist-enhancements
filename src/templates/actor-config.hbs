@@ -1,20 +1,19 @@
-<div class="ke-setup-container">
-    <form id="ke-actor-config">
+<div id="ke-actor-config">
+    <form id="actor-config">
 
-        <h1>{{actor.name}} Kineticist Enhanced Config</h1>
+        <h1>{{actor.name}} Config</h1>
         <hr>
         <nav class="tabs {{style}} ke-setup-tabs" id="ke-setup-tabs" data-group="primary-tabs">
             <a class="item" data-tab="blastconfig">Blasts</a>
             <a class="item" data-tab="infusionconfig">Infusions</a>
             <a class="item" data-tab="utilityconfig">Utilities</a>
-            <a class="item" data-tab="featconfig">Feats</a>
+            <a class="item" data-tab="metakinesisconfig">Metakinesis</a>
         </nav>
         <hr>
         <div style="width: 100%; height: 8px;"></div>
 
         <div style="text-align: center; padding: 0 3rem 8px">
-            <button class="ke-button save-simple-button" type="submit"><i class="fas fa-solid fa-save"></i> Save Config
-            </button>
+            <button class="ke-button save-simple-button" type="submit" id="save-actor-config"><i class="fas fa-solid fa-save"></i> Save Config</button>
         </div>
 
         <section class="ke-setup-body {{style}}" id="ke-setup-body">
@@ -27,8 +26,8 @@
             <div class="tab" data-tab="utilityconfig" data-group="primary-tabs">
                 {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-utilities.hbs" tabname="utilityconfig" utilityTalents=utilityTalents }}
             </div>
-            <div class="tab" data-tab="featconfig" data-group="primary-tabs">
-                {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-feats.hbs" tabname="featconfig" feats=feats }}
+            <div class="tab" data-tab="metakinesisconfig" data-group="primary-tabs">
+                {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-metakinesis.hbs" tabname="metakinesisconfig"}}
             </div>
         </section>
 

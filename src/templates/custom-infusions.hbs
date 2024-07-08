@@ -1,0 +1,58 @@
+<form id="settings-custom-infusions">
+    <div class="save-button">
+        <button class="ke-button save-simple-button" type="submit" id="save-actor-config"><i class="fas fa-solid fa-save"></i> Save Infusions</button>
+    </div>
+    <div class="columns">
+
+        <div class="column">
+            <table class="ke-table">
+                <tr>
+                    <th colspan="2">Form Infusions</th>
+                </tr>
+
+                {{#each customFormInfusions}}
+                    <tr class="settings-custom-row editable">
+
+                        <td>
+                            <label for="custom-form-{{id}}">{{name}}</label>
+                            <div>
+                                <button id="custom-form-{{id}}-edit"><i class="fa-solid fa-edit"></i></button>
+                                <button id="custom-form-{{id}}-delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td class="table-add-button" colspan="2"><span id="add-custom-form-infusion">+ Add Custom</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="column">
+            <table class="ke-table">
+                <tr>
+                    <th colspan="2">Substance Infusions</th>
+                </tr>
+
+                {{#each customSubstanceInfusions}}
+                    <tr class="settings-custom-row editable">
+
+                        <td>
+                            <label for="custom-substance-{{id}}">{{name}}</label>
+                            <div>
+                                <button id="custom-substance-{{id}}-edit"><i class="fa-solid fa-edit"></i></button>
+                                <button id="custom-substance-{{id}}-delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td class="table-add-button" colspan="2"><span id="add-custom-substance-infusion">+ Add Custom</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</form>

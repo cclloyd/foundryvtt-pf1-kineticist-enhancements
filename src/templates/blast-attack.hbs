@@ -57,6 +57,13 @@
                             <td><label for="{{id}}">0</label></td>
                         </tr>
                     {{/each}}
+                    {{#each customSimple}}
+                        <tr>
+                            <td><input type="radio" name="blast" id="custom-{{id}}" value="custom-{{id}}" data-type="simple" required /></td>
+                            <td><label for="custom-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-{{id}}">0</label></td>
+                        </tr>
+                    {{/each}}
                     <tr>
                         <td colspan="3">
                             <div style="width: 1px; height: 17px;"></div>
@@ -76,6 +83,13 @@
                             <td><input type="radio" name="blast" id="{{id}}" value="{{id}}" data-type="composite" required /></td>
                             <td><label for="{{id}}">{{name}}</label></td>
                             <td><label for="{{id}}">{{ burn }}</label></td>
+                        </tr>
+                    {{/each}}
+                    {{#each customComposite}}
+                        <tr>
+                            <td><input type="radio" name="blast" id="custom-{{id}}" value="custom-{{id}}" data-type="composite" required /></td>
+                            <td><label for="custom-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-{{id}}">{{ burn }}</label></td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -110,6 +124,13 @@
                             <td><label for="form-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
+                    {{#each customFormInfusions}}
+                        <tr>
+                            <td><input type="radio" name="form" id="custom-form-{{id}}" value="custom-{{id}}" /></td>
+                            <td><label for="custom-form-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-form-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>
@@ -142,6 +163,13 @@
                             <td><label for="substance-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
+                    {{#each customSubstanceInfusions}}
+                        <tr>
+                            <td><input type="radio" name="substance" id="custom-substance-{{id}}" value="custom-{{id}}" /></td>
+                            <td><label for="custom-substance-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-substance-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
                 </tbody>
             </table>
         </div>
@@ -164,9 +192,16 @@
                 <tbody>
                     {{#each metakinesis}}
                         <tr>
-                            <td><input type="checkbox" name="meta-{{id}}" id="meta-{{id}}" value="meta-{{id}}" /></td>
+                            <td><input type="checkbox" name="meta-{{id}}" id="meta-{{id}}" value="{{id}}" {{active}}/></td>
                             <td><label for="meta-{{id}}">{{name}}</label></td>
                             <td><label for="meta-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                    {{#each customMetakinesis}}
+                        <tr>
+                            <td><input type="checkbox" name="custom-meta-{{id}}" id="custom-meta-{{id}}" value="{{id}}" {{active}}/></td>
+                            <td><label for="custom-meta-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-meta-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -192,11 +227,17 @@
                     {{#each utilityTalents}}
                         <tr>
                             <td>
-                                <input type="checkbox" name="utility-{{id}}" id="utility-{{id}}"
-                                       value="utility-{{id}}" {{active}}/>
+                                <input type="checkbox" name="utility-{{id}}" id="utility-{{id}}" value="{{id}}" {{active}}/>
                             </td>
                             <td><label for="utility-{{id}}">{{name}}</label></td>
                             <td><label for="utility-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
+                    {{#each customUtilityTalents}}
+                        <tr>
+                            <td><input type="checkbox" name="utility-{{id}}" id="custom-utility-{{id}}" value="{{id}}" {{active}}/></td>
+                            <td><label for="custom-utility-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-utility-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
                 </tbody>
@@ -213,15 +254,23 @@
                     {{#each feats}}
                         <tr>
                             <td>
-                                <input type="checkbox" name="feat-{{id}}" id="feat-{{id}}" value="feat-{{id}}" {{active}} checked disabled/>
+                                <input type="checkbox" name="feat-{{id}}" id="feat-{{id}}" value="feat_{{id}}" checked />
                             </td>
                             <td><label for="feat-{{id}}">{{name}}</label></td>
                             <td><label for="feat-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
+                    {{#each customFeats}}
+                        <tr>
+                            <td>
+                                <input type="checkbox" name="custom-feat-{{id}}" id="custom-feat-{{id}}" value="custom-feat_{{id}}" checked />
+                            </td>
+                            <td><label for="custom-feat-{{id}}">{{name}}</label></td>
+                            <td><label for="custom-feat-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
                 </tbody>
             </table>
-            <div style="font-style: italic; font-size: 8pt; width: 100%; text-align: center">Toggling feats is WIP</div>
         </div>
     </div>
 

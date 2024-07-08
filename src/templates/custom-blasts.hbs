@@ -1,0 +1,58 @@
+<form id="settings-custom-blasts">
+    <div class="save-button">
+        <button class="ke-button save-simple-button" type="submit" id="save-actor-config"><i class="fas fa-solid fa-save"></i> Save Blasts</button>
+    </div>
+    <div class="columns">
+
+        <div class="column">
+            <table class="ke-table">
+                <tr>
+                    <th colspan="2">Simple Blasts</th>
+                </tr>
+
+                {{#each customSimpleBlasts}}
+                    <tr class="settings-custom-row editable">
+
+                        <td>
+                            <label for="custom-{{id}}">{{name}}</label>
+                            <div>
+                                <button id="custom-{{id}}-edit"><i class="fa-solid fa-edit"></i></button>
+                                <button id="custom-{{id}}-delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td class="table-add-button" colspan="2"><span id="add-custom-simple">+ Add Custom</span></td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="column">
+            <table class="ke-table">
+                <tr>
+                    <th colspan="2">Composite Blasts</th>
+                </tr>
+
+                {{#each customCompositeBlasts}}
+                    <tr class="settings-custom-row editable">
+
+                        <td>
+                            <label for="custom-{{id}}">{{name}}</label>
+                            <div>
+                                <button id="custom-{{id}}-edit"><i class="fa-solid fa-edit"></i></button>
+                                <button id="custom-{{id}}-delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td class="table-add-button" colspan="2"><span id="add-custom-composite">+ Add Custom</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</form>

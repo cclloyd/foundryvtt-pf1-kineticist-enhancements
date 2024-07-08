@@ -1,0 +1,33 @@
+<form id="settings-custom-metakinesis">
+    <div class="save-button">
+        <button class="ke-button save-simple-button" type="submit" id="save-custom"><i class="fas fa-solid fa-save"></i> Save Metakinesis</button>
+    </div>
+    <div class="columns">
+
+        <div class="column">
+            <table class="ke-table">
+                <tr>
+                    <th colspan="2">Metakinesis</th>
+                </tr>
+
+                {{#each customMetakinesis}}
+                    <tr class="settings-custom-row editable">
+
+                        <td>
+                            <label for="custom-metakinesis-{{id}}">{{name}}</label>
+                            <div>
+                                <button id="custom-{{id}}-edit"><i class="fa-solid fa-edit"></i></button>
+                                <button id="custom-{{id}}-delete"><i class="fa-solid fa-trash"></i></button>
+                            </div>
+                        </td>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <td class="table-add-button" colspan="2"><span id="add-custom-metakinesis">+ Add Custom</span></td>
+                </tr>
+            </table>
+        </div>
+    </div>
+
+</form>

@@ -1,16 +1,58 @@
 <div>
-    <p>Check off each simple blast you can use.</p>
-    <table>
-        {{#each simpleBlasts}}
-            <tr>
-                <td style="width: 40px; text-align: center;"><input type="checkbox"
-                                                                    name="simple-{{id}}"
-                                                                    id="simple-{{id}}"
-                                                                    value="{{id}}" {{owned}} />
-                </td>
-                <td style="text-align: left;"><label for="simple-{{id}}">{{name}}</label>
-                </td>
-            </tr>
-        {{/each}}
-    </table>
+    <div class="columns">
+        <div class="column">
+
+            <table class="ke-table actor-setting-table">
+                <tr>
+                    <th colspan="2">Simple Blasts</th>
+                </tr>
+
+                {{#each simpleBlasts}}
+                    <tr>
+                        <td><input type="checkbox" name="simple-{{id}}" id="simple-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><label for="simple-{{id}}">{{name}}</label>
+                    </tr>
+                {{/each}}
+
+                <tr>
+                    <th colspan="2">Custom Simple Blasts</th>
+                </tr>
+
+                {{#each customSimpleBlasts}}
+                    <tr>
+
+                        <td><input type="checkbox" name="custom-simple-{{id}}" id="custom-simple-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td>
+                            <label for="custom-simple-{{id}}">{{name}}</label>
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </table>
+        </div>
+
+        <div class="column">
+
+            <table class="ke-table actor-setting-table">
+                <tr>
+                    <th colspan="2">Custom Composite Blasts</th>
+                </tr>
+
+                {{#each customCompositeBlasts}}
+                    <tr>
+
+                        <td><input type="checkbox" name="custom-composite-{{id}}" id="custom-composite-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td>
+                            <label for="custom-composite-{{id}}">{{name}}</label>
+                        </td>
+                    </tr>
+                {{/each}}
+
+            </table>
+        </div>
+
+    </div>
+    <div style="text-align: center; font-style: italic; user-select: none; padding: 1rem">
+        Add custom blasts from the game settings.
+    </div>
 </div>

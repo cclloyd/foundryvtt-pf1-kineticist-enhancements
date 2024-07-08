@@ -56,3 +56,33 @@ export const jquery = {
     keydown: 'keydown',
     mousedown: 'mousedown',
 };
+
+export const serializeForm = (formId) => {
+    const formObject = $(`#${formId}`).serializeArray();
+    const formData = {};
+    $.each(formObject, (index, field) => {
+        formData[field.name] = field.value;
+        if (formData[field.name] === '') formData[field.name] = null;
+        if (formData[field.name] === 'on' || formData[field.name] === 'off')
+            formData[field.name] = formData[field.name] === 'on';
+    });
+    return formData;
+};
+
+export const capitalizeFirstLetter = (string) => {
+    return string.charAt(0).toUpperCase() + string.slice(1);
+};
+
+export const parseTransform = (inputFunction) => {
+    if (typeof inputFunction === 'function') return inputFunction;
+    if (inputFunction?.length > 0)
+        return Function(
+            'instance',
+            'dmgParts',
+            'blastData',
+            'blastConfig',
+            'formData',
+            `${inputFunction};\n;return [dmgParts, blastData];`,
+        );
+    return null;
+};

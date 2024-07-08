@@ -1,0 +1,119 @@
+<div id="ke-add-custom-infusion">
+    <form id="custom-infusion">
+    {{#with infusion}}
+    <table>
+        <tr>
+            <th><label for="name">Name</label></th>
+            <td>
+                <input type="text" id="name" name="name" placeholder="Name" autocomplete="off" value="{{name}}"/>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id">ID</label></th>
+            <td>
+                <input type="text" id="id" name="id" placeholder="short-name" autocomplete="off" value="{{id}}"/>
+                <span>ID name this will be referenced by.  No spaces.</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="description">Description</label></th>
+            <td>
+                <textarea rows="6" id="description" name="description" placeholder="A long description">{{description}}</textarea>
+                <span>A long full description of this infusion</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="element">Elements</label></th>
+            <td>
+                <input type="text" id="element" name="element" placeholder="air,earth,etc" value="{{element}}"/>
+                <span>csv list of element IDs this infusion is associated with</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="level">Level</label></th>
+            <td>
+                <input type="number" id="level" name="level" value="{{level}}"/>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="burn">Burn</label></th>
+            <td>
+                <input type="text" id="burn" name="burn" value="{{burn}}"/>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="prerequisites">Prerequisites</label></th>
+            <td>
+                <input type="text" id="prerequisites" name="prerequisites" placeholder="cyclone,kinetic-blade,etc" value="{{prerequisites}}"/>
+                <span>csv list of prerequisite IDs needed for this infusion</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="blasts">Blasts</label></th>
+            <td>
+                <input type="text" id="blasts" name="blasts" placeholder="lightning,thunderstorm,etc" value="{{blasts}}"/>
+                <span>csv list of blast IDs this works with</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="save">Save</label></th>
+            <td>
+                <input type="text" id="save" name="save" placeholder="Reflex half" value="{{save}}"/>
+                <span>Save description</span>
+            </td>
+        </tr>
+
+        <tr>
+            <th><label for="prepend">Prefix</label></th>
+            <td>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="checkbox" id="prepend" name="prepend" {{#if prepend}}checked{{/if}} />
+                    <input type="text" id="prependText" name="prependText" placeholder="Chaining" value="{{prependText}}" />
+                </div>
+                <span>Text to prepend to the blast when rolled</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="append">Suffix</label></th>
+            <td>
+                <div style="display: flex; gap: 0.5rem;">
+                    <input type="checkbox" id="append" name="append" {{#if append}}checked{{/if}}/>
+                    <input type="text" id="appendText" placeholder="Cyclone" value="{{appendText}}" />
+                </div>
+                <span>Text to append to the end of the blast when rolled</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="noBlastText">Name Override</label></th>
+            <td>
+                <input type="checkbox" id="noBlastText" name="noBlastText" {{#if noBlastText}}checked{{/if}}/>
+                <span>Replace the word 'blast' with the suffix</span>
+            </td>
+        </tr>
+
+        <tr>
+            <th><label for="transform">Transform</label></th>
+            <td>
+                <div class="transform-function">
+                    <i class="fa-regular fa-circle-question" id="transform-help"></i>
+                    <pre>function transform(instance, dmgParts, blastData, blastConfig, formData) {</pre>
+                    <textarea rows="6" id="transform" name="transform" spellcheck="false" class="language-javascript">{{transform}}</textarea>
+                    <pre>    return [blastData, dmgParts];
+}</pre>
+                </div>
+                <span>A function that accepts a PF1.Item object and returns the modified object. This is where you should modify the blast as per the infusion. See wiki/readme for more info.</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <button class="ke-button save-simple-button" type="submit" id="save-custom-form-infusion">
+                    <i class="fas fa-solid fa-save"></i> Save New Form Infusion
+                </button>
+            </td>
+        </tr>
+    </table>
+    {{/with}}
+    </form>
+</div>
+

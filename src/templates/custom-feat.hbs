@@ -1,0 +1,50 @@
+<div id="ke-add-custom-feat">
+    <form id="custom-feat">
+    {{#with defaultData}}
+    <table>
+        <tr>
+            <th><label for="name">Name</label></th>
+            <td>
+                <input type="text" id="name" name="name" placeholder="Name" autocomplete="off" value="{{name}}"/>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="id">ID</label></th>
+            <td>
+                <input type="text" id="id" name="id" placeholder="short-name" autocomplete="off" value="{{id}}"/>
+                <span>ID name this will be referenced by.  Will be used by Foundry to auto-find feats On the basis of `feat_ID`.</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="description">Description</label></th>
+            <td>
+                <textarea rows="6" id="description" name="description" placeholder="A long description">{{description}}</textarea>
+                <span>A long full description of this feat</span>
+            </td>
+        </tr>
+        <tr>
+            <th><label for="transform">Transform</label></th>
+            <td>
+                <div class="transform-function">
+                    <i class="fa-regular fa-circle-question" id="transform-help"></i>
+                    <pre>function transform(instance, dmgParts, blastData, blastConfig, formData) {</pre>
+                    <textarea rows="6" id="transform" name="transform" spellcheck="false" class="language-javascript">{{transform}}</textarea>
+                    <pre>    return [blastData, dmgParts];
+}</pre>
+                </div>
+                <span>A function that accepts a PF1.Item object and returns the modified object. This is where you should modify the blast as per the infusion. See wiki/readme for more info.</span>
+            </td>
+        </tr>
+
+        <tr>
+            <td colspan="2">
+                <button class="ke-button save-simple-button" type="submit" id="save-custom">
+                    <i class="fas fa-solid fa-save"></i> Save New Feat
+                </button>
+            </td>
+        </tr>
+    </table>
+    {{/with}}
+    </form>
+
+</div>

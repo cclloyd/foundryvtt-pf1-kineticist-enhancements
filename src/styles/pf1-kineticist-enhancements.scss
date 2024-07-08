@@ -176,3 +176,177 @@
     box-shadow: 0 0 10px #ff6400;
     cursor: pointer;
 }
+
+#ke-add-custom-form-infusion {
+    table {
+        tr {
+            th {
+                vertical-align: top;
+                padding-top: 0.75rem;
+            }
+            td {
+                padding: 0.5rem 0.25rem;
+                span {
+                    font-size: 9pt;
+                }
+            }
+        }
+    }
+}
+
+.table-add-button {
+    user-select: none;
+    text-align: center;
+    //padding: 0.5rem 0;
+    background: transparent;
+    span {
+        color: #333;
+        transition: all 0.3s ease-out;
+        padding: 0.5rem 0;
+        display: inline-block;
+        width: 100%;
+        height: 100%;
+        //margin: 0.5rem 0;
+        cursor: pointer;
+        text-align: center;
+        &:hover {
+            color: #111;
+            background-color: rgba(0, 0, 0, 0.1);
+        }
+    }
+}
+
+.ke-table {
+    border-top-width: 0;
+    border-bottom-width: 0;
+}
+
+.actor-setting-table {
+    tr {
+        td:first-child {
+            width: 40px;
+            text-align: center;
+        }
+        td:last-child {
+            text-align: left;
+        }
+    }
+}
+.transform-function {
+    position: relative;
+    pre {
+        font-size: 8pt;
+        margin: 0;
+    }
+    textarea {
+        border-width: 0;
+        margin-left: 1.5rem;
+        font-family: monospace;
+        width: calc(100% - 1.5rem);
+        resize: vertical;
+    }
+    i {
+        position: absolute;
+        left: 0.25rem;
+        top: 1rem;
+        cursor: pointer;
+        color: black;
+        font-size: 12pt;
+        opacity: 0.5;
+        transition: opacity 0.35s ease;
+        &:hover {
+            opacity: 1;
+        }
+    }
+}
+
+#custom-transform-help {
+    pre {
+        font-size: 8pt;
+        width: 800px;
+        user-select: text;
+    }
+}
+
+.settings-custom-row {
+    &.editable {
+        td:last-child {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            div {
+                display: flex;
+                justify-content: flex-end;
+                align-items: center;
+                width: 100%;
+                height: 100%;
+                label {
+                    display: inline-block;
+                }
+                button {
+                    width: 30px;
+                    display: inline-block;
+                }
+            }
+        }
+    }
+}
+
+.actor-config-row {
+    td:nth-child(2) {
+        div {
+            display: flex;
+            justify-content: flex-end;
+            align-items: center;
+            width: 100%;
+            height: 100%;
+            label {
+                display: inline-block;
+            }
+            button {
+                width: 30px;
+                display: inline-block;
+            }
+        }
+    }
+}
+
+.checkbox-row {
+    td:first-child {
+        width: 40px;
+    }
+}
+
+.columns {
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    width: 100%;
+    gap: 1rem;
+    .column {
+        flex-grow: 1;
+        flex-shrink: 1;
+        flex-basis: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+    }
+}
+
+#settings-custom-infusions {
+    min-height: 200px;
+    .save-button {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        button {
+            width: 400px;
+        }
+    }
+
+    div:last-child {
+        display: flex;
+        gap: 0.5rem;
+    }
+}
