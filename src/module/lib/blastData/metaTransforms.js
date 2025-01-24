@@ -18,15 +18,9 @@ export const metaTransforms = {
         let dmg = dmgParts[0][0];
         let [, dmgBase, dmgStep] = dmg.match(/((?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\))d(\d+)/);
 
-        if (blastData.system.attackNotes.includes('Empowered'))
-            dmg = dmg.replace(
-                /(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/,
-                `floor((${dmgBase}*${dmgStep})*1.5)`,
-            );
-        else dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase}*${dmgStep})`);
+        dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase}*${dmgStep})`);
         dmgParts[0][0] = dmg;
-        dmgParts[0][1] += ' (Maximized)';
-        //dmgParts.unshift(['0', 'Base']);
+        dmgParts[0][1] += ` (Maximized) (${dmgParts[0][0]})`;
         blastData.flags.baseDamageModified = true;
         return [dmgParts, blastData];
     },

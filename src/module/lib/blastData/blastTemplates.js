@@ -373,12 +373,14 @@ export const melee = (blastData, formData, options = {}) => {
  */
 export const measure = (size, shape, color, texture) => {
     return {
-        size: size ?? 10,
-        type: shape ?? 'circle',
-        overrideColor: color !== undefined,
+        color: '',
         customColor: color ?? '',
-        overrideTexture: texture !== undefined,
         customTexture: texture ?? '',
+        overrideColor: color !== undefined,
+        overrideTexture: texture !== undefined,
+        size: size ?? 10,
+        texture: '',
+        type: shape ?? 'circle',
     };
 };
 

@@ -151,7 +151,7 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Set owned feats
         const playerFeats = this.actor.items.filter(
-            (item) => item.system.tag.startsWith('feat_') || item.system.tag.startsWith('classFeat_'),
+            (item) => item.system?.tag?.startsWith('feat_') || item.system?.tag?.startsWith('classFeat_'),
         );
         const ownedFeats = [];
         const featIDs = Object.keys({ ...feats, ...mythicFeats }).map((k) => k.replace(/^(feat_|classFeat_)/, ''));
