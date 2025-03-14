@@ -212,7 +212,7 @@ export class ApplicationBlastAttack extends FormApplication {
     }
 
     async getBaseBlast() {
-        return (await this.actor.createEmbeddedDocuments('Item', getBaseData(), { temporary: true }))[0];
+        return (await this.actor.createEmbeddedDocuments('Item', [getBaseData()], { temporary: true }))[0];
     }
 
     async _asyncUpdateObject(event, inputFormData) {

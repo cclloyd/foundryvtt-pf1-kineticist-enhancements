@@ -1,5 +1,5 @@
 {
-    "name": "pf1-kineticist-enhancements",
+    "id": "pf1-kineticist-enhancements",
     "title": "Kineticist Enhancements for pf1e",
     "description": "Enhances the Kineticist experience on Pathfinder 1st Edition.",
     "version": "CI_COMMIT_TAG",
@@ -13,7 +13,7 @@
     "packs": [],
     "compatibility": {
         "minimum": "11",
-        "verified": "11.315"
+        "verified": "12.311"
     },
     "relationships": {
         "systems": [
@@ -22,7 +22,7 @@
                 "type": "system",
                 "compatibility": {
                     "minimum": "9.4",
-                    "verified": "10.8"
+                    "verified": "11.3"
                 }
             }
         ]

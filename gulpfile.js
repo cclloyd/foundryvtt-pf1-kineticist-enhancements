@@ -12,9 +12,10 @@ const sass = require('gulp-dart-sass');
 /*  CONFIGURATION   */
 /********************/
 
-const name = path.basename(path.resolve('.'));
+const baseName = path.basename(path.resolve('.'));
 const sourceDirectory = './src';
 const distDirectory = './dist';
+const distDirectory2 = '/data/dev/heavy-rain/Data/modules/pf1-kineticist-enhancements';
 const stylesDirectory = `${sourceDirectory}/styles`;
 const stylesExtension = 'scss';
 const sourceFileExtension = 'js';
@@ -38,7 +39,7 @@ async function buildCode() {
  */
 function buildStyles() {
     return gulp
-        .src(`${stylesDirectory}/${name}.${stylesExtension}`)
+        .src(`${stylesDirectory}/${baseName}.${stylesExtension}`)
         .pipe(sass().on('error', sass.logError))
         .pipe(gulp.dest(`${distDirectory}/styles`));
 }
@@ -50,6 +51,7 @@ async function copyFiles() {
     for (const file of staticFiles) {
         if (fs.existsSync(`${sourceDirectory}/${file}`)) {
             await fs.copy(`${sourceDirectory}/${file}`, `${distDirectory}/${file}`);
+            await fs.copy(`${sourceDirectory}/${file}`, `${distDirectory2}/${file}`);
         }
     }
 }
@@ -77,7 +79,7 @@ function buildWatch() {
 async function clean() {
     const files = [...staticFiles, 'module'];
 
-    if (fs.existsSync(`${stylesDirectory}/${name}.${stylesExtension}`)) {
+    if (fs.existsSync(`${stylesDirectory}/${baseName}.${stylesExtension}`)) {
         files.push('styles');
     }
 
@@ -86,6 +88,7 @@ async function clean() {
 
     for (const filePath of files) {
         await fs.remove(`${distDirectory}/${filePath}`);
+        await fs.remove(`${distDirectory2}/${filePath}`);
     }
 }
 
@@ -121,7 +124,7 @@ async function linkUserData() {
         throw new Error(`Could not find ${chalk.blueBright('module.json')}`);
     }
 
-    const linkDirectory = path.resolve(getDataPath(), destinationDirectory, name);
+    const linkDirectory = path.resolve(getDataPath(), destinationDirectory, baseName);
 
     if (argv.clean || argv.c) {
         console.log(chalk.yellow(`Removing build in ${chalk.blueBright(linkDirectory)}.`));
@@ -131,6 +134,7 @@ async function linkUserData() {
         console.log(chalk.green(`Linking dist to ${chalk.blueBright(linkDirectory)}.`));
         await fs.ensureDir(path.resolve(linkDirectory, '..'));
         await fs.symlink(path.resolve(distDirectory), linkDirectory);
+        await fs.symlink(path.resolve(distDirectory2), linkDirectory);
     }
 }
 
