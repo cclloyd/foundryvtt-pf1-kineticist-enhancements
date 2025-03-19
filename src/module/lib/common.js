@@ -35,8 +35,7 @@ export const getCompositeBlasts = (simpleBlasts, include3pp = true) => {
  */
 export const defaultCompositeTransform = (dmgParts, blastData, blastConfig, formData) => {
     blastData.system.attackNotes.push(`Composite Blast`);
-    dmgParts[0][0] = dmgParts[0][0].replace(/ceil\(@classes.kineticist.level\s?\/2\)d/, '(@classes.kineticist.level)d');
-    dmgParts[0][1] = 'Composite';
+    dmgParts[0] = ['(@classes.kineticist.level)d6', 'Composite'];
     return [dmgParts, blastData];
 };
 

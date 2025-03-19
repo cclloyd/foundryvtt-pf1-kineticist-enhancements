@@ -351,14 +351,8 @@ export const compositeEnergy = { ...mergedCompositeEnergy };
 export const melee = (blastData, formData, options = {}) => {
     blastData.system.actions[0].actionType = 'mwak';
     blastData.system.actions[0].range.value = `${options.range ?? 5}`;
-    blastData.system.actions[0].formulaicAttacks = {
-        count: {
-            formula: `ceil(@attributes.bab.total / 5) - ${formData['attack-fix'] ? 2 : 1}`,
-        },
-        bonus: {
-            formula: '@formulaicAttack * -5',
-        },
-        label: 'Attack #{0}',
+    blastData.system.actions[0].extraAttacks = {
+        type: 'standard',
     };
     return blastData;
 };
@@ -382,6 +376,23 @@ export const measure = (size, shape, color, texture) => {
         texture: '',
         type: shape ?? 'circle',
     };
+};
+
+export const divideDamage = (dmgParts, divisor) => {
+    dmgParts[0][0] = `(floor((${dmgParts[0][0]})/2))`;
+    for (let i = 1; i < dmgParts.length; i++) {
+        dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
+    }
+    return dmgParts;
+};
+
+export const appendBaseName = (dmgParts, suffix) => {
+    dmgParts[0][1] += ` ${suffix}`;
+    return dmgParts;
+};
+export const setBaseName = (dmgParts, blastName) => {
+    dmgParts[0][1] = `${blastName}`;
+    return dmgParts;
 };
 
 export const save = (blastData, type, negate, dc) => {

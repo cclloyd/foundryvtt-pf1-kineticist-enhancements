@@ -5,7 +5,7 @@ export const metaTransforms = {
         blastData.system.attackNotes.push(`Empowered`);
 
         for (let i = 0; i < dmgParts.length; i++) {
-            dmgParts[i][0] = `floor(${dmgParts[i][0]} *1.5)`;
+            dmgParts[i][0] = `(floor(${dmgParts[i][0]} *1.5))`;
             dmgParts[i][1] += ' (Empowered)';
         }
         blastData.system.actions[0].ability.damageMult *= 1.5;
@@ -16,9 +16,9 @@ export const metaTransforms = {
         blastData.system.actions[0].name += ' (Maximized)';
         blastData.system.attackNotes.push(`Maximized`);
         let dmg = dmgParts[0][0];
-        let [, dmgBase, dmgStep] = dmg.match(/((?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\))d(\d+)/);
+        let [_, dmgBase, dmgStep] = dmg.match(/(.+)d(\d+)/);
 
-        dmg = dmg.replace(/(?:ceil)?\(@classes\.kineticist\.level\s*(?:\/\d)?\)d\d+/, `(${dmgBase}*${dmgStep})`);
+        dmg = dmg.replace(/(.+)d(\d+)/, `(${dmgBase}*${dmgStep})`);
         dmgParts[0][0] = dmg;
         dmgParts[0][1] += ` (Maximized) (${dmgParts[0][0]})`;
         blastData.flags.baseDamageModified = true;

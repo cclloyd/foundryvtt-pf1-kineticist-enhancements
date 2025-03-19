@@ -1,5 +1,5 @@
 /* eslint-disable no-unused-vars */
-import { measure, melee, save } from './blastTemplates';
+import { appendBaseName, divideDamage, measure, melee, save } from './blastTemplates';
 
 export const formTransforms = {
     'blade-rush': (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -25,21 +25,24 @@ export const formTransforms = {
     },
     cloud: (instance, dmgParts, blastData, blastConfig, formData) => {
         // TODO: Add measure templates.  Override texture to be cloud w/ lightning
+        blastData.system.effectNotes.push(`Cloud Infusion`);
         blastData.system.actions[0].actionType = 'save';
         blastData.system.actions[0].spellArea = '20-ft. radius';
         blastData.system.actions[0].range.value = '120';
         blastData.system.actions[0].measureTemplate = measure(20);
         save(blastData, 'ref');
+        divideDamage(dmgParts, 2);
+        appendBaseName(dmgParts, 'Cloud');
         return [dmgParts, blastData];
     },
     cyclone: (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.effectNotes.push(`Cyclone Infusion`);
         blastData.system.actions[0].actionType = 'save';
         blastData.system.actions[0].range.value = '0';
         blastData.system.actions[0].measureTemplate = measure(20);
         save(blastData, 'ref');
-        for (let i = 0; i < dmgParts.length; i++) {
-            dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
-        }
+        divideDamage(dmgParts, 2);
+        appendBaseName(dmgParts, 'Cyclone');
         return [dmgParts, blastData];
     },
     'deadly-earth': (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -49,12 +52,11 @@ export const formTransforms = {
         return [dmgParts, blastData];
     },
     detonation: (instance, dmgParts, blastData, blastConfig, formData) => {
-        blastData.system.actions[0].actionType = 'save';
         blastData.system.effectNotes.push(`Detonation Infusion`);
+        blastData.system.actions[0].actionType = 'save';
         blastData.system.actions[0].range.value = '0';
         blastData.system.actions[0].measureTemplate = measure(20);
         save(blastData, 'ref');
-        // TODO: Move save and measure to Macros class.  Add half, double,  maximize, etc to Macro class.
         return [dmgParts, blastData];
     },
     eruption: (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -62,11 +64,7 @@ export const formTransforms = {
         blastData.system.actions[0].range.value = '120';
         blastData.system.actions[0].measureTemplate = measure(10);
         save(blastData, 'ref');
-        // TODO: Half damage for physical blast
-        if (blastConfig.type === 'physical')
-            for (let i = 0; i < dmgParts.length; i++) {
-                dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
-            }
+        if (blastConfig.type === 'physical') divideDamage(dmgParts, 2);
         return [dmgParts, blastData];
     },
     explosion: (instance, dmgParts, blastData, blastConfig, formData) => {
@@ -104,7 +102,10 @@ export const formTransforms = {
         // Base simple blast
         let BASE = ['1d6', 'Simple'];
         // Elemental Overflow
-        let EO = ['(min(@resources.burn.value, floor(@classes.kineticist.level /3))*2)', 'Elemental Overflow'];
+        let EO = [
+            '(min(@resources.classFeat_burn.value, floor(@classes.kineticist.level / 3)) * 2)',
+            'Elemental Overflow',
+        ];
         // Physical blast bonus
         let PB = ['@classes.kineticist.level', 'Physical blast'];
         // Array of damage parts in the form of [str:damage string, str:description]
@@ -140,7 +141,6 @@ export const formTransforms = {
         return [dmgParts, blastData];
     },
     'kinetic-blade': (instance, dmgParts, blastData, blastConfig, formData) => {
-        console.log('blade blastData', blastData);
         blastData.type = 'attack';
         blastData = melee(blastData, formData);
         return [dmgParts, blastData];
@@ -195,7 +195,7 @@ export const formTransforms = {
         blastData.system.actions[0].actionType = 'save';
         blastData.system.actions[0].range.value = '0';
         blastData.system.actions[0].measureTemplate = measure(10);
-        dmgParts[0][0] = `min(5, ceil(@classes.kineticist.level /2))d6`;
+        dmgParts[0][0] = `(min(5, ceil(@classes.kineticist.level /2)))d6`;
         blastData.system.actions[0].ability.damageMult = 1;
         save(blastData, 'ref');
         return [dmgParts, blastData];
@@ -205,6 +205,8 @@ export const formTransforms = {
         blastData.system.actions[0].range.value = '30';
         save(blastData, 'ref');
         blastData.system.actions[0].measureTemplate = measure(30, 'ray');
+        if (blastConfig.type === 'physical') divideDamage(dmgParts, 2);
+        appendBaseName(dmgParts, 'Torrent');
         return [dmgParts, blastData];
     },
     tremor: (instance, dmgParts, blastData, blastConfig, formData) => {

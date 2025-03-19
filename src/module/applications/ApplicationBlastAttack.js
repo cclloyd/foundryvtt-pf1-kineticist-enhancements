@@ -211,6 +211,10 @@ export class ApplicationBlastAttack extends FormApplication {
         });
     }
 
+    /**
+     * Returns a PF1.Item that uses the default PF1 action for its only action.  All fields are default.
+     * @returns {Promise<*>}
+     */
     async getBaseBlast() {
         return (await this.actor.createEmbeddedDocuments('Item', [getBaseData()], { temporary: true }))[0];
     }
@@ -273,7 +277,8 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Get blast data
         if (blastItem === undefined) {
-            console.error('Foundry VTT | Blast Item not found', blastItem);
+            console.error('PF1 Kineticist Enhancements | Blast Item not found', blastItem);
+            ui.notifications.error('PF1 Kineticist Enhancements | Blast Item not found');
             return;
         }
         let blastData = blastItem.toObject();
@@ -284,19 +289,21 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Merge template item with data based on form input
         blastData = foundry.utils.mergeObject(blastData, {
-            //name: `${blastConfig.name}`,
             img: blastConfig.icon,
+            system: {
+                identifiedName: blastConfig.name,
+                attackNotes: [],
+            },
         });
-        blastData.system.identifiedName = blastConfig.name;
-
+        //blastData.system.identifiedName = blastConfig.name;
         // Create empty attack notes in case it doesn't exist
-        blastData.system.attackNotes = [];
+        //blastData.system.attackNotes = [];
 
         // Base simple blast
-        let BASE = ['ceil(@classes.kineticist.level /2)d6', 'Simple'];
+        let BASE = ['(ceil(@classes.kineticist.level / 2))d6', 'Simple'];
         // Elemental Overflow
         let EO = [
-            '(min(@resources.classFeat_burn.value  , floor(@classes.kineticist.level /3))*2)',
+            '(min(@resources.classFeat_burn.value, floor(@classes.kineticist.level / 3)) * 2)',
             'Elemental Overflow',
         ];
         // Array of damage parts in the form of [str:damage string, str:description]
@@ -366,6 +373,8 @@ export class ApplicationBlastAttack extends FormApplication {
             blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
         else blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
 
+        // START OF TRANSFORMS
+
         // Apply utility talents
         appliedUtilityTalents.map((talent) => {
             const transform = utilityTransforms[talent.id] ?? parseTransform(customUtilityTalents[talent.id].transform);
@@ -398,23 +407,29 @@ export class ApplicationBlastAttack extends FormApplication {
                 formData,
             );
 
+        // END OF TRANSFORMS
+        console.log('Final dmgParts', dmgParts);
+
         // Build damage string
         let damage = '';
         if (blastData.flags.baseDamageModified) {
             for (let p of dmgParts) damage += ` + ${p[0]}[${p[1]}]`;
         } else {
-            damage = `${dmgParts[0][0]}`;
+            damage = `${dmgParts[0][0]}[${dmgParts[0][1]}]`;
             for (let p of dmgParts.slice(1)) {
-                if (p[1].includes('Physical ')) damage += ` + ${p[0]}[${p[1]}]`;
-                else damage += ` + ${p[0]}[${p[1]}]`;
+                if (p[1].includes('Physical ')) damage += ` + (${p[0]})[${p[1]}]`;
+                else damage += ` + (${p[0]})[${p[1]}]`;
             }
         }
+        // TODO: Find where I should add the full name of the infusion to the attack nodes as 'X Infusion'
 
         // Set damage string
         blastData.system.actions[0].damage.parts[0] = {
             formula: damage,
             type: { values: blastConfig.damageType },
         };
+
+        console.log('Damage', blastData.system.actions[0].damage);
 
         blastData.name = blastData.system.identifiedName;
 

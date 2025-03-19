@@ -22,7 +22,7 @@ const baseAction = {
     },
     attackName: '',
     actionType: 'rwak',
-    attackBonus: 'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]',
+    attackBonus: 'min(@resources.classFeat_burn.value, floor(@classes.kineticist.level / 3))[Elemental Overflow]',
     critConfirmBonus: '',
     damage: {
         parts: [],
@@ -74,11 +74,4 @@ export const getBaseData = () => {
             featType: 'misc',
         },
     };
-};
-
-export const getSimplePhysical = () => {
-    const base = getBaseData();
-    base.data.actions[0].attackBonus =
-        'min(@resources.classFeat_burn.value , floor(@classes.kineticist.level / 3))[Elemental Overflow]';
-    return base;
 };
