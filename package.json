@@ -39,6 +39,7 @@
         "eslint-config-prettier": "^8.3.0",
         "eslint-plugin-prettier": "^3.4.0",
         "fs-extra": "^10.0.0",
+        "fvtt-types": "npm:@league-of-foundry-developers/foundry-vtt-types@12.343",
         "gulp": "^4.0.2",
         "gulp-dart-sass": "^1.0.2",
         "husky": "^7.0.1",
