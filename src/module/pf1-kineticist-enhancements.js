@@ -1,11 +1,11 @@
 import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
-import { ApplicationActorHUD } from './applications/ApplicationActorHUD';
+import { ApplicationActorConfig } from './applications/ApplicationActorConfig';
+import { ApplicationBlastAttack } from './applications/ApplicationBlastAttack';
 
 // Initialize module
 Hooks.once('init', async () => {
-    //CONFIG.debug.hooks = true;
-    console.log('pf1ke | Initializing pf1-kineticist-enhancements');
+    console.log('pf1-ke | Initializing pf1-kineticist-enhancements');
 
     // Register custom module settings
     registerSettings();
@@ -14,43 +14,71 @@ Hooks.once('init', async () => {
     await preloadTemplates();
 });
 
-Hooks.on('controlToken', (token, selected) => {
-    //CONFIG.debug.hooks = true;
+Hooks.on('getSceneControlButtons', (controls) => {
+    const tokenControl = controls.find((c) => c.name === 'token');
+    if (!tokenControl) return;
 
-    if (selected && token.actor.classes.kineticist?.level > 0) {
-        // Set the correct actor to the buttons
-        if (game.keTokenHUD.actor === null) {
-            game.keTokenHUD.actor = token.actor;
-        } else if (game.keTokenHUD.actor.id !== token.document.actorId) {
-            game.keTokenHUD.actor = game.actors.get(token.document.actorId);
-        }
-        // Set position of the HUD relative to Token Action HUD
-        const tah = game.tokenActionHud;
-        console.log('tah', tah);
-        let topPos = tah?.hudPosition?.top ?? window.innerHeight - 80;
-        let leftPos = tah?.hudPosition?.left ?? 220;
-        console.log('old pos', topPos, leftPos);
+    const kineticistSelected = () => {
+        const selected = canvas.tokens?.controlled?.[0];
+        return selected?.actor?.classes?.kineticist?.level > 0;
+    };
 
-        if (topPos >= window.innerHeight * 0.7) {
-            console.log('putting menu above');
-            topPos -= 40;
-        } else {
-            topPos += 40;
-        }
-        //game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
-        console.log('new pos', topPos, leftPos);
+    tokenControl.tools.push(
+        {
+            name: 'ke-actor-config',
+            title: 'Kineticist Enhanced Config',
+            icon: 'fas fa-hand-sparkles',
+            toggle: true,
+            active: false,
+            visible: kineticistSelected,
+            onClick: () => {
+                const tool = tokenControl.tools.find((t) => t.name === 'ke-actor-config');
+                tool.active = false;
+                ui.controls?.render();
 
-        // Render the application
-        //game.keTokenHUD.setPosition({ top: topPos, left: leftPos });
-        game.keTokenHUD.render(true, { left: leftPos, top: topPos });
-        console.log(game.keTokenHUD.actor);
-    } else {
-        game.keTokenHUD.close().then();
-    }
-});
+                const selectedToken = canvas.tokens?.controlled?.[0];
+                if (!selectedToken) {
+                    ui.notifications?.warn('Select a single kineticist token first.');
+                    return;
+                }
 
-Hooks.on('canvasReady', async () => {
-    if (!game.keTokenHUD) {
-        game.keTokenHUD = new ApplicationActorHUD({}, game.user);
-    }
+                const actor = selectedToken.actor;
+                if (actor?.classes?.kineticist?.level > 0) {
+                    const app = new ApplicationActorConfig({}, actor);
+                    app.render(true);
+                } else {
+                    ui.notifications?.warn('Selected actor has no kineticist levels.');
+                }
+            },
+        },
+        {
+            name: 'ke-blast-attack',
+            title: 'Kinetic Blast Attack',
+            icon: 'fas fa-burst',
+            toggle: true,
+            active: false,
+            visible: kineticistSelected,
+            onClick: () => {
+                const tool = tokenControl.tools.find((t) => t.name === 'ke-actor-config');
+                tool.active = false;
+                ui.controls?.render();
+
+                const selectedToken = canvas.tokens?.controlled?.[0];
+                if (!selectedToken) {
+                    ui.notifications?.warn('Select a single kineticist token first.');
+                    return;
+                }
+
+                const actor = selectedToken.actor;
+                if (actor?.classes?.kineticist?.level > 0) {
+                    let app = new ApplicationBlastAttack({
+                        actor: actor,
+                    });
+                    app.render(true);
+                } else {
+                    ui.notifications?.warn('Selected actor has no kineticist levels.');
+                }
+            },
+        },
+    );
 });

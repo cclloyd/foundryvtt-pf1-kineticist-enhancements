@@ -13,7 +13,7 @@
     "packs": [],
     "compatibility": {
         "minimum": "11",
-        "verified": "12.311"
+        "verified": "12.343"
     },
     "relationships": {
         "systems": [
@@ -22,7 +22,7 @@
                 "type": "system",
                 "compatibility": {
                     "minimum": "9.4",
-                    "verified": "11.3"
+                    "verified": "11.8"
                 }
             }
         ]

@@ -1,4 +1,4 @@
-const { rollup } = require('rollup');
+const { rollup, watch: rollupWatch } = require('rollup');
 const argv = require('yargs').argv;
 const chalk = require('chalk');
 const fs = require('fs-extra');
@@ -7,6 +7,31 @@ const path = require('path');
 const rollupConfig = require('./rollup.config');
 const semver = require('semver');
 const sass = require('gulp-dart-sass');
+
+// Helper: format current local time as dev-YYYYMMDD-HHMMSS
+function getDevTimestampVersion(date = new Date()) {
+    const pad = (n) => String(n).padStart(2, '0');
+    const year = date.getFullYear();
+    const month = pad(date.getMonth() + 1);
+    const day = pad(date.getDate());
+    const hours = pad(date.getHours());
+    const minutes = pad(date.getMinutes());
+    const seconds = pad(date.getSeconds());
+    return `dev-${year}${month}${day}-${hours}${minutes}${seconds}`;
+}
+
+async function writeStampedModuleJson(srcPath, destPath) {
+    try {
+        const json = await fs.readJSON(srcPath);
+        json.version = getDevTimestampVersion();
+        await fs.ensureDir(path.dirname(destPath));
+        await fs.writeJSON(destPath, json, { spaces: 2 });
+    } catch (err) {
+        console.error(chalk.red(`[module.json] failed to stamp: ${err?.message || err}`));
+        // Fallback to raw copy to avoid breaking build
+        await fs.copy(srcPath, destPath);
+    }
+}
 
 /********************/
 /*  CONFIGURATION   */
@@ -49,9 +74,15 @@ function buildStyles() {
  */
 async function copyFiles() {
     for (const file of staticFiles) {
-        if (fs.existsSync(`${sourceDirectory}/${file}`)) {
-            await fs.copy(`${sourceDirectory}/${file}`, `${distDirectory}/${file}`);
-            await fs.copy(`${sourceDirectory}/${file}`, `${distDirectory2}/${file}`);
+        const srcPath = `${sourceDirectory}/${file}`;
+        if (fs.existsSync(srcPath)) {
+            if (file === 'module.json') {
+                await fs.copy(srcPath, `${distDirectory}/${file}`);
+                await fs.copy(srcPath, `${distDirectory2}/${file}`);
+            } else {
+                await fs.copy(srcPath, `${distDirectory}/${file}`);
+                await fs.copy(srcPath, `${distDirectory2}/${file}`);
+            }
         }
     }
 }
@@ -60,13 +91,85 @@ async function copyFiles() {
  * Watch for changes for each build step
  */
 function buildWatch() {
-    gulp.watch(`${sourceDirectory}/**/*.${sourceFileExtension}`, { ignoreInitial: false }, buildCode);
+    // Use Rollup's own watcher for incremental JavaScript rebuilds (significantly faster than full rebuilds)
+    const rollupWatcher = rollupWatch({
+        ...rollupConfig,
+        watch: rollupConfig.watch || {},
+    });
+
+    rollupWatcher.on('event', (event) => {
+        switch (event.code) {
+            case 'BUNDLE_START':
+                console.log(chalk.cyan('[rollup] build start...'));
+                break;
+            case 'BUNDLE_END':
+                console.log(chalk.green(`[rollup] build finished in ${event.duration}ms`));
+                break;
+            case 'ERROR':
+                console.error(chalk.red('[rollup] error'), event.error);
+                break;
+            case 'FATAL':
+                console.error(chalk.red('[rollup] fatal error'), event.error);
+                break;
+        }
+    });
+
+    // Styles: recompile when any SCSS changes
     gulp.watch(`${stylesDirectory}/**/*.${stylesExtension}`, { ignoreInitial: false }, buildStyles);
-    gulp.watch(
-        staticFiles.map((file) => `${sourceDirectory}/${file}`),
-        { ignoreInitial: false },
-        copyFiles,
-    );
+
+    // Static files: copy only changed files instead of whole directories
+    const staticGlobs = staticFiles.map((file) => {
+        const full = path.join(sourceDirectory, file);
+        try {
+            const stat = fs.statSync(full);
+            return stat.isDirectory() ? path.join(full, '**/*') : full;
+        } catch (e) {
+            return full; // fallback
+        }
+    });
+
+    const watcher = gulp.watch(staticGlobs, { ignoreInitial: false });
+
+    const copySingle = async (filePath) => {
+        // preserve relative structure under src
+        const rel = path.relative(sourceDirectory, filePath);
+        if (!rel || rel.startsWith('..')) return;
+        const dest1 = path.join(distDirectory, rel);
+        const dest2 = path.join(distDirectory2, rel);
+        await fs.ensureDir(path.dirname(dest1));
+        await fs.ensureDir(path.dirname(dest2));
+        if (rel === 'module.json') {
+            await writeStampedModuleJson(filePath, dest1);
+            await writeStampedModuleJson(filePath, dest2);
+        } else {
+            await fs.copy(filePath, dest1);
+            await fs.copy(filePath, dest2);
+        }
+        console.log(chalk.gray(`[copy] ${rel}`));
+    };
+
+    const removeSingle = async (filePath) => {
+        const rel = path.relative(sourceDirectory, filePath);
+        if (!rel || rel.startsWith('..')) return;
+        await fs.remove(path.join(distDirectory, rel));
+        await fs.remove(path.join(distDirectory2, rel));
+        console.log(chalk.gray(`[remove] ${rel}`));
+    };
+
+    watcher
+        .on('add', copySingle)
+        .on('change', copySingle)
+        .on('unlink', removeSingle)
+        .on('addDir', async (dirPath) => {
+            const rel = path.relative(sourceDirectory, dirPath);
+            await fs.ensureDir(path.join(distDirectory, rel));
+            await fs.ensureDir(path.join(distDirectory2, rel));
+        })
+        .on('unlinkDir', async (dirPath) => {
+            const rel = path.relative(sourceDirectory, dirPath);
+            await fs.remove(path.join(distDirectory, rel));
+            await fs.remove(path.join(distDirectory2, rel));
+        });
 }
 
 /********************/
