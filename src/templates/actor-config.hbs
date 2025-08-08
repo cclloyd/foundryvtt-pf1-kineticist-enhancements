@@ -12,11 +12,15 @@
         <hr>
         <div style="width: 100%; height: 8px;"></div>
 
-        <div style="text-align: center; padding: 0 3rem 8px">
-            <button class="ke-button save-simple-button" type="submit" id="save-actor-config"><i class="fas fa-solid fa-save"></i> Save Config</button>
+        <div style="text-align: center; padding: 0 3rem 8px; display: flex; justify-content: space-between; gap: 2rem">
+            <button class="ke-button save-simple-button" type="submit" id="save-actor-config"><i class="fas fa-solid fa-save"></i> Save Actor Config</button>
+            <button class="ke-button ke-config-custom-settings-button" id="open-custom-infusions" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Infusions</button>
+            <button class="ke-button ke-config-custom-settings-button" id="open-custom-blasts" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Blasts</button>
+            <button class="ke-button ke-config-custom-settings-button" id="open-custom-utility" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Utility Infusions</button>
+            <button class="ke-button ke-config-custom-settings-button" id="open-custom-metakinesis" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Metakinesis</button>
         </div>
 
-        <section class="ke-setup-body {{style}}" id="ke-setup-body">
+        <section class="ke-setup-body {{style}}" id="ke-setup-body" style="margin-bottom: 1rem">
             <div class="tab" data-tab="blastconfig" data-group="primary-tabs">
                 {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-blasts.hbs" simpleBlasts=simpleBlasts }}
             </div>

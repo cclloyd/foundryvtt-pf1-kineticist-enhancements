@@ -63,7 +63,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
             active: false,
             visible: kineticistSelected,
             onClick: () => {
-                const tool = tokenControl.tools.find((t) => t.name === 'ke-actor-config');
+                const tool = tokenControl.tools.find((t) => t.name === 'ke-blast-attack');
                 tool.active = false;
                 ui.controls?.render();
 
