@@ -2,10 +2,14 @@ import { registerSettings } from './settings.js';
 import { preloadTemplates } from './lib/preloadTemplates.js';
 import { ApplicationActorConfig } from './applications/ApplicationActorConfig';
 import { ApplicationBlastAttack } from './applications/ApplicationBlastAttack';
+import { ns } from './lib/config.js';
+import { keLogger } from './lib/logger';
 
 // Initialize module
-Hooks.once('init', async () => {
-    console.log('pf1-ke | Initializing pf1-kineticist-enhancements');
+Hooks.once('init', async (log) => {
+    // Demonstrate configurable logger with module namespace as prefix
+    keLogger.setPrefix(`${ns} | `);
+    keLogger.info('Initializing pf1-kineticist-enhancements');
 
     // Register custom module settings
     registerSettings();
@@ -65,7 +69,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
 
                 const selectedToken = canvas.tokens?.controlled?.[0];
                 if (!selectedToken) {
-                    ui.notifications?.warn('Select a single kineticist token first.');
+                    ui.notifications.warn('Select a single kineticist token first.');
                     return;
                 }
 
@@ -76,7 +80,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
                     });
                     app.render(true);
                 } else {
-                    ui.notifications?.warn('Selected actor has no kineticist levels.');
+                    ui.notifications.warn('Selected actor has no kineticist levels.');
                 }
             },
         },
