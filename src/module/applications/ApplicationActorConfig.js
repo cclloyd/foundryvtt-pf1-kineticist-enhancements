@@ -5,20 +5,21 @@ import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts
 import { utilityTalents } from '../lib/generated/utilityTalents';
 import { feats, mythicFeats } from '../lib/blastData/feats';
 import { ApplicationCustomInfusion } from './ApplicationCustomInfusion';
-import { serializeForm } from '../lib/common';
 import { metakinesis } from '../lib/generated/metakinesis';
 import { SettingsCustomInfusions } from './SettingsCustomInfusions';
 import { SettingsCustomBlasts } from './SettingsCustomBlasts';
 import { SettingsCustomUtilities } from './SettingsCustomUtilities';
 import { SettingsCustomMetakinesis } from './SettingsCustomMetakinesis';
-import { keLogger } from '../lib/logger';
 
 export class ApplicationActorConfig extends FormApplication {
     constructor(options = {}, actor = null) {
         super(options);
         this.actor = actor;
     }
-    //TODO: Add ability to import/export actor config and custom talents
+    // TODO: Add ability to import/export actor config and custom talents
+    // TODO: Add suite of bundled custom utilities that are disabled by default. (2x damage, 2x area, half damage, etc)
+    // TODO: Add priority to utility talents to allow executing them in specific orders.
+    // TODO: Create BlastFactory class with various classes like setName(), setBlast(), etc, so that the application is just a series of function calls instead of a complicated mess
 
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
