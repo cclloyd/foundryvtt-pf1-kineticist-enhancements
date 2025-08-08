@@ -6,7 +6,7 @@ import { ns } from './lib/config.js';
 import { keLogger } from './lib/logger';
 
 // Initialize module
-Hooks.once('init', async (log) => {
+Hooks.once('init', async () => {
     // Demonstrate configurable logger with module namespace as prefix
     keLogger.setPrefix(`${ns} | `);
     keLogger.info('Initializing pf1-kineticist-enhancements');
@@ -63,7 +63,7 @@ Hooks.on('getSceneControlButtons', (controls) => {
             active: false,
             visible: kineticistSelected,
             onClick: () => {
-                const tool = tokenControl.tools.find((t) => t.name === 'ke-actor-config');
+                const tool = tokenControl.tools.find((t) => t.name === 'ke-blast-attack');
                 tool.active = false;
                 ui.controls?.render();
 

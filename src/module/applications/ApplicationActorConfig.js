@@ -5,14 +5,21 @@ import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts
 import { utilityTalents } from '../lib/generated/utilityTalents';
 import { feats, mythicFeats } from '../lib/blastData/feats';
 import { ApplicationCustomInfusion } from './ApplicationCustomInfusion';
-import { serializeForm } from '../lib/common';
 import { metakinesis } from '../lib/generated/metakinesis';
+import { SettingsCustomInfusions } from './SettingsCustomInfusions';
+import { SettingsCustomBlasts } from './SettingsCustomBlasts';
+import { SettingsCustomUtilities } from './SettingsCustomUtilities';
+import { SettingsCustomMetakinesis } from './SettingsCustomMetakinesis';
 
 export class ApplicationActorConfig extends FormApplication {
     constructor(options = {}, actor = null) {
         super(options);
         this.actor = actor;
     }
+    // TODO: Add ability to import/export actor config and custom talents
+    // TODO: Add suite of bundled custom utilities that are disabled by default. (2x damage, 2x area, half damage, etc)
+    // TODO: Add priority to utility talents to allow executing them in specific orders.
+    // TODO: Create BlastFactory class with various classes like setName(), setBlast(), etc, so that the application is just a series of function calls instead of a complicated mess
 
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
@@ -24,7 +31,7 @@ export class ApplicationActorConfig extends FormApplication {
             width: 600,
             height: 700,
             title: 'Kineticist Enhanced Actor Configuration',
-            tabs: [{ navSelector: '.ke-setup-tabs', contentSelector: '.ke-setup-body', initial: 'blastconfig' }],
+            tabs: [{ navSelector: '.ke-setup-tabs', contentSelector: '.ke-setup-body', initial: 'blastsconfig' }],
         });
     }
 
@@ -53,7 +60,7 @@ export class ApplicationActorConfig extends FormApplication {
                 actorConfig[key] = defaultActorConfig[key];
         }
 
-        let owned = this.actor.getFlag(ns, 'simpleBlasts');
+        let owned = actorConfig.simple;
         if (owned === undefined) owned = [];
 
         // Get all simple blasts with `owned = false`
@@ -150,7 +157,6 @@ export class ApplicationActorConfig extends FormApplication {
         for (let key of Object.keys(allMythicFeats)) {
             allMythicFeats[key].owned = actorConfig.mythicFeats?.indexOf(allMythicFeats[key].id) > -1 ? 'checked' : '';
         }
-
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
             simpleBlasts: allSimple,
@@ -246,10 +252,6 @@ export class ApplicationActorConfig extends FormApplication {
         };
         await this.actor.unsetFlag(ns, 'actorConfig', actorConfig);
         await this.actor.setFlag(ns, 'actorConfig', actorConfig);
-
-        // Mark actor setup completed if not setup before
-        if (!this.actor.getFlag(ns, 'firstSetupCompleted')) await this.actor.setFlag(ns, 'firstSetupCompleted', true);
-        // TODO: Application requires you to unselect token once to refresh after configuring for first time.
     }
 
     openCustomFormInfusion() {
@@ -288,9 +290,61 @@ export class ApplicationActorConfig extends FormApplication {
         app.render(true);
     }
 
+    openCustomBlastsSettings(e) {
+        e.preventDefault();
+        let app = new SettingsCustomBlasts({}, this.actor);
+        app.render(true);
+    }
+
+    openCustomInfusionSettings(e) {
+        e.preventDefault();
+        let app = new SettingsCustomInfusions({}, this.actor);
+        app.render(true);
+    }
+
+    openCustomUtilitySettings(e) {
+        e.preventDefault();
+        let app = new SettingsCustomUtilities({}, this.actor);
+        app.render(true);
+    }
+
+    openCustomMetakinesisSettings(e) {
+        e.preventDefault();
+        let app = new SettingsCustomMetakinesis({}, this.actor);
+        app.render(true);
+    }
+
+    _onTabChanged(tab) {
+        const root = this.element;
+        if (!root) return;
+        root.find('.ke-config-custom-settings-button').css('display', 'none');
+
+        // Try a direct id based on trimming the trailing "config"
+        let id = `#open-custom-${tab.slice(0, -6)}`;
+        let $btn = root.find(id);
+        // Fallback: some ids use a plural form (e.g. "blasts" vs "blast")
+        if ($btn.length === 0) $btn = root.find(`${id}s`);
+        if ($btn.length > 0) $btn.css('display', 'inline-block');
+    }
+
     activateListeners(html) {
         super.activateListeners(html);
         html.on('click', '#add-custom-infusion', () => this.openCustomFormInfusion());
+        html.on('click', '#open-custom-blasts', this.openCustomBlastsSettings);
+        html.on('click', '#open-custom-infusions', this.openCustomInfusionSettings);
+        html.on('click', '#open-custom-utility', this.openCustomUtilitySettings);
+        html.on('click', '#open-custom-metakinesis', this.openCustomMetakinesisSettings);
+        html.on('click', '.ke-setup-tabs a.item', (event) => {
+            const tab = $(event.currentTarget).attr('data-tab');
+            this._onTabChanged(tab);
+        });
+        // Set initial tab button
+        let initialTab =
+            html.find('.ke-setup-tabs a.item.active').attr('data-tab') ||
+            html.find('.ke-setup-body .tab:visible').attr('data-tab') ||
+            this.options?.tabs?.[0]?.initial ||
+            'blastsconfig';
+        this._onTabChanged(initialTab);
 
         const allCustomFormInfusions = this.actor.getFlag(ns, 'customFormInfusions') ?? {};
         for (let key of Object.keys(allCustomFormInfusions)) {

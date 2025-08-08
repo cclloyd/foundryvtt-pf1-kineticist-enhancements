@@ -21,7 +21,8 @@
                 {{#each customFormInfusions}}
                     <tr class="custom-infusions">
 
-                        <td><input type="checkbox" name="custom-form-{{id}}" id="custom-form-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><input type="checkbox" name="custom-form-{{id}}" id="custom-form-{{id}}"
+                                   value="{{id}}" {{owned}}/></td>
                         <td>
                             <label for="custom-form-{{id}}">{{name}}</label>
                         </td>
@@ -40,7 +41,8 @@
 
                 {{#each substanceInfusions}}
                     <tr>
-                        <td><input type="checkbox" name="substance-{{id}}" id="substance-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><input type="checkbox" name="substance-{{id}}" id="substance-{{id}}"
+                                   value="{{id}}" {{owned}}/></td>
                         <td><label for="substance-{{id}}">{{name}}</label>
                     </tr>
                 {{/each}}
@@ -52,7 +54,8 @@
                 {{#each customSubstanceInfusions}}
                     <tr class="custom-infusions">
 
-                        <td><input type="checkbox" name="custom-substance-{{id}}" id="custom-substance-{{id}}" value="{{id}}" {{owned}}/></td>
+                        <td><input type="checkbox" name="custom-substance-{{id}}" id="custom-substance-{{id}}"
+                                   value="{{id}}" {{owned}}/></td>
                         <td>
                             <label for="custom-substance-{{id}}">{{name}}</label>
                         </td>
@@ -62,8 +65,5 @@
             </table>
         </div>
 
-    </div>
-    <div style="text-align: center; font-style: italic; user-select: none; padding: 1rem">
-        Add custom infusions from the game settings.
     </div>
 </div>
