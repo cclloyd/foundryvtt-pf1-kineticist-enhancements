@@ -8,19 +8,16 @@ stages:
   - build
   - release
 
-# Install zip (and keep it noninteractive). Move package install to before_script so it's guaranteed
-# to run for the job environment and available for every job that needs it.
-before_script:
-  - export DEBIAN_FRONTEND=noninteractive
-  - apt-get update -y
-  - apt-get install -y zip
-  - rm -rf /var/lib/apt/lists/*
-
 build:
   image: node:24
   rules:
     - if: $CI_COMMIT_TAG
   stage: build
+  before_script:
+    - export DEBIAN_FRONTEND=noninteractive
+    - apt-get update -y
+    - apt-get install -y zip
+    - rm -rf /var/lib/apt/lists/*
   script:
     - yarn install
     - yarn build
@@ -44,6 +41,8 @@ release:
   stage: release
   rules:
     - if: $CI_COMMIT_TAG
+  # Override before_script to avoid apt-get in this Alpine-based image
+  before_script: []
   release:
     name: 'Release $CI_COMMIT_TAG'
     description: 'Created using the release-cli'
