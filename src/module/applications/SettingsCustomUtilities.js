@@ -6,6 +6,20 @@ export class SettingsCustomUtilities extends FormApplication {
         super(options);
         this.actor = actor;
         this.key = 'customUtilityTalents';
+
+        // Listen for changes to the custom utilities setting and re-render if it changes
+        this._onSettingUpdate = (setting) => {
+            try {
+                const namespace = setting?.namespace ?? setting?.module;
+                const key = setting?.key;
+                if (namespace === ns && key === this.key) {
+                    this.render(false);
+                }
+            } catch (err) {
+                this.render(false);
+            }
+        };
+        Hooks.on('updateSetting', this._onSettingUpdate);
     }
 
     static get defaultOptions() {
@@ -22,6 +36,7 @@ export class SettingsCustomUtilities extends FormApplication {
     }
 
     async close(options) {
+        if (this._onSettingUpdate) Hooks.off('updateSetting', this._onSettingUpdate);
         return super.close(options);
     }
 

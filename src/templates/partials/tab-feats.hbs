@@ -1,5 +1,6 @@
-<h4 style="text-align: center">If you know of a feat you want support added for, open a GitLab issue.</h4>
-<h5 style="text-align: center">If you add a feature with the proper identifier, you don't need to check anything here.</h5>
+<h4 style="text-align: center">If you know of a feat that has an effect you want support added for, open a GitLab issue.</h4>
+<h5 style="text-align: center">If you add a feature with the proper identifier (starting with feat_ or classFeat_ then camelCase), <br /> then you don't need to check anything
+    here.</h5>
 <div style="display: flex; justify-content: space-between">
     <div style="width: 48%">
 
@@ -10,10 +11,25 @@
 
             {{#each feats}}
                 <tr>
-                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="feat-{{id}}"
-                                                                        id="feat-{{id}}"
-                                                                        value="{{id}}" {{owned}}/></td>
+                    <td style="width: 40px; text-align: center;">
+                        <input type="checkbox" name="feat-{{id}}"
+                               id="feat-{{id}}"
+                               value="{{id}}" {{owned}} {{#if forced}}disabled title="Auto-managed: Feat found on character sheet"{{/if}}/></td>
                     <td style="text-align: left;"><label for="feat-{{id}}">{{name}}</label>
+                </tr>
+            {{/each}}
+
+
+            <tr style="background-color: rgba(0,0,0,0.1);">
+                <th colspan="2">Custom Feats</th>
+            </tr>
+            {{#each customFeats}}
+                <tr>
+                    <td style="width: 40px; text-align: center;">
+                        <input type="checkbox" name="custom-feat-{{id}}"
+                               id="custom-feat-{{id}}"
+                               value="{{id}}" {{owned}} {{#if forced}}disabled title="Auto-managed: Feat found on character sheet"{{/if}}/></td>
+                    <td style="text-align: left;"><label for="custom-feat-{{id}}">{{name}}</label>
                 </tr>
             {{/each}}
         </table>
@@ -26,9 +42,10 @@
             </tr>
             {{#each mythicFeats}}
                 <tr>
-                    <td style="width: 40px; text-align: center;"><input type="checkbox" name="mythicFeat-{{id}}"
-                                                                        id="mythicFeat-{{id}}"
-                                                                        value="{{id}}" {{owned}}/></td>
+                    <td style="width: 40px; text-align: center;">
+                        <input type="checkbox" name="mythicFeat-{{id}}"
+                               id="mythicFeat-{{id}}"
+                               value="{{id}}" {{owned}} {{#if forced}}disabled title="Auto-managed: Feat found on character sheet"{{/if}}/></td>
                     <td style="text-align: left;"><label for="mythicFeat-{{id}}">{{name}}</label>
                 </tr>
             {{/each}}

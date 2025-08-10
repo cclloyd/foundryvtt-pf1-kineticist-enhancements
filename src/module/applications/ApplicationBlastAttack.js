@@ -142,27 +142,60 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Set owned custom feats
         const allCustomFeats = game.settings.get(ns, 'customFeats') ?? {};
-        const ownedCustomFeats = [];
+        let ownedCustomFeats = [];
         for (let key of Object.keys(allCustomFeats)) {
+            // custom feats are keyed by id; flags store ids as well
             if (actorConfig.feats.indexOf(key) > -1) ownedCustomFeats.push(allCustomFeats[key]);
         }
 
-        // Set owned feats
-        const playerFeats = this.actor.items.filter(
-            (item) => item.system?.tag?.startsWith('feat_') || item.system?.tag?.startsWith('classFeat_'),
+        // Set owned feats (merge from actor items and saved actor flags)
+        const playerFeats = (this.actor.items ?? []).filter(
+            (item) =>
+                (item.system?.tag &&
+                    (item.system.tag.startsWith('feat_') || item.system.tag.startsWith('classFeat_'))) ||
+                item.system?.type === 'feat',
         );
+        const normalize = (t) => (t + '').replace(/^(feat_|classFeat_)/, '');
+        const itemOwnedIds = new Set(
+            playerFeats
+                .map((it) => it?.system?.tag)
+                .filter((t) => typeof t === 'string' && t.length > 0)
+                .map((t) => normalize(t)),
+        );
+        const configOwnedIds = new Set(
+            [...(actorConfig?.feats ?? []), ...(actorConfig?.mythicFeats ?? [])].map((t) => normalize(t)),
+        );
+
+        // Build owned feats from core feat data (includes mythic feats)
+        const allCoreFeats = { ...feats, ...mythicFeats };
         const ownedFeats = [];
-        const featIDs = Object.keys({ ...feats, ...mythicFeats }).map((k) => k.replace(/^(feat_|classFeat_)/, ''));
-        const customFeatIDs = Object.keys(allCustomFeats).map((k) => k.replace(/^(feat_|classFeat_)/, ''));
-        const allFeatIDs = [...featIDs, ...customFeatIDs];
-        for (let key of Object.keys(playerFeats)) {
-            const feat = {
-                name: playerFeats[key].name,
-                id: playerFeats[key].system.tag.slice(5),
-            };
-            // Only show feats that have an interaction with the module either vanilla or modded
-            if (allFeatIDs.includes(playerFeats[key].system.tag.replace(/^(feat_|classFeat_)/, '')))
-                ownedFeats.push(feat);
+        const pushed = new Set();
+        for (let key of Object.keys(allCoreFeats)) {
+            const f = allCoreFeats[key];
+            const id = normalize(f?.id ?? key);
+            if (itemOwnedIds.has(id) || configOwnedIds.has(id)) {
+                if (!pushed.has(id)) {
+                    ownedFeats.push(f);
+                    pushed.add(id);
+                }
+            }
+        }
+
+        // Apply remembered selections to feats and custom feats (reuse utility remember flag/value)
+        if (this.actor.getFlag(ns, 'remember-utility')) {
+            const activeUtilityIDs = this.actor.getFlag(ns, 'remember-utility-value') ?? [];
+            // For feats, template values are prefixed; mirror that here for comparison
+            for (let i = 0; i < ownedFeats.length; i++) {
+                const t = ownedFeats[i];
+                ownedFeats[i] = { ...t, active: activeUtilityIDs.includes(`feat_${t.id}`) ? 'checked' : '' };
+            }
+            for (let i = 0; i < ownedCustomFeats.length; i++) {
+                const t = ownedCustomFeats[i];
+                ownedCustomFeats[i] = {
+                    ...t,
+                    active: activeUtilityIDs.includes(`custom-feat_${t.id}`) ? 'checked' : '',
+                };
+            }
         }
 
         const flags = this.kineticist.getBurnFlags();
@@ -237,8 +270,15 @@ export class ApplicationBlastAttack extends FormApplication {
         this.actor.setFlag(ns, 'remember-utility', formData['remember-utility']);
         if (formData['remember-utility']) {
             const activeUtilityIDs = [];
+            // Utilities
             for (let talent of acme.utilityTalents) activeUtilityIDs.push(talent.id);
-            this.actor.setFlag(ns, 'remember-utility-value', activeUtilityIDs);
+            // Feats (core and custom) — collect from form data values
+            for (const [k, v] of Object.entries(formData)) {
+                if (k.startsWith('feat-') || k.startsWith('custom-feat-')) activeUtilityIDs.push(v);
+            }
+            // Deduplicate
+            const unique = [...new Set(activeUtilityIDs)];
+            this.actor.setFlag(ns, 'remember-utility-value', unique);
         }
 
         this.actor.setFlag(ns, 'remember-apply-burn', formData['apply-burn']);

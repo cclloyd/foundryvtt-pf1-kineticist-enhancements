@@ -7,6 +7,24 @@ export class SettingsCustomBlasts extends FormApplication {
         super(options);
         this.actor = actor;
         this.key = 'customBlasts';
+
+        // Listen for changes to the custom blasts setting and re-render if it changes
+        this._onSettingUpdate = (setting) => {
+            console.log('triggered', setting);
+            try {
+                // Foundry VTT v12 uses `namespace`; older versions may have `module`
+                const namespace = setting?.namespace ?? setting?.module;
+                const key = setting?.key;
+                if (namespace === ns && key === this.key) {
+                    // Re-render but don't force a full re-open; just refresh contents
+                    this.render(false);
+                }
+            } catch (err) {
+                // If anything goes wrong determining the setting, fail-soft by re-rendering
+                this.render(false);
+            }
+        };
+        Hooks.on('updateSetting', this._onSettingUpdate);
     }
 
     static get defaultOptions() {
@@ -23,6 +41,8 @@ export class SettingsCustomBlasts extends FormApplication {
     }
 
     async close(options) {
+        // Clean up hook to avoid leaks or duplicate listeners
+        if (this._onSettingUpdate) Hooks.off('updateSetting', this._onSettingUpdate);
         return super.close(options);
     }
 

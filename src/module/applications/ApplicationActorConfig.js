@@ -10,11 +10,24 @@ import { SettingsCustomInfusions } from './SettingsCustomInfusions';
 import { SettingsCustomBlasts } from './SettingsCustomBlasts';
 import { SettingsCustomUtilities } from './SettingsCustomUtilities';
 import { SettingsCustomMetakinesis } from './SettingsCustomMetakinesis';
+import { SettingsCustomFeats } from './SettingsCustomFeats';
 
 export class ApplicationActorConfig extends FormApplication {
     constructor(options = {}, actor = null) {
         super(options);
         this.actor = actor;
+
+        // Re-render when any setting in our module namespace changes
+        this._onSettingUpdate = (setting) => {
+            try {
+                const namespace = setting?.namespace ?? setting?.module;
+                if (namespace === ns) this.render(true); // force full re-render so templates fully refresh
+            } catch (err) {
+                // If anything goes wrong, attempt a re-render anyway
+                this.render(true);
+            }
+        };
+        Hooks.on('updateSetting', this._onSettingUpdate);
     }
     // TODO: Add ability to import/export actor config and custom talents
     // TODO: Add suite of bundled custom utilities that are disabled by default. (2x damage, 2x area, half damage, etc)
@@ -36,6 +49,7 @@ export class ApplicationActorConfig extends FormApplication {
     }
 
     async close(options) {
+        if (this._onSettingUpdate) Hooks.off('updateSetting', this._onSettingUpdate);
         return super.close(options);
     }
 
@@ -147,23 +161,59 @@ export class ApplicationActorConfig extends FormApplication {
                 actorConfig.metakinesis?.indexOf(allCustomMetakinesis[key].id) > -1 ? 'checked' : '';
         }
 
-        // Set owned feats
+        // Determine owned feats from actor items and from saved actor flags
+        const actorFeats = (this.actor.items ?? [])
+            .filter((item) => {
+                const tag = item?.system?.tag;
+                return (
+                    (typeof tag === 'string' && (tag.startsWith('feat_') || tag.startsWith('classFeat_'))) ||
+                    item?.system?.type === 'feat'
+                );
+            })
+            .map((item) => item?.system?.tag)
+            .filter((tag) => typeof tag === 'string' && tag.length > 0);
+        const normalize = (t) => (t + '').replace(/^(feat_|classFeat_)/, '');
+        const itemOwnedFeatIdSet = new Set(actorFeats.map((t) => normalize(t)));
+
+        // Read feats saved on actor flags (these should remain toggleable)
+        const savedFeats = Array.isArray(actorConfig.feats) ? actorConfig.feats : [];
+        const savedMythic = Array.isArray(actorConfig.mythicFeats) ? actorConfig.mythicFeats : [];
+        const flagOwnedFeatIdSet = new Set(savedFeats.map((t) => normalize(t)));
+        const flagOwnedMythicIdSet = new Set(savedMythic.map((t) => normalize(t)));
+
+        // Set owned feats (core feats list) with forced flag if owned by item
         let allFeats = feats;
         for (let key of Object.keys(allFeats)) {
-            allFeats[key].owned = actorConfig.feats?.indexOf(allFeats[key].id) > -1 ? 'checked' : '';
+            const keyNorm = normalize(key);
+            const idNorm = normalize(allFeats[key]?.id ?? key);
+            const itemOwned = itemOwnedFeatIdSet.has(keyNorm) || itemOwnedFeatIdSet.has(idNorm);
+            const flagOwned = flagOwnedFeatIdSet.has(keyNorm) || flagOwnedFeatIdSet.has(idNorm);
+            allFeats[key].owned = itemOwned || flagOwned ? 'checked' : '';
+            allFeats[key].forced = !!itemOwned;
         }
 
         // Set owned custom feats
         const allCustomFeats = game.settings.get(ns, 'customFeats') ?? {};
         for (let key of Object.keys(allCustomFeats)) {
-            allCustomFeats[key].owned = actorConfig.feats?.indexOf(allCustomFeats[key].id) > -1 ? 'checked' : '';
+            const customId = (allCustomFeats[key]?.id ?? key) + '';
+            const customNorm = normalize(customId);
+            const itemOwned = itemOwnedFeatIdSet.has(customNorm);
+            const flagOwned = flagOwnedFeatIdSet.has(customNorm);
+            allCustomFeats[key].owned = itemOwned || flagOwned ? 'checked' : '';
+            allCustomFeats[key].forced = !!itemOwned;
         }
 
-        // Set owned mythic feats
+        // Set owned mythic feats (determine from actor items like other feats)
         let allMythicFeats = mythicFeats;
         for (let key of Object.keys(allMythicFeats)) {
-            allMythicFeats[key].owned = actorConfig.mythicFeats?.indexOf(allMythicFeats[key].id) > -1 ? 'checked' : '';
+            const keyNorm = normalize(key + '');
+            const idNorm = normalize((allMythicFeats[key]?.id ?? key) + '');
+            const itemOwned = itemOwnedFeatIdSet.has(keyNorm) || itemOwnedFeatIdSet.has(idNorm);
+            const flagOwned = flagOwnedMythicIdSet.has(keyNorm) || flagOwnedMythicIdSet.has(idNorm);
+            allMythicFeats[key].owned = itemOwned || flagOwned ? 'checked' : '';
+            allMythicFeats[key].forced = !!itemOwned;
         }
+
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
             simpleBlasts: allSimple,
@@ -260,7 +310,7 @@ export class ApplicationActorConfig extends FormApplication {
             feats: ownedFeats,
             mythicFeats: ownedMythicFeats,
             metakinesis: ownedMetakinesis,
-            autofeats: false, // TODO: add boolean to automatically calculate feats from features tab
+            autofeats: false,
         };
         await this.actor.unsetFlag(ns, 'actorConfig', actorConfig);
         await this.actor.setFlag(ns, 'actorConfig', actorConfig);
@@ -326,6 +376,12 @@ export class ApplicationActorConfig extends FormApplication {
         app.render(true);
     }
 
+    openCustomFeatsSettings(e) {
+        e.preventDefault();
+        let app = new SettingsCustomFeats({}, this.actor);
+        app.render(true);
+    }
+
     _onTabChanged(tab) {
         const root = this.element;
         if (!root) return;
@@ -346,6 +402,7 @@ export class ApplicationActorConfig extends FormApplication {
         html.on('click', '#open-custom-infusions', this.openCustomInfusionSettings);
         html.on('click', '#open-custom-utility', this.openCustomUtilitySettings);
         html.on('click', '#open-custom-metakinesis', this.openCustomMetakinesisSettings);
+        html.on('click', '#open-custom-feats', this.openCustomFeatsSettings);
         html.on('click', '.ke-setup-tabs a.item', (event) => {
             const tab = $(event.currentTarget).attr('data-tab');
             this._onTabChanged(tab);

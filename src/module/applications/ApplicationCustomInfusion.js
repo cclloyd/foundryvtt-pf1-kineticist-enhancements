@@ -48,11 +48,23 @@ export class ApplicationCustomInfusion extends Application {
 
         const formData = serializeForm('custom-infusion');
 
-        // Set default ID if none provided
-        if (!formData.id || formData.id.length < 3) formData.id = 'default';
-        const existing = game.settings.get(ns, this.key) ?? {};
-        existing[formData.id] = formData;
-        game.settings.set(ns, this.key, existing);
+        // Normalize and validate the new ID
+        let newId = (formData.id ?? '').trim();
+        if (!newId || newId.length < 3) newId = 'default';
+
+        // Load existing infusions
+        const existing = foundry.utils.duplicate(game.settings.get(ns, this.key) ?? {});
+
+        // If we are editing an existing infusion and the ID changed, remove the old entry
+        const oldId = this?.defaultData?.id;
+        if (oldId && oldId !== newId && existing[oldId]) {
+            delete existing[oldId];
+        }
+
+        // Save under the new ID
+        formData.id = newId;
+        existing[newId] = formData;
+        await game.settings.set(ns, this.key, existing);
         if (this.parent) this.parent.render(true);
         await this.close();
     }

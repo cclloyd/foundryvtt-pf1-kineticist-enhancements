@@ -8,6 +8,7 @@
             <a class="item" data-tab="infusionconfig">Infusions</a>
             <a class="item" data-tab="utilityconfig">Utilities</a>
             <a class="item" data-tab="metakinesisconfig">Metakinesis</a>
+            <a class="item" data-tab="featsconfig">Feats</a>
         </nav>
         <hr>
         <div style="width: 100%; height: 8px;"></div>
@@ -18,6 +19,7 @@
             <button class="ke-button ke-config-custom-settings-button" id="open-custom-blasts" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Blasts</button>
             <button class="ke-button ke-config-custom-settings-button" id="open-custom-utility" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Utility Infusions</button>
             <button class="ke-button ke-config-custom-settings-button" id="open-custom-metakinesis" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Metakinesis</button>
+            <button class="ke-button ke-config-custom-settings-button" id="open-custom-feats" style="display: none;"><i class="fas fa-solid fa-gear"></i> Custom Feats</button>
         </div>
 
         <section class="ke-setup-body {{style}}" id="ke-setup-body" style="margin-bottom: 1rem">
@@ -32,6 +34,9 @@
             </div>
             <div class="tab" data-tab="metakinesisconfig" data-group="primary-tabs">
                 {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-metakinesis.hbs" tabname="metakinesisconfig"}}
+            </div>
+            <div class="tab" data-tab="featsconfig" data-group="primary-tabs">
+                {{> "modules/pf1-kineticist-enhancements/templates/partials/tab-feats.hbs" tabname="featsconfig"}}
             </div>
         </section>
 

@@ -7,6 +7,20 @@ export class SettingsCustomFeats extends FormApplication {
         super(options);
         this.actor = actor;
         this.key = 'customFeats';
+
+        // Listen for changes to the custom feats setting and re-render if it changes
+        this._onSettingUpdate = (setting) => {
+            try {
+                const namespace = setting?.namespace ?? setting?.module;
+                const key = setting?.key;
+                if (namespace === ns && key === this.key) {
+                    this.render(false);
+                }
+            } catch (err) {
+                this.render(false);
+            }
+        };
+        Hooks.on('updateSetting', this._onSettingUpdate);
     }
 
     static get defaultOptions() {
@@ -23,12 +37,13 @@ export class SettingsCustomFeats extends FormApplication {
     }
 
     async close(options) {
+        if (this._onSettingUpdate) Hooks.off('updateSetting', this._onSettingUpdate);
         return super.close(options);
     }
 
     getData() {
         const allCustomFeats = game.settings.get(ns, this.key) ?? {};
-
+        console.log(allCustomFeats);
         return {
             customFeats: Object.values(allCustomFeats),
         };

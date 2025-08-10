@@ -261,7 +261,7 @@
                     {{#each feats}}
                         <tr>
                             <td>
-                                <input type="checkbox" name="feat-{{id}}" id="feat-{{id}}" value="feat_{{id}}" checked />
+                                <input type="checkbox" name="feat-{{id}}" id="feat-{{id}}" value="feat_{{id}}" {{active}} />
                             </td>
                             <td><label for="feat-{{id}}">{{name}}</label></td>
                             <td><label for="feat-{{id}}">{{burn}}</label></td>
@@ -270,7 +270,7 @@
                     {{#each customFeats}}
                         <tr>
                             <td>
-                                <input type="checkbox" name="custom-feat-{{id}}" id="custom-feat-{{id}}" value="custom-feat_{{id}}" checked />
+                                <input type="checkbox" name="custom-feat-{{id}}" id="custom-feat-{{id}}" value="custom-feat_{{id}}" {{active}} />
                             </td>
                             <td><label for="custom-feat-{{id}}">{{name}}</label></td>
                             <td><label for="custom-feat-{{id}}">{{burn}}</label></td>
