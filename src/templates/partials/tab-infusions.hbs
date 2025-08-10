@@ -14,7 +14,7 @@
                     </tr>
                 {{/each}}
 
-                <tr>
+                <tr style="background-color: rgba(0,0,0,0.1);">
                     <th colspan="2">Custom Form Infusions</th>
                 </tr>
 
@@ -26,6 +26,10 @@
                         <td>
                             <label for="custom-form-{{id}}">{{name}}</label>
                         </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2" style="text-align: center; opacity: 0.7;"><i>&lt;No custom form infusions&gt;</i></td>
                     </tr>
                 {{/each}}
 
@@ -47,9 +51,10 @@
                     </tr>
                 {{/each}}
 
-                <tr>
+                <tr style="background-color: rgba(0,0,0,0.1);">
                     <th colspan="2">Custom Substance Infusions</th>
                 </tr>
+
 
                 {{#each customSubstanceInfusions}}
                     <tr class="custom-infusions">
@@ -59,6 +64,10 @@
                         <td>
                             <label for="custom-substance-{{id}}">{{name}}</label>
                         </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2" style="text-align: center; opacity: 0.7"><i>&lt;No custom substance infusions&gt;</i></td>
                     </tr>
                 {{/each}}
 

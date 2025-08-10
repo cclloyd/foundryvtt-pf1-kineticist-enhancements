@@ -14,7 +14,7 @@
                     </tr>
                 {{/each}}
 
-                <tr>
+                <tr style="background-color: rgba(0,0,0,0.1);">
                     <th colspan="2">Custom Simple Blasts</th>
                 </tr>
 
@@ -25,6 +25,10 @@
                         <td>
                             <label for="custom-simple-{{id}}">{{name}}</label>
                         </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2" style="text-align: center; opacity: 0.7"><i>&lt;No custom simple blasts&gt;</i></td>
                     </tr>
                 {{/each}}
 
@@ -45,6 +49,10 @@
                         <td>
                             <label for="custom-composite-{{id}}">{{name}}</label>
                         </td>
+                    </tr>
+                {{else}}
+                    <tr>
+                        <td colspan="2" style="text-align: center; opacity: 0.7"><i>&lt;No custom substance infusions&gt;</i></td>
                     </tr>
                 {{/each}}
 

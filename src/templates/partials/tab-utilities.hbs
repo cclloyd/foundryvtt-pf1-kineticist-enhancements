@@ -31,13 +31,17 @@
                 </tr>
             {{/each}}
 
-            <tr>
+            <tr style="background-color: rgba(0,0,0,0.1);">
                 <th colspan="2">Custom Utility Talents</th>
             </tr>
             {{#each customUtilityTalents}}
                 <tr class="settings-custom-row checkbox-row">
                     <td><input type="checkbox" name="custom-utility-{{id}}" id="custom-utility-{{id}}" value="custom-{{id}}" {{owned}}/></td>
                     <td><label for="custom-utility-{{id}}">{{name}}</label></td>
+                </tr>
+            {{else}}
+                <tr>
+                    <td colspan="2" style="text-align: center; opacity: 0.7"><i>&lt;No custom utility talents&gt;</i></td>
                 </tr>
             {{/each}}
         </table>

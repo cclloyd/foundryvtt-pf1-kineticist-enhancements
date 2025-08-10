@@ -1,4 +1,4 @@
-import { ns } from './config';
+import { defaultIcon, ns } from './config';
 import { defaultCompositeTransform, parseTransform } from './common';
 import { formInfusions } from './generated/formInfusions';
 import { formTransforms } from './blastData/formTransforms';
@@ -139,12 +139,14 @@ export default class BlastFactory {
 
         // Merge template item with data based on form input
         this.blastData = foundry.utils.mergeObject(this.blastData, {
-            img: this.blastConfig.icon ?? 'systems/pf1/icons/spells/wind-sky-1.jpg',
+            img: this.blastConfig.icon ?? defaultIcon,
             system: {
                 identifiedName: this.blastConfig.name,
                 attackNotes: [],
             },
         });
+        // Set icon for action as well as the item
+        this.blastData.system.actions[0].img = this.blastConfig.icon ?? defaultIcon;
 
         // Ensure effect notes exists
         if (!Array.isArray(this.blastData.system.effectNotes)) this.blastData.system.effectNotes = [];

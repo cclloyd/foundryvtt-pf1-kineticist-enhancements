@@ -24,6 +24,10 @@
                     <td><input type="checkbox" name="custom-metakinesis-{{id}}" id="custom-metakinesis-{{id}}" value="custom-{{id}}" {{owned}}/></td>
                     <td><label for="custom-metakinesis-{{id}}">{{name}}</label></td>
                 </tr>
+            {{else}}
+                <tr>
+                    <td colspan="2" style="text-align: center; opacity: 0.7"><i>&lt;No custom metakinesis&gt;</i></td>
+                </tr>
             {{/each}}
         </table>
     </div>
