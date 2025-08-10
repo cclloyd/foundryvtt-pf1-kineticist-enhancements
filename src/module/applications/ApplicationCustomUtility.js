@@ -33,13 +33,11 @@ export class ApplicationCustomUtility extends Application {
         event.preventDefault();
 
         const formData = serializeForm('custom-utility');
-        console.log('formData', formData);
 
         // Set default ID if none provided
         if (!formData.id || formData.id.length < 3) formData.id = 'default';
         const existing = game.settings.get(ns, this.key) ?? {};
         existing[formData.id] = formData;
-        console.log('existing', existing);
         game.settings.set(ns, this.key, existing);
         if (this.parent) this.parent.render(true);
         await this.close();

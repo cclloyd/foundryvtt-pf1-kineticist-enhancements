@@ -13,6 +13,24 @@
                 </tr>
             {{/each}}
 
+        </table>
+    </div>
+
+    <div class="column" style="max-width: 300px">
+        <table class="ke-table">
+            <tr>
+                <th colspan="2">Bundled Utility Talents</th>
+            </tr>
+            <tr>
+                <td colspan="2"><i>These are some premade transforms bundled into the module for convenience so you don't have to make a custom one.</i></td>
+            </tr>
+            {{#each bundledUtilityTalents}}
+                <tr class="settings-custom-row checkbox-row">
+                    <td><input type="checkbox" name="bundled-utility-{{id}}" id="bundled-utility-{{id}}" value="bundled-{{id}}" {{owned}}/></td>
+                    <td><label for="bundled-utility-{{id}}">{{name}}</label></td>
+                </tr>
+            {{/each}}
+
             <tr>
                 <th colspan="2">Custom Utility Talents</th>
             </tr>

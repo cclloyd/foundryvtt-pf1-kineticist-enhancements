@@ -1,30 +1,21 @@
 import { ns } from '../lib/config';
-import { defaultCompositeTransform, getCompositeBlasts, jquery, parseTransform } from '../lib/common';
-import { metaTransforms } from '../lib/blastData/metaTransforms';
+import { getCompositeBlasts } from '../lib/common';
 import { simpleBlastsAsArray, simpleBlastsWith3pp } from '../lib/generated/simpleBlasts';
-import { compositeBlasts, compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
+import { compositeBlastsWith3pp } from '../lib/generated/compositeBlasts';
 import { formInfusions } from '../lib/generated/formInfusions';
-import { formTransforms } from '../lib/blastData/formTransforms';
 import { substanceInfusions } from '../lib/generated/substanceInfusions';
-import { substanceTransforms } from '../lib/blastData/substanceTransforms';
 import { metakinesis } from '../lib/generated/metakinesis';
-import { utilityTalents, utilityTalentsAsArray } from '../lib/generated/utilityTalents';
-import { utilityTransforms } from '../lib/blastData/utilityTransforms';
-import { getBaseData, getDefaultAction } from '../lib/blastData/newBlastTemplates';
+import { bundledUtilityTalents, utilityTalents } from '../lib/generated/utilityTalents';
 import { Kineticist } from './Kineticist';
 import { feats, mythicFeats } from '../lib/blastData/feats';
-import { specialTransforms } from '../lib/blastData/specialTransforms';
+import BlastFactory from '../lib/factory';
 
 export class ApplicationBlastAttack extends FormApplication {
     constructor(options = {}) {
         super(options);
         this.actor = options.actor;
         this.kineticist = new Kineticist(this.actor);
-        //if (options.actor) {}
     }
-
-    // TODO: Clean up flow.  Maybe separate out some into functions.  Maybe make full pipeline that inputs blastData and outputs blastData<modified> for each thing.
-    // TODO: Make HUD align with TokenActionHUD or even integrate into it
 
     static get defaultOptions() {
         return foundry.utils.mergeObject(super.defaultOptions, {
@@ -130,6 +121,13 @@ export class ApplicationBlastAttack extends FormApplication {
             if (actorConfig.utility.indexOf(key) > -1) ownedCustomUtilityTalents.push(allCustomUtilityTalents[key]);
         }
 
+        // Set owned bundled utility talents
+        const allBundledUtilityTalents = bundledUtilityTalents;
+        let ownedBundledUtilityTalents = [];
+        for (let key of Object.keys(allBundledUtilityTalents)) {
+            if (actorConfig.utility.indexOf(key) > -1) ownedBundledUtilityTalents.push(allBundledUtilityTalents[key]);
+        }
+
         if (this.actor.getFlag(ns, 'remember-utility')) {
             const activeUtilityIDs = this.actor.getFlag(ns, 'remember-utility-value');
             ownedUtilityTalents = ownedUtilityTalents.map((t) => ({
@@ -199,6 +197,7 @@ export class ApplicationBlastAttack extends FormApplication {
             customFormInfusions: ownedCustomFormInfusions,
             customSubstanceInfusions: ownedCustomSubstanceInfusions,
             customUtilityTalents: ownedCustomUtilityTalents,
+            bundledUtilityTalents: ownedBundledUtilityTalents,
             customMetakinesis: ownedCustomMetakinesis,
             customFeats: ownedCustomFeats,
             infusionSpecialization: this.kineticist.getInfusionSpecialization(),
@@ -211,232 +210,12 @@ export class ApplicationBlastAttack extends FormApplication {
         });
     }
 
-    /**
-     * Returns a PF1.Item that uses the default PF1 action for its only action.  All fields are default.
-     * @returns {Promise<*>}
-     */
-    async getBaseBlast() {
-        return (await this.actor.createEmbeddedDocuments('Item', [getBaseData()], { temporary: true }))[0];
-    }
-
     async _asyncUpdateObject(event, inputFormData) {
         // Parse form data first
         const formData = Object.fromEntries(Object.entries(inputFormData).filter(([key, value]) => value !== null));
-
-        const customFormInfusions = game.settings.get(ns, 'customFormInfusions');
-        const customSubstanceInfusions = game.settings.get(ns, 'customSubstanceInfusions');
-        const customUtilityTalents = game.settings.get(ns, 'customUtilityTalents');
-        const customMetakinesis = game.settings.get(ns, 'customMetakinesis');
-        const customBlasts = game.settings.get(ns, 'customBlasts');
-
-        // Fetch infusions
-        let formInfusion;
-        if (formData.form.startsWith('custom')) {
-            formInfusion = customFormInfusions[formData.form.slice(7)];
-            if (formInfusion) formInfusion.transform = parseTransform(formInfusion.transform);
-        } else {
-            formInfusion = formInfusions[formData.form];
-            if (formInfusion) formInfusion.transform = formTransforms[formData.form];
-        }
-
-        let substanceInfusion;
-        if (formData.form.startsWith('custom')) {
-            substanceInfusion = customSubstanceInfusions[formData.substance.slice(7)];
-            if (substanceInfusion) substanceInfusion.transform = parseTransform(substanceInfusion.transform);
-        } else {
-            substanceInfusion = substanceInfusions[formData.substance];
-            if (substanceInfusion) substanceInfusion.transform = substanceTransforms[formData.substance];
-        }
-
-        // Get applied utility talents
-        const appliedUtilityTalents = [];
-        const utilityKeys = Object.keys(formData).filter((k) => k.includes('utility-'));
-        const allCustomUtilityTalents = game.settings.get(ns, 'customUtilityTalents') ?? {};
-        for (let k of utilityKeys) {
-            const talent = utilityTalents[formData[k]] ?? allCustomUtilityTalents[formData[k]];
-            if (talent) appliedUtilityTalents.push(talent);
-        }
-
-        // Get applied metakinesis
-        const appliedMetakinesis = [];
-        const metakinesisKeys = Object.keys(formData).filter((k) => k.includes('meta-'));
-        const allCustomMetakinesis = game.settings.get(ns, 'customMetakinesis') ?? {};
-        for (let k of metakinesisKeys) {
-            const talent = metakinesis[formData[k]] ?? allCustomMetakinesis[formData[k]];
-            if (talent) appliedMetakinesis.push(talent);
-        }
-
-        // Fetch (or create) template item to copy and morph
-        let blastItem = await this.getBaseBlast();
-        console.log('Foundry VTT | blastItem', blastItem);
-
-        // Get blast config from module config
-        let blastConfig = simpleBlastsWith3pp[formData['blast']];
-        if (!blastConfig) blastConfig = compositeBlastsWith3pp[formData['blast']];
-        console.log('Foundry VTT | blastConfig', blastConfig);
-
-        // Get blast data
-        if (blastItem === undefined) {
-            console.error('PF1 Kineticist Enhancements | Blast Item not found', blastItem);
-            ui.notifications.error('PF1 Kineticist Enhancements | Blast Item not found');
-            return;
-        }
-        let blastData = blastItem.toObject();
-
-        console.log('Foundry VTT | Start of blastData mutation', blastData);
-        // Merge template item with blast config data
-        blastData = foundry.utils.mergeObject(blastData, getBaseData());
-
-        // Merge template item with data based on form input
-        blastData = foundry.utils.mergeObject(blastData, {
-            img: blastConfig.icon,
-            system: {
-                identifiedName: blastConfig.name,
-                attackNotes: [],
-            },
-        });
-        //blastData.system.identifiedName = blastConfig.name;
-        // Create empty attack notes in case it doesn't exist
-        //blastData.system.attackNotes = [];
-
-        // Base simple blast
-        let BASE = ['(ceil(@classes.kineticist.level / 2))d6', 'Simple'];
-        // Elemental Overflow
-        let EO = [
-            '(min(@resources.classFeat_burn.value, floor(@classes.kineticist.level / 3)) * 2)',
-            'Elemental Overflow',
-        ];
-        // Array of damage parts in the form of [str:damage string, str:description]
-        let dmgParts = [BASE];
-
-        // Add physical bonus
-        if (blastConfig.type === 'physical') {
-            dmgParts.push([
-                blastConfig.class === 'composite' ? '@classes.kineticist.level' : 'ceil(@classes.kineticist.level /2)',
-                'Physical blast',
-            ]);
-        }
-        // Apply energy penalty
-        else {
-            blastData.system.actions[0].ability.damageMult = 0.5;
-        }
-
-        // Add elemental overflow
-        dmgParts.push(EO);
-
-        // Apply custom transform function if found (mainly used for special composite blasts)
-        if (blastConfig.transform) {
-            [dmgParts, blastData] = blastConfig.transform(dmgParts, blastData, blastConfig, formData);
-        } else if (blastConfig.class === 'composite') {
-            [dmgParts, blastData] = defaultCompositeTransform(dmgParts, blastData, blastConfig, formData);
-        }
-
-        // Set long description
-        blastData.system.description.value = blastConfig.description;
-        if (formInfusion) blastData.system.description.value += ` <hr/>${formInfusion.description}`;
-        if (substanceInfusion) blastData.system.description.value += ` <hr/>${substanceInfusion.description}`;
-        blastData.system.description.value = blastData.system.description.value.replaceAll('\n', '<br/>');
-
-        // Apply changes to name
-        if (formInfusion?.prepend)
-            blastData.system.identifiedName = `${formInfusion.prependText} ${blastData.system.identifiedName}`;
-        if (formInfusion?.append)
-            blastData.system.identifiedName = `${blastData.system.identifiedName} ${formInfusion.appendText}`;
-        if (substanceInfusion?.prepend)
-            blastData.system.identifiedName = `${substanceInfusion.prependText} ${blastData.system.identifiedName}`;
-        if (substanceInfusion?.append)
-            blastData.system.identifiedName = `${blastData.system.identifiedName} ${substanceInfusion.appendText}`;
-        if (!formInfusion?.noBlastText && !substanceInfusion?.noBlastText) blastData.system.identifiedName += ' Blast';
-
-        // Apply transformations
-        if (!Array.isArray(blastData.system.effectNotes)) blastData.system.effectNotes = [];
-        if (formInfusion?.transform) {
-            const transform = parseTransform(formInfusion.transform);
-            [dmgParts, blastData] = transform(this, dmgParts, blastData, blastConfig, formData);
-            if (blastData.system.actions[0].actionType === 'save')
-                blastData.system.effectNotes.push(`${formInfusion.name} Infusion`);
-            else blastData.system.attackNotes.push(`${formInfusion.name} Infusion`);
-        }
-        if (substanceInfusion?.transform) {
-            const transform = parseTransform(substanceInfusion.transform);
-            [dmgParts, blastData] = transform(this, dmgParts, blastData, blastConfig, formData);
-            if (blastData.system.actions[0].actionType === 'save')
-                blastData.system.effectNotes.push(`${substanceInfusion.name} Infusion`);
-            else blastData.system.attackNotes.push(`${substanceInfusion.name} Infusion`);
-        }
-
-        // Apply bold to asterisks in descriptions
-        blastData.system.description.value = blastData.system.description.value.replaceAll(/\*(.+)\*/g, '<b>$1</b>');
-
-        // Add touch attack notes
-        if (blastData.system.actions[0].actionType === 'save')
-            blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
-        else blastData.system.attackNotes.push(`${blastConfig.type === 'physical' ? 'Not ' : ''}Touch Attack`);
-
-        // START OF TRANSFORMS
-
-        // Apply utility talents
-        appliedUtilityTalents.map((talent) => {
-            const transform = utilityTransforms[talent.id] ?? parseTransform(customUtilityTalents[talent.id].transform);
-            if (transform) [dmgParts, blastData] = transform(this, dmgParts, blastData, blastConfig, formData);
-        });
-
-        // Apply metakinesis
-        appliedMetakinesis.map((talent) => {
-            const transform = metaTransforms[talent.id] ?? parseTransform(customMetakinesis[talent.id].transform);
-            if (transform) [dmgParts, blastData] = transform(this, dmgParts, blastData, blastConfig, formData);
-        });
-
-        // Apply special case transforms
-        if (formData['double-area'])
-            [dmgParts, blastData] = specialTransforms['double-area'](this, dmgParts, blastData, blastConfig, formData);
-        if (formData['double-damage'])
-            [dmgParts, blastData] = specialTransforms['double-damage'](
-                this,
-                dmgParts,
-                blastData,
-                blastConfig,
-                formData,
-            );
-        if (formData['skip-templates'])
-            [dmgParts, blastData] = specialTransforms['skip-templates'](
-                this,
-                dmgParts,
-                blastData,
-                blastConfig,
-                formData,
-            );
-
-        // END OF TRANSFORMS
-        console.log('Final dmgParts', dmgParts);
-
-        // Build damage string
-        let damage = '';
-        if (blastData.flags.baseDamageModified) {
-            for (let p of dmgParts) damage += ` + ${p[0]}[${p[1]}]`;
-        } else {
-            damage = `${dmgParts[0][0]}[${dmgParts[0][1]}]`;
-            for (let p of dmgParts.slice(1)) {
-                if (p[1].includes('Physical ')) damage += ` + (${p[0]})[${p[1]}]`;
-                else damage += ` + (${p[0]})[${p[1]}]`;
-            }
-        }
-        // TODO: Find where I should add the full name of the infusion to the attack nodes as 'X Infusion'
-
-        // Set damage string
-        blastData.system.actions[0].damage.parts[0] = {
-            formula: damage,
-            type: { values: blastConfig.damageType },
-        };
-
-        console.log('Damage', blastData.system.actions[0].damage);
-
-        blastData.name = blastData.system.identifiedName;
-
-        console.log('Foundry VTT | End of blastData mutation', blastData);
-
-        // Create new item from data
-        const newBlast = (await this.actor.createEmbeddedDocuments('Item', [blastData], { temporary: true }))[0];
+        const acme = new BlastFactory({ formData, actor: this.actor });
+        await acme.runFactory();
+        const newBlast = await acme.getDocument();
 
         // Save inputs
         this.actor.setFlag(ns, 'remember-gather', formData['remember-gather']);
@@ -451,14 +230,14 @@ export class ApplicationBlastAttack extends FormApplication {
         this.actor.setFlag(ns, 'remember-meta', formData['remember-meta']);
         if (formData['remember-meta']) {
             const activeMetaIDs = [];
-            for (let talent of appliedMetakinesis) activeMetaIDs.push(talent.id);
+            for (let talent of acme.metakinesis) activeMetaIDs.push(talent.id);
             this.actor.setFlag(ns, 'remember-meta-value', activeMetaIDs);
         }
 
         this.actor.setFlag(ns, 'remember-utility', formData['remember-utility']);
         if (formData['remember-utility']) {
             const activeUtilityIDs = [];
-            for (let talent of appliedUtilityTalents) activeUtilityIDs.push(talent.id);
+            for (let talent of acme.utilityTalents) activeUtilityIDs.push(talent.id);
             this.actor.setFlag(ns, 'remember-utility-value', activeUtilityIDs);
         }
 
@@ -479,14 +258,13 @@ export class ApplicationBlastAttack extends FormApplication {
 
         // Pull up the dialog to use the blast
         try {
-            console.log('Foundry VTT | newBlast', newBlast);
+            console.log('pf1-ke | Final Blast Item:', newBlast);
             await newBlast.use({ skipDialog: false });
             if (formData['apply-burn']) await this.kineticist.addBurn(formData['burn']);
         } catch (err) {
-            console.error('Foundry VTT | Error using new item', err);
+            console.error('pf1-ke | Error using new item', err);
         }
     }
-    // actor.system.resources.classFeat_burn.value,max,_id
 
     _updateObject(event, formData) {
         this._asyncUpdateObject(event, formData);

@@ -2,7 +2,7 @@ import { ns } from '../lib/config';
 import { formInfusions } from '../lib/generated/formInfusions';
 import { substanceInfusions } from '../lib/generated/substanceInfusions';
 import { simpleBlasts, simpleBlastsAsArray } from '../lib/generated/simpleBlasts';
-import { utilityTalents } from '../lib/generated/utilityTalents';
+import { bundledUtilityTalents, utilityTalents } from '../lib/generated/utilityTalents';
 import { feats, mythicFeats } from '../lib/blastData/feats';
 import { ApplicationCustomInfusion } from './ApplicationCustomInfusion';
 import { metakinesis } from '../lib/generated/metakinesis';
@@ -133,6 +133,13 @@ export class ApplicationActorConfig extends FormApplication {
                 actorConfig.utility?.indexOf(allCustomUtilityTalents[key].id) > -1 ? 'checked' : '';
         }
 
+        // Set owned bundled utility talents
+        const allBundledUtilityTalents = bundledUtilityTalents;
+        for (let key of Object.keys(allBundledUtilityTalents)) {
+            allBundledUtilityTalents[key].owned =
+                actorConfig.utility?.indexOf(allBundledUtilityTalents[key].id) > -1 ? 'checked' : '';
+        }
+
         // Set owned custom metakinesis
         const allCustomMetakinesis = game.settings.get(ns, 'customMetakinesis') ?? {};
         for (let key of Object.keys(allCustomMetakinesis)) {
@@ -160,18 +167,19 @@ export class ApplicationActorConfig extends FormApplication {
         return foundry.utils.mergeObject(super.getData(), {
             actor: this.actor,
             simpleBlasts: allSimple,
-            formInfusions: allFormInfusionTalents,
-            substanceInfusions: allSubstanceInfusionTalents,
-            utilityTalents: allUtilityTalents,
-            customFormInfusions: allCustomFormInfusions,
-            customSubstanceInfusions: allCustomSubstanceInfusions,
-            customUtilityTalents: allCustomUtilityTalents,
             customSimpleBlasts: allCustomSimpleBlasts,
             customCompositeBlasts: allCustomCompositeBlasts,
+            formInfusions: allFormInfusionTalents,
+            customFormInfusions: allCustomFormInfusions,
+            customSubstanceInfusions: allCustomSubstanceInfusions,
+            substanceInfusions: allSubstanceInfusionTalents,
+            utilityTalents: allUtilityTalents,
+            customUtilityTalents: allCustomUtilityTalents,
+            bundledUtilityTalents: allBundledUtilityTalents,
             metakinesis: metakinesis,
-            customFeats: allCustomFeats,
             customMetakinesis: allCustomMetakinesis,
             feats: allFeats,
+            customFeats: allCustomFeats,
             mythicFeats: allMythicFeats,
         });
     }
@@ -219,6 +227,10 @@ export class ApplicationActorConfig extends FormApplication {
         // Save custom utility talents
         for (let key in formData)
             if (key.startsWith('custom-utility-') && formData[key]?.length > 1) ownedUtility.push(key.substring(15));
+
+        // Save bundled utility talents
+        for (let key in formData)
+            if (key.startsWith('bundled-utility-') && formData[key]?.length > 1) ownedUtility.push(key.substring(16));
 
         // Save custom metakinesis
         const ownedMetakinesis = [];

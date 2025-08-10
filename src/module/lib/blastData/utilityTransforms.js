@@ -21,4 +21,24 @@ export const utilityTransforms = {
         dmgParts[0][0] = `(@classes.kineticist.level )d6`;
         return [dmgParts, blastData];
     },
+    'double-damage': (instance, dmgParts, blastData, blastConfig, formData) => {
+        dmgParts.forEach((part, index) => {
+            dmgParts[index][0] = `(${part[0]})*2`;
+        });
+        return [dmgParts, blastData];
+    },
+    'half-damage': (instance, dmgParts, blastData, blastConfig, formData) => {
+        dmgParts.forEach((part, index) => {
+            dmgParts[index][0] = `(${part[0]})/2`;
+        });
+        return [dmgParts, blastData];
+    },
+    'double-area': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.actions[0].measureTemplate.size =
+            parseInt(blastData.system.actions[0].measureTemplate.size) * 2;
+    },
+    'half-area': (instance, dmgParts, blastData, blastConfig, formData) => {
+        blastData.system.actions[0].measureTemplate.size =
+            Math.floor(parseInt(blastData.system.actions[0].measureTemplate.size) / 2 / 5) * 5;
+    },
 };

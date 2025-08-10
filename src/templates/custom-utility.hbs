@@ -16,6 +16,13 @@
             </td>
         </tr>
         <tr>
+            <th><label for="priority">Priority</label></th>
+            <td>
+                <input type="text" id="priority" name="priority" placeholder="0" autocomplete="off" value="{{priority}}"/>
+                <span>Utility transforms are executed in order of lowest priority first, alphabetical order.</span>
+            </td>
+        </tr>
+        <tr>
             <th><label for="description">Description</label></th>
             <td>
                 <textarea rows="6" id="description" name="description" placeholder="A long description">{{description}}</textarea>

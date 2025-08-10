@@ -240,6 +240,13 @@
                             <td><label for="custom-utility-{{id}}">{{burn}}</label></td>
                         </tr>
                     {{/each}}
+                    {{#each bundledUtilityTalents}}
+                        <tr>
+                            <td><input type="checkbox" name="utility-{{id}}" id="bundled-utility-{{id}}" value="{{id}}" {{active}}/></td>
+                            <td><label for="bundled-utility-{{id}}">{{name}}</label></td>
+                            <td><label for="bundled-utility-{{id}}">{{burn}}</label></td>
+                        </tr>
+                    {{/each}}
                 </tbody>
             </table>
             <table class="ke-attack-table ke-burn-table" style="margin-top: 1rem;">
@@ -298,18 +305,6 @@
             <div class="ke-checkbox">
                 <input type="checkbox" name="skip-templates" id="skip-templates" {{ ifThen actorFlags.remember-skip-templates 'checked' '' }}/>
                 <label for="skip-templates">Skip Measure Templates</label>
-            </div>
-            <div class="ke-checkbox">
-                <input type="checkbox" name="double-damage" id="double-damage" {{ ifThen actorFlags.remember-double-damage 'checked' '' }}/>
-                <label for="double-damage">x2 Damage</label>
-            </div>
-            <div class="ke-checkbox">
-                <input type="checkbox" name="double-area" id="double-area" {{ ifThen actorFlags.remember-double-area 'checked' '' }}/>
-                <label for="double-area">x2 Area</label>
-            </div>
-            <div class="ke-checkbox">
-                <input type="checkbox" name="attack-fix" id="attack-fix" {{ ifThen actorFlags.remember-attack-fix 'checked' '' }}/>
-                <label for="attack-fix">Atk Num Fix</label>
             </div>
         </div>
     </div>
