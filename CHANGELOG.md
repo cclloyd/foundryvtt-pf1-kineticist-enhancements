@@ -1,3 +1,13 @@
+# 1.4
+
+- Support for Foundry v12.343 and pf1 11.8
+- Moved buttons to token controls. Always visible but require a single token to work.
+- Made the actor config page a bit more intuitive to use, and easier to add custom features.
+- Improved logging
+- Changed some utiilties to be bundled utiilty talents.
+- Improved stability, speed.
+- Dev: Improved build watch speed dramatically
+
 # 1.1
 
 ## Breaking changes

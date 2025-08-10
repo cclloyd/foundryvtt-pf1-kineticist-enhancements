@@ -4,7 +4,7 @@ This is a module for FoundryVTT that streamlines using the Kinetic Blast class f
 
 # Features:
 -
-- Automatiaclly apply burn
+- Automatically apply burn
 - Automatically detect feats/class features on your sheet
   - Requires the identifier to follow a specific standard
     - feat: `feat_camelCase` (Be wary of exceptions in the compendium, such as `feat_twoweaponFighting`)
