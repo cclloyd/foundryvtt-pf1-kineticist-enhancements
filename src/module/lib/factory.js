@@ -46,6 +46,7 @@ export default class BlastFactory {
         await this.applyExtraTransforms();
 
         await this.setItemName();
+        // TODO: Set icon here (or find where its already being set and make sure it works)
         await this.setTouchAttack();
         await this.formatDescription();
         await this.setDamage();
