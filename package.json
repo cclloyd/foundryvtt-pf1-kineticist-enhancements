@@ -1,17 +1,24 @@
 {
-  "name": "pf1-kineticist-enhancements",
-  "private": true,
-  "version": "0.0.0",
-  "type": "module",
-  "scripts": {
-    "dev": "vite",
-    "build": "tsc && vite build",
-    "preview": "vite preview"
-  },
-  "devDependencies": {
-    "fvtt-types": "npm:@league-of-foundry-developers/foundry-vtt-types@12.343",
-    "typescript": "~5.8.3",
-    "vite": "^7.1.0",
-    "yarn-upgrade-all": "^0.7.5"
-  }
+    "name": "pf1-kineticist-enhancements",
+    "private": true,
+    "version": "0.0.1",
+    "type": "module",
+    "scripts": {
+        "clean": "rimraf dist",
+        "build": "NODE_ENV=production gulp build",
+        "dev": "NODE_ENV=development gulp dev"
+    },
+    "devDependencies": {
+        "fvtt-types": "npm:@league-of-foundry-developers/foundry-vtt-types@12.343",
+        "typescript": "~5.8.3",
+        "yarn-upgrade-all": "^0.7.5",
+        "esbuild": "^0.25.8",
+        "gulp": "^5.0.1",
+        "gulp-newer": "^1.4.0",
+        "gulp-sass": "^6.0.1",
+        "rimraf": "^6.0.1",
+        "sass": "^1.90.0"
+    },
+    "dependencies": {
+    }
 }
