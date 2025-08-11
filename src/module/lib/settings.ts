@@ -1,4 +1,5 @@
 import { ns } from "./config.js";
+import { SettingsCustomUtilities } from "../applications/SettingsCustomUtilities";
 // import { SettingsCustomInfusions } from "./applications/SettingsCustomInfusions";
 // import { SettingsCustomUtilities } from "./applications/SettingsCustomUtilities";
 // import { SettingsCustomMetakinesis } from "./applications/SettingsCustomMetakinesis";
@@ -12,11 +13,14 @@ export function registerSettings() {
     //     name: "Configure Infusions",
     //     type: SettingsCustomInfusions
     // });
-    // game.settings.registerMenu(ns, "customUtilityTalentsMenu", {
-    //     label: "Custom Utility Talents",
-    //     name: "Configure Utility Talents",
-    //     type: SettingsCustomUtilities
-    // });
+    game.settings!.registerMenu(ns, "customUtilityTalentsMenu", {
+        label: "Custom Utility Talents",
+        name: "Configure Utility Talents",
+        type: SettingsCustomUtilities,
+        hint: "",
+        icon: "",
+        restricted: false,
+    });
     // game.settings.registerMenu(ns, "customMetakinesisMenu", {
     //     label: "Custom Metakinesis",
     //     name: "Configure Metakinesis",
