@@ -4,6 +4,7 @@ import newer from 'gulp-newer';
 import gulpSass from 'gulp-sass';
 import sassCompiler from 'sass';
 import * as esbuild from 'esbuild';
+import { rm } from 'fs/promises';
 
 const sass = gulpSass(sassCompiler);
 
@@ -18,6 +19,11 @@ const paths = {
     stylesOut: 'dist/module/styles',
     moduleOutFile: 'dist/module/pf1-kineticist-enhancements.js'
 };
+
+// --- Clean ---
+async function cleanDist() {
+    await rm(paths.out, { recursive: true, force: true });
+}
 
 // --- TypeScript (esbuild) ---
 async function buildTS() {
@@ -81,6 +87,7 @@ async function watchAssets() {
 // --- Public tasks ---
 export const build = series(buildTS, parallel(buildStyles, copyAssets));
 export const dev = series(
+    cleanDist,
     // keep initial full build, then start watchers
     series(buildTS, parallel(buildStyles, copyAssets)),
     parallel(watchTS, watchStyles, watchAssets)
