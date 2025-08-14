@@ -4,6 +4,12 @@
     "target": "esnext",
     "moduleResolution": "bundler",
     "strict": true,
+    "include": [
+      "src",
+      "src/types/**/*.d.ts",
+      "pf1-kineticist-enhancements.d.ts"
+    ],
+
     "useDefineForClassFields": true,
     "module": "ESNext",
     "lib": ["ES2022", "DOM", "DOM.Iterable"],
