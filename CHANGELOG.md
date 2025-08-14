@@ -1,3 +1,10 @@
+# 1.5
+
+- Added support for Foundry v13.347
+- Dropped support for Foundry v11 and below
+- Fixed console logs
+- Fixed buttons, now always appear in Token controls.
+
 # 1.4
 
 - Support for Foundry v12.343 and pf1 11.8
