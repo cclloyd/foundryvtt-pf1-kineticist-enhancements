@@ -1,5 +1,7 @@
 image: node:24
 
+# TODO: Use https://foundryvtt.com/article/package-release-api/ to automate new releases
+
 cache:
   paths:
     - node_modules/
