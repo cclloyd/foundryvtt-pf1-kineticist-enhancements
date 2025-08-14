@@ -1,3 +1,4 @@
 export const getCoreMajorVersion = () => {
-    return parseInt(game.version.split('.')[0]);
+    if (game.version) return parseInt(game.version.split('.')[0]);
+    return true;
 };

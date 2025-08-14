@@ -11,11 +11,11 @@ import { ns } from './config.js';
  *   sub.debug('Loaded', actor.id);
  */
 export class Logger {
-    constructor({ prefix = '', level = 'info', enabled = true } = {}) {
-        this._prefix = prefix || `[${ns}]`;
+    constructor({ prefix = '', level = 'log', enabled = true } = {}) {
+        this._prefix = prefix || `${ns} |`;
         this._enabled = enabled;
         this._levels = { debug: 10, log: 15, info: 20, warn: 30, error: 40, none: 1000 };
-        this._level = this._levels[level] !== undefined ? level : 'info';
+        this._level = this._levels[level] !== undefined ? level : 'log';
     }
 
     setPrefix(prefix) {
@@ -89,4 +89,4 @@ export class Logger {
     }
 }
 
-export const keLogger = new Logger({ prefix: '[pf1-ke]', level: 'info', enabled: true });
+export const keLogger = new Logger();
