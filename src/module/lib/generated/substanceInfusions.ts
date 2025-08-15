@@ -1,4 +1,6 @@
-export const substanceInfusions = {
+import type {SubstanceInfusionConfig} from "#ke/types/infusions";
+
+export const substanceInfusions: Record<string, SubstanceInfusionConfig> = {
     blocking: {
         name: 'Blocking',
         element: ['universal'],
@@ -590,14 +592,22 @@ export const substanceInfusions = {
         appendText: null,
     },
     'turning-blast': {
-        name: 'Turning Blast',
-        description:
-            'Your kinetic blast causes undead creatures to flee in terror.\n\nElements void, wood; Type substance infusion; Level 4; Burn 3Prerequisite(s): duskwalker, or Planar InfusionAssociated Blast(s): positive, negativeSaving Throw Will negates\n\nUndead that take damage from a turning blast must succeed at a Will save or flee for [[1]] round. An undead creature that succeeds at its saving throw against a turning blast is immune to this effect for 24 hours.',
         id: 'turning-blast',
+        name: 'Turning Blast',
+        type: 'substance',
+        element: ['void', 'wood'],
+        level: '4',
+        burn: '3',
+        blasts: ['positive', 'negative'],
+        save: 'Will negates',
+        prerequisites: ['duskwalker, or Planar Infusion'],
+        description:
+            'Your kinetic blast causes undead creatures to flee in terror.\n\nUndead that take damage from a turning blast must succeed at a Will save or flee for [[1]] round. An undead creature that succeeds at its saving throw against a turning blast is immune to this effect for 24 hours.',
         prepend: true,
         append: false,
         prependText: 'Undead-Turning',
-        appendText: null,
+        appendText: null,  // type element blasts level burn
+
     },
     'unblinking-flame': {
         name: 'Unblinking Flame',

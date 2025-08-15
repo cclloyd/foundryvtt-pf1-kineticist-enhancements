@@ -1,6 +1,7 @@
-import { compositeBlasts3pp } from './3pp/compositeBlasts.js';
+import {compositeBlasts3pp} from '#ke/module/lib/generated/3pp/compositeBlasts';
+import type {CompositeBlastConfig} from "#ke/types/blasts";
 
-export const compositeBlasts = {
+export const compositeBlasts: Record<string, CompositeBlastConfig> = {
     autumn: {
         name: 'Autumn',
         id: 'autumn',
@@ -37,7 +38,7 @@ export const compositeBlasts = {
         name: 'Blue Flame',
         id: 'blue-flame',
         description: 'You unleash a concentrated blast of intense blue flame.',
-        element: 'fire',
+        element: ['fire'],
         class: 'composite',
         damageType: ['fire'],
         burn: '2',
@@ -86,7 +87,7 @@ export const compositeBlasts = {
         id: 'force',
         description:
             'You throw a burst of force at a foe. Force blast deals damage as a simple energy blast instead of a composite energy blast.',
-        element: 'aether',
+        element: ['aether'],
         class: 'composite',
         damageType: ['force'],
         burn: '2',
@@ -103,7 +104,7 @@ export const compositeBlasts = {
         id: 'gravitic-boost',
         description:
             'You infuse a simple physical blast with added gravity, increasing its damage dice from d6s to d8s; it otherwise deals damage as per the simple blast. At 15th level, you can also infuse a composite blast with gravity, though to do so you must accept 1 additional point of burn.',
-        element: 'void',
+        element: ['void'],
         class: 'composite',
         damageType: ['see text'],
         burn: '2',
@@ -119,7 +120,7 @@ export const compositeBlasts = {
         name: 'Ice',
         id: 'ice',
         description: 'You shoot a chilling icicle to stab a single foe.',
-        element: 'water',
+        element: ['water'],
         class: 'composite',
         damageType: ['piercing', 'cold'],
         burn: '2',
@@ -152,7 +153,7 @@ export const compositeBlasts = {
         name: 'Metal',
         id: 'metal',
         description: 'You shape metal into clumps, shards, or blades and send them flying.',
-        element: 'earth',
+        element: ['earth'],
         class: 'composite',
         damageType: ['bludgeoning, piercing, or slashing'],
         burn: '2',
@@ -185,7 +186,7 @@ export const compositeBlasts = {
         id: 'negative',
         description:
             'Choose another simple energy blast you know. Negative admixture’s damage is half negative energy, and half the chosen blast’s type.',
-        element: 'void',
+        element: ['void'],
         class: 'composite',
         damageType: ['see text'],
         burn: '2',
@@ -219,7 +220,7 @@ export const compositeBlasts = {
         id: 'positive',
         description:
             'Choose another energy simple blast you know. Positive admixture’s damage is half positive energy, and half the chosen blast’s type.',
-        element: 'wood',
+        element: ['wood'],
         class: 'composite',
         damageType: ['see text'],
         burn: '2',
@@ -299,7 +300,7 @@ export const compositeBlasts = {
         name: 'Thunderstorm',
         id: 'thunderstorm',
         description: 'You batter a single foe with a gust of air crackling with electricity.',
-        element: 'air',
+        element: ['air'],
         class: 'composite',
         damageType: ['bludgeoning', 'electric'],
         burn: '2',
@@ -316,7 +317,7 @@ export const compositeBlasts = {
         id: 'verdant',
         description:
             'You blast your foes with fanciful wild plant growth overflowing with positive energy from the First World. Verdant Blast’s damage counts as positive energy only when it would be beneficial to you.',
-        element: 'wood',
+        element: ['wood'],
         class: 'composite',
         damageType: ['bludgeoning, piercing, slashing, and optionally positive energy'],
         burn: '2',
@@ -332,7 +333,7 @@ export const compositeBlasts = {
         name: 'Void',
         id: 'void',
         description: 'You call forth the power of the void to annihilate your foe.',
-        element: 'void',
+        element: ['void'],
         class: 'composite',
         damageType: ['half bludgeoning', 'negative energy'],
         burn: '2',
@@ -363,6 +364,6 @@ export const compositeBlasts = {
 };
 
 export const compositeBlastsAsArray = (include3pp = true) =>
-    Object.entries(include3pp ? { ...compositeBlasts, ...compositeBlasts3pp } : compositeBlasts).map((i) => i[1]);
+    Object.entries(include3pp ? {...compositeBlasts, ...compositeBlasts3pp} : compositeBlasts).map((i) => i[1]);
 
-export const compositeBlastsWith3pp = { ...compositeBlasts, ...compositeBlasts3pp };
+export const compositeBlastsWith3pp = {...compositeBlasts, ...compositeBlasts3pp};

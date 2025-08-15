@@ -13,6 +13,7 @@ export interface SimpleBlastConfig {
     element: readonly ElementString[];
     description: string;
     icon?: string;
+    transform?: Function;
 }
 
 export interface CompositeBlastConfig extends SimpleBlastConfig {
@@ -23,3 +24,5 @@ export interface CompositeBlastConfig extends SimpleBlastConfig {
     blast2: string;
     blast3: string | null;
 }
+
+export type BlastConfig = SimpleBlastConfig;

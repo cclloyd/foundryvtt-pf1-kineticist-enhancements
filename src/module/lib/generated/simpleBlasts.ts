@@ -1,6 +1,7 @@
-import { simpleBlasts3pp } from './3pp/simpleBlasts.d.ts';
+import type {SimpleBlastConfig} from "#ke/types/blasts";
+import {simpleBlasts3pp} from "#ke/module/lib/generated/3pp/simpleBlasts";
 
-export const simpleBlasts = {
+export const simpleBlasts: Record<string, SimpleBlastConfig> = {
     telekinetic: {
         class: 'simple',
         id: 'telekinetic',
@@ -94,6 +95,7 @@ export const simpleBlasts = {
         icon: 'systems/pf1/icons/spells/wind-sky-1.jpg',
     },
     positive: {
+        class: 'simple',
         id: 'positive',
         name: 'Positive',
         type: 'energy',

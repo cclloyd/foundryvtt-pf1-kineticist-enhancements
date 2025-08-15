@@ -1,7 +1,8 @@
 import { compositeBlastsAsArray } from './generated/compositeBlasts';
+import type {BlastConfig, CompositeBlastConfig, SimpleBlastConfig} from "../../types/blasts";
 
-export const sleep = (time) => {
-    return new Promise((resolve) => setTimeout(resolve, time));
+export const sleep = (ms: number) => {
+    return new Promise((resolve) => setTimeout(resolve, ms));
 };
 
 export const debug = () => {
@@ -9,13 +10,14 @@ export const debug = () => {
 };
 
 export const getAllPlayersActors = async () => {
-    let actors = game.actors!.entities.filter((o) => o.hasPlayerOwner);
+    // @ts-ignore
+    let actors = game.actors!.entities.filter((o: any) => o.hasPlayerOwner);
     console.debug('Actors:', actors);
     return actors;
 };
 
-export const getCompositeBlasts = (simpleBlasts, include3pp = true) => {
-    return compositeBlastsAsArray(include3pp).filter((b) => {
+export const getCompositeBlasts = (simpleBlasts: SimpleBlastConfig[], include3pp = true) => {
+    return compositeBlastsAsArray(include3pp).filter((b: any) => {
         let count = 0;
 
         for (let s of simpleBlasts) {
@@ -33,7 +35,7 @@ export const getCompositeBlasts = (simpleBlasts, include3pp = true) => {
 /**
  * Catch-all transform for composite blasts.  Converts damage to match that of a composite blast.
  */
-export const defaultCompositeTransform = (dmgParts, blastData, blastConfig, formData) => {
+export const defaultCompositeTransform = (dmgParts: [string, string][], blastData: any, blastConfig: BlastConfig, formData: unknown) => {
     blastData.system.attackNotes.push(`Composite Blast`);
     dmgParts[0] = ['(@classes.kineticist.level)d6', 'Composite'];
     return [dmgParts, blastData];
@@ -56,9 +58,9 @@ export const jquery = {
     mousedown: 'mousedown',
 };
 
-export const serializeForm = (formId) => {
+export const serializeForm = (formId: string): unknown => {
     const formObject = $(`#${formId}`).serializeArray();
-    const formData = {};
+    const formData = {} as any;
     $.each(formObject, (index, field) => {
         formData[field.name] = field.value;
         if (formData[field.name] === '') formData[field.name] = null;
@@ -68,11 +70,11 @@ export const serializeForm = (formId) => {
     return formData;
 };
 
-export const capitalizeFirstLetter = (string) => {
+export const capitalizeFirstLetter = (string: string) => {
     return string.charAt(0).toUpperCase() + string.slice(1);
 };
 
-export const parseTransform = (inputFunction) => {
+export const parseTransform = (inputFunction: Function | string) => {
     if (typeof inputFunction === 'function') return inputFunction;
     if (inputFunction?.length > 0)
         return Function(

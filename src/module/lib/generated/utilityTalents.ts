@@ -1,8 +1,10 @@
 // JavaScript
+import type {UtilityTalentConfig} from "#ke/types/utilityTalents";
+
 export const utilityTalentsAsArray = () => Object.entries(utilityTalents).map((i) => i[1]);
 
 // TODO: Move these out of the generated folder as they aren't generated, theyre hardcoded, then generate the whole utilities page
-export const utilityTalents = {
+export const utilityTalents: Record<string, UtilityTalentConfig> = {
     'aetheric-boost': {
         id: 'aetheric-boost',
         name: 'Aetheric Boost',

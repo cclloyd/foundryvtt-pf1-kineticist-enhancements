@@ -1,0 +1,291 @@
+{
+    "com.linkedin.realtimefrontend.DecoratedEvent": {
+        "topic": "urn:li-realtime:conversationsTopic:urn:li-realtime:myself",
+        "leftServerAt": 1713826277666,
+        "id": "01a32135-9326-44a2-90c3-9648a523516e",
+        "payload": {
+            "data": {
+                "_recipeType": "com.linkedin.103d92df0d822bed3dffad51d56bc810",
+                "_type": "com.linkedin.103d92df0d822bed3dffad51d56bc810",
+                "doDecorateConversationMessengerRealtimeDecoration": {
+                    "result": {
+                        "notificationStatus": "MUTE",
+                        "conversationParticipants": [
+                            {
+                                "hostIdentityUrn": "urn:li:fsd_profile:ACoAAA4bjaIB_TEDTU8I_58I5JjkLkYrCAc0Bi8",
+                                "entityUrn": "urn:li:msg_messagingParticipant:urn:li:fsd_profile:ACoAAA4bjaIB_TEDTU8I_58I5JjkLkYrCAc0Bi8",
+                                "showVerificationBadge": false,
+                                "_type": "com.linkedin.messenger.MessagingParticipant",
+                                "participantType": {
+                                    "member": {
+                                        "profileUrl": "https://www.linkedin.com/in/ACoAAA4bjaIB_TEDTU8I_58I5JjkLkYrCAc0Bi8",
+                                        "firstName": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "Michael",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        },
+                                        "lastName": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "White",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        },
+                                        "profilePicture": {
+                                            "digitalmediaAsset": null,
+                                            "_type": "com.linkedin.common.VectorImage",
+                                            "attribution": null,
+                                            "_recipeType": "com.linkedin.24beaac6b637019ad61958ebd1c4693b",
+                                            "focalPoint": null,
+                                            "artifacts": [
+                                                {
+                                                    "width": 100,
+                                                    "_type": "com.linkedin.common.VectorArtifact",
+                                                    "_recipeType": "com.linkedin.fb3e5bf3c119b80d2daa9d87a86f0894",
+                                                    "fileIdentifyingUrlPathSegment": "100_100/0/1664218647017?e=1719446400&v=beta&t=s1n36b4kcMFPoO1bVPgPcuTkAK9PIoetYAj8nKbUoUA",
+                                                    "height": 100
+                                                },
+                                                {
+                                                    "width": 200,
+                                                    "_type": "com.linkedin.common.VectorArtifact",
+                                                    "_recipeType": "com.linkedin.fb3e5bf3c119b80d2daa9d87a86f0894",
+                                                    "fileIdentifyingUrlPathSegment": "200_200/0/1664218647017?e=1719446400&v=beta&t=5IfylmJFoL_6UEiHZS6Lt2bwAFJRbErBw9WSiOO0nkA",
+                                                    "height": 200
+                                                },
+                                                {
+                                                    "width": 400,
+                                                    "_type": "com.linkedin.common.VectorArtifact",
+                                                    "_recipeType": "com.linkedin.fb3e5bf3c119b80d2daa9d87a86f0894",
+                                                    "fileIdentifyingUrlPathSegment": "400_400/0/1664218647017?e=1719446400&v=beta&t=PGd9TeO0v022yCK5cU1XPzNcHNCJuIH1O2ZbQFlP78U",
+                                                    "height": 400
+                                                },
+                                                {
+                                                    "width": 800,
+                                                    "_type": "com.linkedin.common.VectorArtifact",
+                                                    "_recipeType": "com.linkedin.fb3e5bf3c119b80d2daa9d87a86f0894",
+                                                    "fileIdentifyingUrlPathSegment": "800_800/0/1664218647017?e=1719446400&v=beta&t=RperB23ZUAby-8VwoTm7QsTvgKuHOqYJmPW9YNexA7Y",
+                                                    "height": 800
+                                                }
+                                            ],
+                                            "rootUrl": "https://media.licdn.com/dms/image/C4E03AQExxI6eo2PSIg/profile-displayphoto-shrink_"
+                                        },
+                                        "distance": "SELF",
+                                        "pronoun": null,
+                                        "_type": "com.linkedin.messenger.MemberParticipantInfo",
+                                        "_recipeType": "com.linkedin.8a87c41b6243c2faba843bb0c1fab675",
+                                        "headline": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "Web/Cloud Developer at SignalFire Wireless Telemetry",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        }
+                                    },
+                                    "custom": null,
+                                    "organization": null
+                                },
+                                "_recipeType": "com.linkedin.82fc017f1f0aaba10b380a4c06360d19",
+                                "backendUrn": "urn:li:member:236686754"
+                            },
+                            {
+                                "hostIdentityUrn": "urn:li:fsd_profile:ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                                "entityUrn": "urn:li:msg_messagingParticipant:urn:li:fsd_profile:ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                                "showVerificationBadge": true,
+                                "_type": "com.linkedin.messenger.MessagingParticipant",
+                                "participantType": {
+                                    "member": {
+                                        "profileUrl": "https://www.linkedin.com/in/ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                                        "firstName": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "Shantel",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        },
+                                        "lastName": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "Lubinger",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        },
+                                        "profilePicture": null,
+                                        "distance": "OUT_OF_NETWORK",
+                                        "pronoun": null,
+                                        "_type": "com.linkedin.messenger.MemberParticipantInfo",
+                                        "_recipeType": "com.linkedin.8a87c41b6243c2faba843bb0c1fab675",
+                                        "headline": {
+                                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                                            "attributes": [],
+                                            "text": "TA Partner III at Advisor360°",
+                                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                        }
+                                    },
+                                    "custom": null,
+                                    "organization": null
+                                },
+                                "_recipeType": "com.linkedin.82fc017f1f0aaba10b380a4c06360d19",
+                                "backendUrn": "urn:li:member:426367775"
+                            }
+                        ],
+                        "unreadCount": 0,
+                        "conversationVerificationLabel": null,
+                        "lastActivityAt": 1666894731771,
+                        "conversationVerificationExplanation": null,
+                        "title": null,
+                        "backendUrn": "urn:li:messagingThread:2-Y2UwMzRhYWYtYThkMS00MDBiLTlkZTMtMzJmMzQzNDI4OTFmXzAxMg==",
+                        "shortHeadlineText": null,
+                        "createdAt": 1666894731414,
+                        "lastReadAt": 1699297957251,
+                        "hostConversationActions": [
+                            "SHOULD_REQUEST_CONTACT_INFO"
+                        ],
+                        "entityUrn": "urn:li:msg_conversation:(urn:li:fsd_profile:ACoAAA4bjaIB_TEDTU8I_58I5JjkLkYrCAc0Bi8,2-Y2UwMzRhYWYtYThkMS00MDBiLTlkZTMtMzJmMzQzNDI4OTFmXzAxMg==)",
+                        "categories": [
+                            "SPAM",
+                            "INMAIL"
+                        ],
+                        "state": "PENDING",
+                        "disabledFeatures": [
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "CREATE_LINKEDIN_VIRTUAL_MEETING",
+                                "reasonText": {
+                                    "_type": "com.linkedin.pemberly.text.AttributedText",
+                                    "attributes": [],
+                                    "text": "Virtual meetings are not supported because virtual meetings are currently not available in non-Flagship apps.",
+                                    "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                },
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "UPDATE_MESSAGE_REQUEST_STATE",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "SEND_VOICE_MESSAGE",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "REPLY_TO_MESSAGE",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "ADD_PARTICIPANT",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "CREATE_NEW_GROUP_CHAT",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "RENAMED_CONVERSATION",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "SEND_EXTERNAL_MEDIA_MESSAGE",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "REMOVE_PARTICIPANT",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "CREATE_GROUP_CHAT_LINK",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "REACTIONS",
+                                "reasonText": {
+                                    "_type": "com.linkedin.pemberly.text.AttributedText",
+                                    "attributes": [],
+                                    "text": "Reactions are not supported because reactions are currently not available in non-Flagship apps.",
+                                    "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                },
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            },
+                            {
+                                "_type": "com.linkedin.messenger.ConversationDisabledFeature",
+                                "disabledFeature": "SEND_VIDEO_MESSAGE",
+                                "reasonText": null,
+                                "_recipeType": "com.linkedin.7778f48929ebd67dd5140809f46ac332"
+                            }
+                        ],
+                        "creator": {
+                            "hostIdentityUrn": "urn:li:fsd_profile:ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                            "entityUrn": "urn:li:msg_messagingParticipant:urn:li:fsd_profile:ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                            "showVerificationBadge": true,
+                            "_type": "com.linkedin.messenger.MessagingParticipant",
+                            "participantType": {
+                                "member": {
+                                    "profileUrl": "https://www.linkedin.com/in/ACoAABlp2x8BKPFCWBhZut1b5X40z96oCiGAMdw",
+                                    "firstName": {
+                                        "_type": "com.linkedin.pemberly.text.AttributedText",
+                                        "attributes": [],
+                                        "text": "Shantel",
+                                        "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                    },
+                                    "lastName": {
+                                        "_type": "com.linkedin.pemberly.text.AttributedText",
+                                        "attributes": [],
+                                        "text": "Lubinger",
+                                        "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                    },
+                                    "profilePicture": null,
+                                    "distance": "OUT_OF_NETWORK",
+                                    "pronoun": null,
+                                    "_type": "com.linkedin.messenger.MemberParticipantInfo",
+                                    "_recipeType": "com.linkedin.8a87c41b6243c2faba843bb0c1fab675",
+                                    "headline": {
+                                        "_type": "com.linkedin.pemberly.text.AttributedText",
+                                        "attributes": [],
+                                        "text": "TA Partner III at Advisor360°",
+                                        "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                                    }
+                                },
+                                "custom": null,
+                                "organization": null
+                            },
+                            "_recipeType": "com.linkedin.82fc017f1f0aaba10b380a4c06360d19",
+                            "backendUrn": "urn:li:member:426367775"
+                        },
+                        "read": true,
+                        "groupChat": false,
+                        "_type": "com.linkedin.messenger.Conversation",
+                        "contentMetadata": null,
+                        "_recipeType": "com.linkedin.a9465f80911281e0e48a980afd4676b5",
+                        "conversationUrl": "https://www.linkedin.com/messaging/thread/2-Y2UwMzRhYWYtYThkMS00MDBiLTlkZTMtMzJmMzQzNDI4OTFmXzAxMg==/",
+                        "headlineText": null,
+                        "incompleteRetriableData": false,
+                        "conversationTypeText": {
+                            "_type": "com.linkedin.pemberly.text.AttributedText",
+                            "attributes": [],
+                            "text": "InMail",
+                            "_recipeType": "com.linkedin.51c16a2ebfd6af0744c8015fc79a809a"
+                        }
+                    },
+                    "_recipeType": "com.linkedin.8431a73124e015ae2a8e9399af5a35ba",
+                    "_type": "com.linkedin.restli.common.ActionResponse"
+                }
+            },
+            "$metadata": {}
+        },
+        "trackingId": "çÉÓx×òüI\u000B½\t\\"
+    }
+}

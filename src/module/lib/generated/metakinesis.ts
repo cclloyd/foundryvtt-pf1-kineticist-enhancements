@@ -1,4 +1,6 @@
-export const metakinesis = {
+import type {MetakinesisConfig} from "#ke/types/metakinesis";
+
+export const metakinesis: Record<string, MetakinesisConfig> = {
     minimize: {
         id: 'minimize',
         name: 'Minimize',

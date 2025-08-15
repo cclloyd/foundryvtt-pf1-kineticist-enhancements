@@ -1,4 +1,4 @@
-export const ns = 'pf1-kineticist-enhancements';
+export const ns = 'pf1-kineticist-enhancements' as const;
 
 export const defaultDC = '10 + @classes.kineticist.level + @abilities.con.mod';
 

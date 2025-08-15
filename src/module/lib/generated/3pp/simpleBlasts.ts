@@ -1,7 +1,6 @@
-import type { SimpleBlastConfig } from "../../../../types/blasts";
-import type { SimpleBlastIds3pp } from "./simpleBlasts";
+import type { SimpleBlastConfig } from "#ke/types/blasts";
 
-export const simpleBlasts3pp: Record<SimpleBlastIds3pp, SimpleBlastConfig> = {
+export const simpleBlasts3pp: Record<string, SimpleBlastConfig> = {
   bone: {
     class: 'simple',
     id: 'bone',

@@ -6,7 +6,7 @@
     "scripts": {
         "clean": "rimraf dist",
         "build": "NODE_ENV=production gulp build",
-        "dev": "NODE_ENV=development gulp dev"
+        "dev": "gulp dev"
     },
     "devDependencies": {
         "cheerio": "^1.1.2",
@@ -20,5 +20,8 @@
         "typescript": "~5.8.3",
         "yarn-upgrade-all": "^0.7.5"
     },
-    "dependencies": {}
+    "dependencies": {},
+    "imports": {
+        "#ke/*": "./src/*"
+    }
 }

@@ -29,7 +29,14 @@
 
     "erasableSyntaxOnly": true,
     "noFallthroughCasesInSwitch": true,
-    "noUncheckedSideEffectImports": true
+    "noUncheckedSideEffectImports": true,
+
+    // Relative imports
+    "baseUrl": ".",
+    "paths": {
+      "#ke/*": ["src/*"]
+    }
+
   },
   "include": ["src"]
 }

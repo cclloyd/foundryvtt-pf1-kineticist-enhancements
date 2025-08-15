@@ -1,4 +1,6 @@
-export const formInfusions = {
+import type {FormInfusionConfig} from "#ke/types/infusions";
+
+export const formInfusions: Record<string, FormInfusionConfig> = {
     'blade-rush': {
         name: 'Blade Rush',
         element: ['universal'],
