@@ -21,6 +21,7 @@ foundryconfig.json
 
 # Distribution files
 dist
+src/module/*.js
 
 # ESLint
 .eslintcache

@@ -1,11 +1,15 @@
+// @ts-nocheck
 import { ns } from './lib/config';
 import { SettingsCustomInfusions } from './applications/SettingsCustomInfusions';
 import { SettingsCustomUtilities } from './applications/SettingsCustomUtilities';
 import { SettingsCustomMetakinesis } from './applications/SettingsCustomMetakinesis';
 import { SettingsCustomBlasts } from './applications/SettingsCustomBlasts';
 import { SettingsCustomFeats } from './applications/SettingsCustomFeats';
+import { keLogger } from '#ke/module/lib/logger';
 
 export function registerSettings() {
+    if (!game.settings) return;
+    keLogger.log('Registering settings');
     // Register any custom module settings here
     game.settings.registerMenu(ns, 'customFormInfusionsMenu', {
         label: 'Custom Infusions',

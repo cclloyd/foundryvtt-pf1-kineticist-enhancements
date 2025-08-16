@@ -6,7 +6,7 @@ export const baseData = {
         featType: 'misc',
         typeName: 'Miscellaneous',
     },
-};
+} as any;
 
 const baseAction = {
     name: 'Attack',
@@ -55,10 +55,10 @@ const baseAction = {
     },
     effectNotes: [],
     attackNotes: [],
-};
+} as any;
 
 export const getDefaultAction = () => {
-    // eslint-disable-next-line no-undef
+    // @ts-ignore
     let subAction = globalThis.pf1.components.ItemAction.defaultData;
     subAction = foundry.utils.mergeObject(subAction, baseAction);
     return subAction;
@@ -73,5 +73,5 @@ export const getBaseData = () => {
             actions: [getDefaultAction()],
             featType: 'misc',
         },
-    };
+    } as any;
 };

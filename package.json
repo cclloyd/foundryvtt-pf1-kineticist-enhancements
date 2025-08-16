@@ -25,6 +25,7 @@
     },
     "devDependencies": {
         "@rollup/plugin-node-resolve": "^16.0.1",
+        "@types/lodash-es": "^4.17.12",
         "@typescript-eslint/eslint-plugin": "^8",
         "@typescript-eslint/parser": "^8",
         "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",

@@ -145,6 +145,7 @@
 };*/
 import { merge } from 'lodash-es';
 import { defaultDC } from '../config';
+import type { BlastDamageParts } from '#ke/types/blasts';
 
 const baseBlast = {
     //_id: 'DnYYjPRTPydgAtzz',
@@ -284,7 +285,7 @@ const baseBlast = {
             managedSimplePhysical: true,
         },
     },
-};
+} as any;
 
 export const templateSimple = merge(
     { ...baseBlast },
@@ -348,7 +349,7 @@ merge(baseBlast, {
 });
 export const compositeEnergy = { ...mergedCompositeEnergy };
 
-export const melee = (blastData, formData, options = {}) => {
+export const melee = (blastData: any, formData: any, options: any = {}) => {
     blastData.system.actions[0].actionType = 'mwak';
     blastData.system.actions[0].range.value = `${options.range ?? 5}`;
     blastData.system.actions[0].extraAttacks = {
@@ -365,37 +366,37 @@ export const melee = (blastData, formData, options = {}) => {
  * @param {string} [texture]
  * @returns {{customColor: string, size: number, overrideColor: boolean, overrideTexture: boolean, customTexture: string, type: string}}
  */
-export const measure = (size, shape, color, texture) => {
+export const measure = (size: number = 10, shape: string = 'circle', color?: string, texture?: string) => {
     return {
         color: '',
         customColor: color ?? '',
         customTexture: texture ?? '',
         overrideColor: color !== undefined,
         overrideTexture: texture !== undefined,
-        size: size ?? 10,
+        size: size,
         texture: '',
-        type: shape ?? 'circle',
+        type: shape,
     };
 };
 
-export const divideDamage = (dmgParts, divisor) => {
-    dmgParts[0][0] = `(floor((${dmgParts[0][0]})/2))`;
+export const divideDamage = (dmgParts: BlastDamageParts, divisor: number = 2) => {
+    dmgParts[0][0] = `(floor((${dmgParts[0][0]})/${divisor}))`;
     for (let i = 1; i < dmgParts.length; i++) {
-        dmgParts[i][0] = `(${dmgParts[i][0]})/2`;
+        dmgParts[i][0] = `(${dmgParts[i][0]})/${divisor}`;
     }
     return dmgParts;
 };
 
-export const appendBaseName = (dmgParts, suffix) => {
+export const appendBaseName = (dmgParts: BlastDamageParts, suffix: string) => {
     dmgParts[0][1] += ` ${suffix}`;
     return dmgParts;
 };
-export const setBaseName = (dmgParts, blastName) => {
+export const setBaseName = (dmgParts: BlastDamageParts, blastName: string) => {
     dmgParts[0][1] = `${blastName}`;
     return dmgParts;
 };
 
-export const save = (blastData, type, negate, dc) => {
+export const save = (blastData: any, type: 'fort' | 'ref' | 'will', negate?: string, dc?: string) => {
     // Exit without modification if a save is already set
     if (blastData.system.actions[0].save.type !== '') return;
 
