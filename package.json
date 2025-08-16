@@ -19,46 +19,48 @@
         }
     ],
     "scripts": {
-        "build": "gulp build",
-        "watch": "gulp watch",
-        "build:watch": "gulp watch",
-        "link-project": "gulp link",
-        "clean": "gulp clean",
-        "clean:link": "gulp link --clean",
-        "bump-version": "gulp bumpVersion",
-        "lint": "eslint --ext .js .",
-        "lint:fix": "eslint --ext .js --fix .",
-        "format": "prettier --write \"./**/*.(js|json|scss)\"",
-        "postinstall": "husky install"
+        "clean": "rimraf dist",
+        "build": "NODE_ENV=production gulp build",
+        "dev": "gulp dev"
     },
     "devDependencies": {
-        "@rollup/plugin-node-resolve": "^13.0.4",
+        "@rollup/plugin-node-resolve": "^16.0.1",
+        "@typescript-eslint/eslint-plugin": "^8",
+        "@typescript-eslint/parser": "^8",
         "@typhonjs-fvtt/eslint-config-foundry.js": "^0.8.0",
-        "chalk": "^4.1.2",
-        "eslint": "^7.32.0",
-        "eslint-config-prettier": "^8.3.0",
-        "eslint-plugin-prettier": "^3.4.0",
-        "fs-extra": "^10.0.0",
-        "fvtt-types": "npm:@league-of-foundry-developers/foundry-vtt-types@12.343",
-        "gulp": "^4.0.2",
-        "gulp-dart-sass": "^1.0.2",
-        "husky": "^7.0.1",
-        "lint-staged": "^11.1.2",
-        "prettier": "^2.3.2",
-        "rollup": "^2.56.2",
-        "semver": "^7.3.5",
-        "yargs": "^17.1.1"
+        "chalk": "^5.5.0",
+        "cheerio": "^1.1.2",
+        "esbuild": "^0.25.9",
+        "eslint": "^9.33.0",
+        "eslint-config-prettier": "^10.1.8",
+        "eslint-plugin-prettier": "^5.5.4",
+        "fs-extra": "^11.3.1",
+        "fvtt-types": "^13.346.0-beta.20250812191140",
+        "gulp": "^5.0.1",
+        "gulp-dart-sass": "^1.1.0",
+        "gulp-newer": "^1.4.0",
+        "gulp-sass": "^6.0.1",
+        "husky": "^9.1.7",
+        "lint-staged": "^16.1.5",
+        "prettier": "^3.6.2",
+        "rimraf": "^6.0.1",
+        "rollup": "^4.46.2",
+        "sass": "^1.90.0",
+        "semver": "^7.7.2",
+        "typescript": "^5.9.2",
+        "yargs": "^18.0.0",
+        "yarn-upgrade-all": "^0.7.5"
     },
     "lint-staged": {
         "*.(js)": "eslint --fix",
         "*.(json|scss)": "prettier --write"
     },
     "dependencies": {
-        "axios": "^0.26.1",
-        "cheerio": "^1.0.0-rc.10",
-        "highlight.js": "^11.10.0",
-        "jimp": "^0.22.10",
+        "highlight.js": "^11.11.1",
         "lodash": "^4.17.21",
         "lodash-es": "^4.17.21"
+    },
+    "imports": {
+        "#ke/*": "./src/*"
     }
 }
